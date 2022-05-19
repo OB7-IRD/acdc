@@ -5,10 +5,11 @@
 
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/acdc)](https://cran.r-project.org/package=acdc)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R-CMD-check](https://github.com/OB7-IRD/acdc/workflows/R-CMD-check/badge.svg)](https://github.com/OB7-IRD/acdc/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/acdc)](https://CRAN.R-project.org/package=acdc)
 <!-- badges: end -->
 
 ***Automatic Compliance for Data Calls***
