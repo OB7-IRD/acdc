@@ -1,0 +1,174 @@
+FlagName;FlagCode;StatusCPC;PortsZones;FlagA3ISO;FlagA2ISO
+Albania;ALB;CP;;ALB;AL
+Algerie;DZA;CP;;DZA;DZ
+Angola;AGO;CP;;AGO;AO
+Barbados;BRB;CP;;BRB;BB
+Belize;BLZ;CP;ETRO;BLZ;BZ
+Brazil;BRA;CP;National, Foreign, Recreational (or Sport);BRA;BR
+Canada;CAN;CP;;CAN;CA
+Cape Verde;CPV;CP;Artisanal, Industrial, ETRO;CPV;CV
+China PR;CHN;CP;;CHN;CN
+Curaçao;CUW;CP;ETRO;CUW;CW
+Côte d'Ivoire;CIV;CP;Abidjan, S. Pedro;CIV;CI
+EU-Austria;EU-AUT;CP;;AUT;AT
+EU-Belgium;EU-BEL;CP;;BEL;BE
+EU-Bulgaria;EU-BGR;CP;;BGR;BG
+EU-Croatia;EU-HRV;CP;Recreational (or Sport);HRV;HR
+EU-Cyprus;EU-CYP;CP;Recreational (or Sport);CYP;CY
+EU-Czechia;EU-CZE;CP;;CZE;CZ
+EU-Denmark;EU-DNK;CP;;DNK;DK
+EU-España;EU-ESP;CP;Canárias, Coruña, Cantabric sea, ETRO, MEDI, Recreational (or Sport);ESP;ES
+EU-Estonia;EU-EST;CP;;EST;EE
+EU-Finland;EU-FIN;CP;;FIN;FI
+EU-France;EU-FRA;CP;Mainland, ETRO, MEDI, Recreational (or Sport), Guadeloupe, Martinique;FRA;FR
+EU-Germany;EU-DEU;CP;;DEU;DE
+EU-Greece;EU-GRC;CP;Recreational (or Sport);GRC;GR
+EU-Hungary;EU-HUN;CP;;HUN;HU
+EU-Ireland;EU-IRL;CP;;IRL;IE
+EU-Italy;EU-ITA;CP;Adriatic sea, Ionian sea, Ligurian sea, Sardenha, Strait of Sicily, Tyrrenean sea;ITA;IT
+EU-Latvia;EU-LVA;CP;;LVA;LV
+EU-Lithuania;EU-LTU;CP;;LTU;LT
+EU-Luxemburg;EU-LUX;CP;;LUX;LU
+EU-Malta;EU-MLT;CP;Recreational (or Sport);MLT;MT
+EU-Netherlands;EU-NLD;CP;;NLD;NL
+EU-Poland;EU-POL;CP;;POL;PL
+EU-Portugal;EU-PRT;CP;Mainland, Azores, Madeira, Recreational (or Sport);PRT;PT
+EU-Rumania;EU-ROU;CP;;ROU;RO
+EU-Slovakia;EU-SVK;CP;;SVK;SK
+EU-Slovenia;EU-SVN;CP;;SVN;SI
+EU-Sweden;EU-SWE;CP;;SWE;SE
+Egypt;EGY;CP;;EGY;EG
+El Salvador;SLV;CP;;SLV;SV
+England;GB-ENG;CP;;ENG;GB
+FR-St Pierre et Miquelon;FR-SPM;CP;;SPM;PM
+Gabon;GAB;CP;;GAB;GA
+Gambia;GMB;CP;;GMB;GM
+Ghana;GHA;CP;ETRO;GHA;GH
+Great Britain;GBR;CP;;GBR;GB
+Grenada;GRD;CP;;GRD;GD
+Guatemala;GTM;CP;ETRO;GTM;GT
+Guinea Bissau;GNB;CP;;GNB;GW
+Guinea Ecuatorial;GNQ;CP;Artisanal, Industrial;GNQ;GQ
+Guinée Rep;GIN;CP;;GIN;GN
+Honduras;HND;CP;;HND;HN
+Iceland;ISL;CP;;ISL;IS
+Japan;JPN;CP;;JPN;JP
+Korea Rep;KOR;CP;;KOR;KR
+Liberia;LBR;CP;;LBR;LR
+Libya;LBY;CP;;LBY;LY
+Maroc;MAR;CP;Tanger, Nador, ETRO;MAR;MA
+Mauritania;MRT;CP;;MRT;MR
+Mexico;MEX;CP;;MEX;MX
+Namibia;NAM;CP;;NAM;NA
+Nicaragua;NIC;CP;;NIC;NI
+Nigeria;NGA;CP;;NGA;NG
+Northern Ireland;GB-NIR;CP;;NIR;GB
+Norway;NOR;CP;;NOR;NO
+Panama;PAN;CP;ETRO;PAN;PA
+Philippines;PHL;CP;;PHL;PH
+Russian Federation;RUS;CP;;RUS;RU
+S Tomé e Príncipe;STP;CP;Artisanal, Industrial;STP;ST
+Scotland;GB-SCT;CP;;SCT;GB
+Senegal;SEN;CP;Artisanal, ETRO, Recreational (or Sport);SEN;SN
+Sierra Leone;SLE;CP;;SLE;SL
+South Africa;ZAF;CP;National, Foreign, Recreational (or Sport);ZAF;ZA
+St Vincent and Grenadines;VCT;CP;;VCT;VC
+Syria;SYR;CP;;SYR;SY
+Trinidad and Tobago;TTO;CP;Trinidad, Tobago;TTO;TT
+Tunisie;TUN;CP;;TUN;TN
+Turkey;TUR;CP;;TUR;TR
+UK-Bermuda;UK-BMU;CP;;BMU;BM
+UK-British Virgin Islands;UK-VGB;CP;;VGB;VG
+UK-Sta Helena;UK-SHN;CP;;SHN;SH
+UK-Turks and Caicos;UK-TCA;CP;Recreational (or Sport);TCA;TC
+USA;USA;CP;Comercial, Recreational;USA;US
+Uruguay;URY;CP;;URY;UY
+Venezuela;VEN;CP;Artisanal, Industrial;VEN;VE
+Wales;GB-WLS;CP;;WLS;GB
+Bolivia;BOL;NCC;;BOL;BO
+Chinese Taipei;TAI;NCC;;TWN;TW
+Costa Rica;CRI;NCC;;CRI;CR
+Guyana;GUY;NCC;;GUY;GY
+Suriname;SUR;NCC;;SUR;SR
+Andorra;AND;NCO;;AND;AD
+Anguilla;AIA;NCO;;AIA;AI
+Antigua and Barbuda;ATG;NCO;;ATG;AG
+Argentina;ARG;NCO;;ARG;AR
+Aruba;ABW;NCO;;ABW;AW
+Australia;AUS;NCO;;AUS;AU
+Bahamas;BHS;NCO;;BHS;BS
+Belarus;BLR;NCO;;BLR;BY
+Benin;BEN;NCO;;BEN;BJ
+Bosnia and Herzegovina;BIH;NCO;;BIH;BA
+Brunei;BND;NCO;;BND;BN
+Burkina Faso;BFA;NCO;;BFA;BF
+Cambodia;KHM;NCO;;KHM;KH
+Cameroon;CMR;NCO;;CMR;CM
+Cayman Islands;CYM;NCO;;CYM;KY
+Chile;CHL;NCO;;CHL;CL
+Colombia;COL;NCC;;COL;CO
+Congo;COG;NCO;;COG;CG
+Cook Islands;COK;NCO;;COK;CK
+Cuba;CUB;NCO;;CUB;CU
+Djibouti;DJI;NCO;;DJI;DJ
+Dominica;DMA;NCO;;DMA;DM
+Dominican Republic;DOM;NCO;;DOM;DO
+Ecuador;ECU;NCO;;ECU;EC
+Falklands;FLK;NCO;;FLK;FK
+Faroe Islands;FRO;NCO;;FRO;FO
+Fiji Islands;FJI;NCO;;FJI;FJ
+Georgia;GEO;NCO;;GEO;GE
+Gibraltar;GIB;NCO;;GIB;GI
+Guam;GUM;NCO;;GUM;GU
+Haiti;HTI;NCO;;HTI;HT
+India;IND;NCO;;IND;IN
+Indonesia;IDN;NCO;;IDN;ID
+Iran;IRN;NCO;;IRN;IR
+Isle of Man;IMN;NCO;;IMN;IM
+Israel;ISR;NCO;;ISR;IL
+Jamaica;JAM;NCO;;JAM;JM
+Kenya;KEN;NCO;;KEN;KE
+Kiribati;KIR;NCO;;KIR;KI
+Kuwait;KWT;NCO;;KWT;KW
+Lebanon;LBN;NCO;;LBN;LB
+Madagascar;MDG;NCO;;MDG;MG
+Malaysia;MYS;NCO;;MYS;MY
+Maldives;MDV;NCO;;MDV;MV
+Marshall Islands;MHL;NCO;;MHL;MH
+Mauritius;MUS;NCO;;MUS;MU
+Micronesia;FSM;NCO;;FSM;FM
+Mongolia;MNG;NCO;;MNG;MN
+Montenegro;MNE;NCO;;MNE;ME
+Mozambique;MOZ;NCO;;MOZ;MZ
+New Caledonia;NCL;NCO;;NCL;NC
+New Zealand;NZL;NCO;;NZL;NZ
+North Macedonia Rep;MKD;NCO;;MKD;MK
+Oman;OMN;NCO;;OMN;OM
+Palau;PLW;NCO;;PLW;PW
+Palestine;PSE;NCO;;PSE;PS
+Papua New Guinea;PNG;NCO;;PNG;PG
+Perú;PER;NCO;;PER;PE
+Polynesie Française;PYF;NCO;;PYF;PF
+Puerto Rico;PRI;NCO;;PRI;PR
+Qatar;QAT;NCO;;QAT;QA
+Saint Kitts and Nevis;KNA;NCO;St. Kitts, Nevis;KNA;KN
+Samoa;WSM;NCO;;WSM;WS
+San Marino;SMR;NCO;;SMR;SM
+Saudi Arabia;SAU;NCO;;SAU;SA
+Serbia;SRB;NCO;;SRB;RS
+Seychelles;SYC;NCO;;SYC;SC
+Singapore;SGP;NCO;;SGP;SG
+Solomon Islands;SLB;NCO;;SLB;SB
+Sri Lanka;LKA;NCO;;LKA;LK
+Sta Lucia;LCA;NCO;;LCA;LC
+Switzerland;CHE;NCO;;CHE;CH
+Tanzania;TZA;NCO;;TZA;TZ
+Thailand;THA;NCO;;THA;TH
+Togo;TGO;NCO;;TGO;TG
+Tonga;TON;NCO;;TON;TO
+Tuvalu;TUV;NCO;;TUV;TV
+US Virgin Islands;VIR;NCO;;VIR;VI
+Ukraine;UKR;NCO;;UKR;UA
+United Arab Emirates;ARE;NCO;;ARE;AE
+Vanuatu;VUT;NCO;;VUT;VU
+Vietnam;VNM;NCO;;VNM;VN

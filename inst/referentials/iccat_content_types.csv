@@ -1,0 +1,5 @@
+Content;ContentDescript;ContentCode
+New (FULL);New data (never reported to ICCAT): FULL coverage;NF
+New (PARTIAL);New data (never reported to ICCAT): PARTIAL coverage;NP
+Revision (FULL);Revised data (FULL): to fully replace the previously reported data;RF
+Revision (PARTIAL);Revised data (PARTIAL): to partially replace the previously reported data;RP

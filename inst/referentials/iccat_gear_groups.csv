@@ -1,0 +1,16 @@
+GearGrpCode;GearGrpName;IsscfgCode;IsscfgName
+PS;Purse seine;PS;With purse lines (purse seines) 
+TW;Trawl;TB;Bottom trawls
+TW;Trawl;TM;Midwater trawls 
+GN;Gillnets;GNS;Set Gillnets
+GN;Gillnets;GND;Driftnets
+TP;Traps;FPN;Stationary uncovered pound nets
+HL;Handlines;LHP;Handline and pole-lines (hand operated)
+BB;Baitboats;LHM;Handline and pole-lines (mechanized)
+LL;Longlines;LLS;Set longlines
+LL;Longlines;LLD;Drifting longlines
+TR;Trolling;LTL;Trolling lines
+HP;Harpoon;HAR;Harpoons
+RR;Rod-and-reel;RG;Recreational fishing gear
+MP;Various gears (OR multi-purpose);MIS;Miscellaneus gear
+OTH;Other (described in notes);;

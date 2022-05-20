@@ -1,0 +1,4 @@
+LOACLassCode;LOAClass
+< 10;LOA < 10 m
+[10, 15[;10 m <= LOA < 15 m
+[15, 20[;15 m <= LOA < 20 m

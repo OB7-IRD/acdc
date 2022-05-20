@@ -37,3 +37,8 @@ VignetteBuilder: knitr
 URL: https://github.com/OB7-IRD/acdc,
     https://ob7-ird.github.io/acdc/
 BugReports: https://github.com/OB7-IRD/acdc/issues
+Imports: 
+    codama (>= 0.0.0.9000),
+    magrittr
+Remotes:  
+    OB7-IRD/codama

@@ -1,0 +1,14 @@
+FisheryCode;Fishery;Used in subforms
+ALBN;ALB Northern stock;ST01A & ST01B
+ALBS;ALB Souther stock;ST01A & ST01B
+ALBM;ALB Medditerranean stock;ST01A & ST01B
+SWON;SWO Northern stock;ST01A & ST01B
+SWOS;SWO Souther stock;ST01A & ST01B
+TROP;Targeting Tropicals (YFT/BET/SKJ);ST01A & ST01B
+BFTW;BFT Western stock;ST01A & ST01B
+SMTuna;Targeting small tuna sp.;ST01A & ST01B
+SHARKS;Targeting sharks (major sp.);ST01A & ST01B
+MULTIFISH;Multiple fisheries (>=6 ICCAT fisheries);ST01A & ST01B
+NONE-BC;None of the ICCAT fisheries (by catch);ST01A & ST01B
+SWOM;SWO Medditerranean stock;ST01A only
+BFTE;BFT Eastern stock (ATE + MED);ST01A only
