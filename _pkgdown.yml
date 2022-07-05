@@ -1,6 +1,9 @@
 template:
   params:
     bootswatch: cerulean
+    docsearch:
+      api_key: eed07df6faae8f4ca61ef473342aba20
+      index_name: acdc
 
 url: https://ob7-ird.github.io/acdc/
 
