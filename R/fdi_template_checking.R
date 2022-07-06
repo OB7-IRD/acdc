@@ -54,6 +54,10 @@ fdi_template_checking <- function(fdi_table,
                             output = "message")
   }
   # process ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start table A template checking.\n",
+      sep = "")
   template_name <- fdi_template_identification(table_id = table_id)
   if (system.file("referentials",
                   "fdi",

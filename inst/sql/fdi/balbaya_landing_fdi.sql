@@ -19,7 +19,7 @@ FROM
 	INNER JOIN public.espece sp ON (c.c_esp=sp.c_esp)
 	INNER JOIN public.type_banc fm ON (act.c_tban=fm.c_tban)
 WHERE
-	EXTRACT(YEAR FROM c.d_act) IN (?periode)
+	EXTRACT(YEAR FROM c.d_act) IN (?period)
 	AND v.c_pav_b IN (?flag)
 	AND g.c_engin IN (?gear)
 	-- without discards

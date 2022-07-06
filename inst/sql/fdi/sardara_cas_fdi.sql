@@ -17,7 +17,7 @@ FROM
 	INNER JOIN public.banc tb ON (m.c_banc=tb.c_banc)
 	INNER JOIN public.cl_taille clt ON (m.id_classe_t=clt.id_classe_t)
 WHERE
-	t.an IN (?periode)
+	t.an IN (?period)
 	AND m.c_pav IN (?flag)
 	AND m.c_g_engin IN (?gear)
 ;

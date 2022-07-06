@@ -2,12 +2,12 @@
 % Please edit documentation in R/fdi_tablea_catch_summary.R
 \name{fdi_tablea_catch_summary}
 \alias{fdi_tablea_catch_summary}
-\title{Number of vessels}
+\title{Table A catch generation (FDI process)}
 \usage{
 fdi_tablea_catch_summary(
   balbaya_con,
   observe_bycatch_path,
-  periode,
+  period,
   gear,
   flag,
   fao_area_file_path,
@@ -19,18 +19,28 @@ fdi_tablea_catch_summary(
 )
 }
 \arguments{
-\item{dbconnection}{{\link[base]{list}} or {\link[base]{character}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} or name of a internal fishi dataset.}
+\item{balbaya_con}{{\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}}.}
 
-\item{countries}{{\link[base]{integer}} expected. Countries codes identifiaction.}
+\item{observe_bycatch_path}{{\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
 
-\item{oceans}{{\link[base]{integer}} expected. Oceans codes identifiaction.}
+\item{period}{{\link[base]{integer}} expected. Year period for data extractions.}
 
-\item{vessel_types}{{\link[base]{integer}}. Vessel types codes identification.}
+\item{gear}{{\link[base]{integer}}. Gear(s) selection for data extractions.}
 
-\item{period}{{\link[base]{integer}} expected. Period identification in year.}
+\item{flag}{{\link[base]{integer}} expected. Flag(s) selection for data extractions.}
 
-\item{time_step}{{\link[base]{character}} expected. Kind of display you want in the graphic output. You can choose between "month" and "year".}
+\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.}
+
+\item{eez_area_file_path}{{\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .RData.}
+
+\item{cwp_grid_file_path}{{\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .RData.}
+
+\item{template_checking}{{\link[base]{logical}} expected. Checking FDI table generated regarding the official FDI template.}
+
+\item{template_year}{{\link[base]{integer}} expected. Template year.}
+
+\item{table_export_path}{{\link[base]{character}} expected. Directory path associated for the export.}
 }
 \description{
-Number of vessels by country, ocean, period, time step and vessel type.
+Process for generation and optionally extraction of the FDI table A (catch).
 }

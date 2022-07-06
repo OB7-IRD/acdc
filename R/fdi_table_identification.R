@@ -1,4 +1,12 @@
+#' @name fdi_template_identification
+#' @title Template identification (FDI process)
+#' @description Process for template identification of FDI table.
+#' @param table_id {\link[base]{character}} expected. Identification of the FDI table.
+#' @export
 fdi_template_identification <- function(table_id) {
+  # arguments verifications ----
+  fdi_table_id_checking(table_id = table_id)
+  # process ----
   if (table_id == "a") {
     template_name <- "TABLE_A_CATCH"
   } else if (table_id == "b") {

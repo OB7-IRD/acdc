@@ -22,6 +22,6 @@ FROM
 	INNER JOIN public.type_bateau vt ON (v.c_typ_b=vt.c_typ_b)
 	INNER JOIN public.engin g ON (vt.c_engin=g.c_engin)
 WHERE
-	EXTRACT(YEAR FROM act.d_dbq) IN (?periode)
+	EXTRACT(YEAR FROM act.d_dbq) IN (?period)
 	AND v.c_pav_b IN (?flag)
 	AND g.c_engin IN (?gear)

@@ -1,16 +1,24 @@
 #' @name fdi_tablea_catch_summary
-#' @title Number of vessels
-#' @description Number of vessels by country, ocean, period, time step and vessel type.
-#' @param dbconnection {\link[base]{list}} or {\link[base]{character}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} or name of a internal fishi dataset.
-#' @param countries {\link[base]{integer}} expected. Countries codes identifiaction.
-#' @param oceans {\link[base]{integer}} expected. Oceans codes identifiaction.
-#' @param vessel_types {\link[base]{integer}}. Vessel types codes identification.
-#' @param period {\link[base]{integer}} expected. Period identification in year.
-#' @param time_step {\link[base]{character}} expected. Kind of display you want in the graphic output. You can choose between "month" and "year".
+#' @title Table A catch generation (FDI process)
+#' @description Process for generation and optionally extraction of the FDI table A (catch).
+#' @param balbaya_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}}.
+#' @param observe_bycatch_path {\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
+#' @param period {\link[base]{integer}} expected. Year period for data extractions.
+#' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
+#' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
+#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.
+#' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .RData.
+#' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .RData.
+#' @param template_checking {\link[base]{logical}} expected. Checking FDI table generated regarding the official FDI template.
+#' @param template_year {\link[base]{integer}} expected. Template year.
+#' @param table_export_path {\link[base]{character}} expected. Directory path associated for the export.
 #' @export
+#' @importFrom DBI sqlInterpolate SQL dbGetQuery
+#' @importFrom furdeb marine_area_overlay
+#' @importFrom dplyr mutate case_when rowwise select group_by summarise bind_cols rename full_join
 fdi_tablea_catch_summary <- function(balbaya_con,
                                      observe_bycatch_path,
-                                     periode,
+                                     period,
                                      gear,
                                      flag,
                                      fao_area_file_path,
@@ -19,8 +27,27 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                      template_checking = TRUE,
                                      template_year = NULL,
                                      table_export_path = NULL) {
-  # argument verification ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on FDI table A generation.\n",
+      sep = "")
+  # arguments verifications ----
+  global_database_connection_checking(database_con= balbaya_con)
+  global_export_path_checking(export_path = observe_bycatch_path)
+  global_integer_checking(integer_object = period)
+  global_integer_checking(integer_object = gear)
+  global_integer_checking(integer_object = flag)
+  global_rdata_type_checking(rdata_path = fao_area_file_path)
+  global_rdata_type_checking(rdata_path = eez_area_file_path)
+  global_rdata_type_checking(rdata_path = cwp_grid_file_path)
+  global_logical_checking(logical_object = template_checking)
+  global_integer_checking(integer_object = template_year)
+  global_export_path_checking(export_path = table_export_path)
   # landing data extraction ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on landing data.\n",
+      sep = "")
   balbaya_landing_query <- paste(readLines(con = system.file("sql",
                                                              "fdi",
                                                              "balbaya_landing_fdi.sql",
@@ -28,8 +55,8 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                  collapse = '\n')
   balbaya_landing_query <- DBI::sqlInterpolate(conn = balbaya_con,
                                                sql = balbaya_landing_query,
-                                               periode = DBI::SQL(paste0(periode,
-                                                                         collapse = ", ")),
+                                               period = DBI::SQL(paste0(period,
+                                                                        collapse = ", ")),
                                                flag = DBI::SQL(paste0(flag,
                                                                       collapse = ", ")),
                                                gear = DBI::SQL(paste0(gear,
@@ -37,16 +64,16 @@ fdi_tablea_catch_summary <- function(balbaya_con,
   balbaya_landing <- DBI::dbGetQuery(conn = balbaya_con,
                                      statement = balbaya_landing_query)
   # landings data design ----
-  balbaya_landing <- furdeb::marine_area_overlay(data = balbaya_landing,
-                                                 overlay_expected = "fao_eez_area",
-                                                 longitude_name = "longitude",
-                                                 latitude_name = "latitude",
-                                                 fao_area_file_path = fao_area_file_path,
-                                                 fao_overlay_level = "division",
-                                                 auto_selection_fao = TRUE,
-                                                 eez_area_file_path = eez_area_file_path,
-                                                 for_fdi_use = TRUE,
-                                                 silent = TRUE)
+  balbaya_landing <- suppressMessages(furdeb::marine_area_overlay(data = balbaya_landing,
+                                                                  overlay_expected = "fao_eez_area",
+                                                                  longitude_name = "longitude",
+                                                                  latitude_name = "latitude",
+                                                                  fao_area_file_path = fao_area_file_path,
+                                                                  fao_overlay_level = "division",
+                                                                  auto_selection_fao = TRUE,
+                                                                  eez_area_file_path = eez_area_file_path,
+                                                                  for_fdi_use = TRUE,
+                                                                  silent = TRUE))
   balbaya_landing <- dplyr::mutate(.data = balbaya_landing,
                                    sub_region = dplyr::case_when(
                                      best_fao_area %in% c("47.A.0",
@@ -154,7 +181,15 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                      species) %>%
     dplyr::summarise(totwghtlandg = sum(totwghtlandg),
                      .groups = "drop")
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on landing data.\n",
+      sep = "")
   # observers bycatch data extraction ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on bycatch data.\n",
+      sep = "")
   observe_bycatch <- lapply(X = list.files(path = observe_bycatch_path),
                             FUN = function(file_name) {
                               read.csv2(file.path(observe_bycatch_path,
@@ -175,16 +210,16 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                          dplyr::mutate(longitude_decimal_degree = as.numeric(longitude_decimal_degree),
                                                        latitude_decimal_degree = as.numeric(latitude_decimal_degree)) %>%
                                          dplyr::select(-cwp)))
-  observe_bycatch <- furdeb::marine_area_overlay(data = observe_bycatch,
-                                                 overlay_expected = "fao_eez_area",
-                                                 longitude_name = "longitude_decimal_degree",
-                                                 latitude_name = "latitude_decimal_degree",
-                                                 fao_area_file_path = fao_area_file_path,
-                                                 fao_overlay_level = "division",
-                                                 auto_selection_fao = TRUE,
-                                                 eez_area_file_path = eez_area_file_path,
-                                                 for_fdi_use = TRUE,
-                                                 silent = TRUE) %>%
+  observe_bycatch <- suppressMessages(furdeb::marine_area_overlay(data = observe_bycatch,
+                                                                  overlay_expected = "fao_eez_area",
+                                                                  longitude_name = "longitude_decimal_degree",
+                                                                  latitude_name = "latitude_decimal_degree",
+                                                                  fao_area_file_path = fao_area_file_path,
+                                                                  fao_overlay_level = "division",
+                                                                  auto_selection_fao = TRUE,
+                                                                  eez_area_file_path = eez_area_file_path,
+                                                                  for_fdi_use = TRUE,
+                                                                  silent = TRUE)) %>%
     dplyr::mutate(
       sub_region = dplyr::case_when(
         best_fao_area %in% c("47.A.0",
@@ -288,7 +323,15 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                      .groups = "drop")
   observe_bycatch <- observe_bycatch[! (observe_bycatch$retained_tons == 0
                                         & observe_bycatch$discards == 0), ]
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on bycatch data.\n",
+      sep = "")
   # final design ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start table A design.\n",
+      sep = "")
   tablea_final <- balbaya_landing %>%
     dplyr::full_join(observe_bycatch,
                      by = c("country",
@@ -361,6 +404,10 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                   discards,
                   confidential)
   names(tablea_final) <- toupper(names(tablea_final))
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful table A design.\n",
+      sep = "")
   # template checking ----
   if (template_checking == TRUE) {
     fdi_template_checking(fdi_table = tablea_final,
@@ -378,6 +425,10 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                      export_path = table_export_path,
                      table_id = "a")
   }
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on FDI table A generation.\n",
+      sep = "")
   return(list("fdi_tables" = list("table_a" = tablea_final),
               "ad_hoc_tables" = list("landing_rectangle" = balbaya_landing_rectangle,
                                      "bycatch_retained" = observe_bycatch_retained)))
