@@ -1,19 +1,169 @@
+#' @name fdi_tablef_landings_length
+#' @title Table F NAO OFR landings length generation (FDI process)
+#' @description Process for generation and optionally extraction of the FDI table F (NAO OFR landings length).
+#' @param balbaya_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the balbaya database.
+#' @param sardara_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the sardara database.
+#' @param t3_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the t3 database.
+#' @param period {\link[base]{integer}} expected. Year period for data extractions.
+#' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
+#' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
+#' @param tablea_bycatch_retained Output "bycatch_retained" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
+#' @param tablea_catch_summary Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
+#' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .RData.
+#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.
+#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
+#' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
+#' @return The process returns a list with the FDI table F inside.
 #' @export
+#' @importFrom codama r_type_checking file_path_checking
+#' @importFrom dplyr rename select mutate case_when group_by summarise full_join mutate rowwise bind_cols n ungroup inner_join setdiff
+#' @importFrom DBI sqlInterpolate SQL dbGetQuery
+#' @importFrom furdeb marine_area_overlay lat_lon_cwp_manipulation
+#' @importFrom stringr str_extract str_c
 fdi_tablef_landings_length <- function(balbaya_con,
                                        sardara_con,
                                        t3_con,
-                                       periode,
+                                       period,
                                        gear,
                                        flag,
                                        tablea_bycatch_retained,
-                                       fdi_tablea,
+                                       tablea_catch_summary,
                                        cwp_grid_file_path,
                                        fao_area_file_path,
                                        template_checking = TRUE,
                                        template_year = NULL,
                                        table_export_path = NULL) {
-  # process ----
-  # bycatch retained data from FDI table A ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on FDI table F generation.\n",
+      sep = "")
+  # global variables assignement ----
+  period <- NULL
+  country <- NULL
+  year <- NULL
+  quarter <- NULL
+  sub_region <- NULL
+  nep_sub_region <- NULL
+  metier <- NULL
+  school_type <- NULL
+  vessel_length <- NULL
+  species <- NULL
+  retained_tons <- NULL
+  fishing_mode <- NULL
+  cwp <- NULL
+  cwp_grid_5deg_5deg <- NULL
+  longitude_decimal_degree <- NULL
+  latitude_decimal_degree <- NULL
+  totwghtlandg <- NULL
+  ocean_name <- NULL
+  metier_1 <- NULL
+  metier_2 <- NULL
+  metier_3 <- NULL
+  domain_landings <- NULL
+  mean_weight_at_length <- NULL
+  weight_unit <- NULL
+  no_length <- NULL
+  total_sampled_trips <- NULL
+  no_length_measurements <- NULL
+  length_unit <- NULL
+  min_length <- NULL
+  max_length <- NULL
+  COUNTRY <- NULL
+  YEAR <- NULL
+  DOMAIN_LANDINGS <- NULL
+  id_verif <- NULL
+  # arguments verifications ----
+  if (codama::r_type_checking(r_object = balbaya_con,
+                              type = "PostgreSQLConnection",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = balbaya_con,
+                                   type = "PostgreSQLConnection",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = sardara_con,
+                              type = "PostgreSQLConnection",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = sardara_con,
+                                   type = "PostgreSQLConnection",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = t3_con,
+                              type = "PostgreSQLConnection",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = t3_con,
+                                   type = "PostgreSQLConnection",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = period,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = period,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = gear,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = gear,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = flag,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = flag,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  cwp_grid_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return(codama::file_path_checking(file_path =  cwp_grid_file_path,
+                                      extension = "RData",
+                                      output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  fao_area_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return(codama::file_path_checking(file_path =  fao_area_file_path,
+                                      extension = "RData",
+                                      output = "message"))
+  }
+  if (codama::r_type_checking(r_object = template_checking,
+                              type = "logical",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = template_checking,
+                                   type = "logical",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = template_year,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = template_year,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = table_export_path,
+                              type = "character",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = table_export_path,
+                                   type = "character",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  # bycatch data extraction ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on bycatch data.\n",
+      sep = "")
   observe_bycatch_retained <- tablea_bycatch_retained %>%
     dplyr::group_by(country,
                     year,
@@ -28,7 +178,15 @@ fdi_tablef_landings_length <- function(balbaya_con,
                      .groups = "drop") %>%
     dplyr::rename(fishing_mode = school_type) %>%
     dplyr::mutate(fishing_mode = as.character(fishing_mode))
-  # landings ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on bycatch data.\n",
+      sep = "")
+  # landings data extraction ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on landing data.\n",
+      sep = "")
   balbaya_landing_cwp_query <- paste(readLines(con = system.file("sql",
                                                                  "fdi",
                                                                  "balbaya_landing_cwp_fdi.sql",
@@ -36,8 +194,8 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                      collapse = '\n')
   balbaya_landing_cwp_query <- DBI::sqlInterpolate(conn = balbaya_con,
                                                    sql = balbaya_landing_cwp_query,
-                                                   periode = DBI::SQL(paste0(periode,
-                                                                             collapse = ", ")),
+                                                   period = DBI::SQL(paste0(period,
+                                                                            collapse = ", ")),
                                                    flag = DBI::SQL(paste0(flag,
                                                                           collapse = ", ")),
                                                    gear = DBI::SQL(paste0(gear,
@@ -69,14 +227,14 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                              dplyr::mutate(longitude_decimal_degree = as.numeric(longitude_decimal_degree),
                                                            latitude_decimal_degree = as.numeric(latitude_decimal_degree)) %>%
                                              dplyr::select(-cwp)))
-  balbaya_landing_cwp <- furdeb::marine_area_overlay(data = balbaya_landing_cwp,
-                                                     overlay_expected = "fao_area",
-                                                     longitude_name = "longitude_decimal_degree",
-                                                     latitude_name = "latitude_decimal_degree",
-                                                     fao_area_file_path = fao_area_file_path,
-                                                     fao_overlay_level = "division",
-                                                     auto_selection_fao = TRUE,
-                                                     silent = TRUE)
+  balbaya_landing_cwp <- suppressMessages(furdeb::marine_area_overlay(data = balbaya_landing_cwp,
+                                                                      overlay_expected = "fao_area",
+                                                                      longitude_name = "longitude_decimal_degree",
+                                                                      latitude_name = "latitude_decimal_degree",
+                                                                      fao_area_file_path = fao_area_file_path,
+                                                                      fao_overlay_level = "division",
+                                                                      auto_selection_fao = TRUE,
+                                                                      silent = TRUE))
   if (any(is.na(x = unique(x = balbaya_landing_cwp$best_fao_area)))) {
     cat(format(x = Sys.time(),
                format = "%Y-%m-%d %H:%M:%S"),
@@ -179,7 +337,15 @@ fdi_tablef_landings_length <- function(balbaya_con,
                   -fishing_mode,
                   -vessel_length,
                   -retained_tons)
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on landing data.\n",
+      sep = "")
   # CAS from sardara ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on catch at size data.\n",
+      sep = "")
   sardara_cas_query <- paste(readLines(con = system.file("sql",
                                                          "fdi",
                                                          "sardara_cas_fdi.sql",
@@ -187,8 +353,8 @@ fdi_tablef_landings_length <- function(balbaya_con,
                              collapse = '\n')
   sardara_cas_query <- DBI::sqlInterpolate(conn = sardara_con,
                                            sql = sardara_cas_query,
-                                           periode = DBI::SQL(paste0(periode,
-                                                                     collapse = ", ")),
+                                           period = DBI::SQL(paste0(period,
+                                                                    collapse = ", ")),
                                            flag = DBI::SQL(paste0(flag,
                                                                   collapse = ", ")),
                                            gear = DBI::SQL(paste0(gear,
@@ -215,14 +381,14 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                      dplyr::mutate(longitude_decimal_degree = as.numeric(longitude_decimal_degree),
                                                    latitude_decimal_degree = as.numeric(latitude_decimal_degree)) %>%
                                      dplyr::select(-cwp)))
-  sardara_cas <- furdeb::marine_area_overlay(data = sardara_cas,
-                                             overlay_expected = "fao_area",
-                                             longitude_name = "longitude_decimal_degree",
-                                             latitude_name = "latitude_decimal_degree",
-                                             fao_area_file_path = fao_area_file_path,
-                                             fao_overlay_level = "division",
-                                             auto_selection_fao = TRUE,
-                                             silent = TRUE)
+  sardara_cas <- suppressMessages(furdeb::marine_area_overlay(data = sardara_cas,
+                                                              overlay_expected = "fao_area",
+                                                              longitude_name = "longitude_decimal_degree",
+                                                              latitude_name = "latitude_decimal_degree",
+                                                              fao_area_file_path = fao_area_file_path,
+                                                              fao_overlay_level = "division",
+                                                              auto_selection_fao = TRUE,
+                                                              silent = TRUE))
   if (any(is.na(x = unique(x = sardara_cas$best_fao_area)))) {
     cat(format(x = Sys.time(),
                format = "%Y-%m-%d %H:%M:%S"),
@@ -324,7 +490,15 @@ fdi_tablef_landings_length <- function(balbaya_con,
                   max_length = max(length),
                   no_length_measurements = dplyr::n()) %>%
     dplyr::ungroup()
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on catch at size data.\n",
+      sep = "")
   # final design ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start table F design.\n",
+      sep = "")
   tablef_final <- balbaya_landing_tablef %>%
     dplyr::inner_join(sardara_cas,
                       by = c("country",
@@ -353,13 +527,17 @@ fdi_tablef_landings_length <- function(balbaya_con,
   names(tablef_final) <- toupper(names(tablef_final))
   # consistency with FDI table A ----
   cons_tablea <- dplyr::setdiff(unique(tablef_final[,c("COUNTRY", "YEAR", "DOMAIN_LANDINGS")]),
-                                unique(fdi_tablea[,c("COUNTRY", "YEAR", "DOMAIN_LANDINGS")])) %>%
+                                unique(tablea_catch_summary[,c("COUNTRY", "YEAR", "DOMAIN_LANDINGS")])) %>%
     dplyr::mutate(id_verif = paste0(COUNTRY,
                                     YEAR,
                                     DOMAIN_LANDINGS)) %>%
     dplyr::select(id_verif)
   cons_tablea = cons_tablea$id_verif
   tablef_final <- tablef_final[! tablef_final$ID_VERIF %in% cons_tablea, -ncol(x = tablef_final)]
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful table F design.\n",
+      sep = "")
   # template checking ----
   if (template_checking == TRUE) {
     fdi_template_checking(fdi_table = tablef_final,
@@ -377,5 +555,9 @@ fdi_tablef_landings_length <- function(balbaya_con,
                      export_path = table_export_path,
                      table_id = "f")
   }
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on FDI table F generation.\n",
+      sep = "")
   return(list("fdi_tables" = list("table_f" = tablef_final)))
 }

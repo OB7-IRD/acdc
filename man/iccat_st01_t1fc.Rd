@@ -9,7 +9,7 @@ iccat_st01_t1fc(data_input_type, form_path = NULL)
 \arguments{
 \item{data_input_type}{Object of class \code{\link[base]{character}} expected. Type of input for data extraction. You can choose between "csv_form" or "database".}
 
-\item{outputs_path}{Object of class \code{\link[base]{character}} expected. By default NULL. Form file path location. File extension expected is .csv with field separator character as ";" and decimal point  as ".".}
+\item{form_path}{Object of class \code{\link[base]{character}} expected. By default NULL. Form file path location. File extension expected is .csv with field separator character as ";" and decimal point  as ".".}
 }
 \description{
 Processes (data extraction, quality checks and design) for the ICCAT submission form ST01-T1FC.

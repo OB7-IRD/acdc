@@ -11,7 +11,15 @@ fdi_table_export <- function(fdi_table,
                              export_path,
                              table_id) {
   # arguments verifications ----
-  global_export_path_checking(export_path = export_path)
+  if (codama::r_type_checking(r_object = export_path,
+                              type = "character",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = export_path,
+                                   type = "character",
+                                   length = 1L,
+                                   output = "message"))
+  }
   fdi_table_id_checking(table_id = table_id)
   # process ----
   cat(format(x = Sys.time(),

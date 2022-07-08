@@ -1,7 +1,7 @@
 #' @name fdi_tablea_catch_summary
 #' @title Table A catch generation (FDI process)
 #' @description Process for generation and optionally extraction of the FDI table A (catch).
-#' @param balbaya_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}}.
+#' @param balbaya_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the balbaya database.
 #' @param observe_bycatch_path {\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
 #' @param period {\link[base]{integer}} expected. Year period for data extractions.
 #' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
@@ -9,13 +9,16 @@
 #' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.
 #' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .RData.
 #' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .RData.
-#' @param template_checking {\link[base]{logical}} expected. Checking FDI table generated regarding the official FDI template.
-#' @param template_year {\link[base]{integer}} expected. Template year.
-#' @param table_export_path {\link[base]{character}} expected. Directory path associated for the export.
+#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
+#' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
+#' @return The process returns a double list with the FDI table A in the first one and in the second one two accessory outputs useful for the other FDI table generation processes ("landing_rectangle" and "bycatch_retained").
 #' @export
 #' @importFrom DBI sqlInterpolate SQL dbGetQuery
 #' @importFrom furdeb marine_area_overlay
 #' @importFrom dplyr mutate case_when rowwise select group_by summarise bind_cols rename full_join
+#' @importFrom codama file_path_checking r_type_checking
+#' @importFrom utils read.csv2
 fdi_tablea_catch_summary <- function(balbaya_con,
                                      observe_bycatch_path,
                                      period,
@@ -31,18 +34,129 @@ fdi_tablea_catch_summary <- function(balbaya_con,
              format = "%Y-%m-%d %H:%M:%S"),
       " - Start process on FDI table A generation.\n",
       sep = "")
+  # global variables assignement ----
+  gear_type <- NULL
+  target_assemblage <- NULL
+  country <- NULL
+  quarter <- NULL
+  sub_region <- NULL
+  vessel_length <- NULL
+  species <- NULL
+  year <- NULL
+  fishing_tech <- NULL
+  mesh_size_range <- NULL
+  metier <- NULL
+  fishing_mode <- NULL
+  domain_landings <- NULL
+  latitude <- NULL
+  longitude <- NULL
+  supra_region <- NULL
+  eez_indicator <- NULL
+  geo_indicator <- NULL
+  nep_sub_region <- NULL
+  specon_tech <- NULL
+  deep <- NULL
+  totwghtlandg <- NULL
+  cwp <- NULL
+  longitude_decimal_degree <- NULL
+  latitude_decimal_degree <- NULL
+  fao_code <- NULL
+  school_type <- NULL
+  major_fao <- NULL
+  subarea_fao <- NULL
+  division_fao <- NULL
+  best_fao_area <- NULL
+  eez <- NULL
+  discarded_tons  <- NULL
+  domain_discards <- NULL
+  retained_tons <- NULL
+  discards <- NULL
+  totvallandg <- NULL
+  confidential <- NULL
   # arguments verifications ----
-  global_database_connection_checking(database_con= balbaya_con)
-  global_export_path_checking(export_path = observe_bycatch_path)
-  global_integer_checking(integer_object = period)
-  global_integer_checking(integer_object = gear)
-  global_integer_checking(integer_object = flag)
-  global_rdata_type_checking(rdata_path = fao_area_file_path)
-  global_rdata_type_checking(rdata_path = eez_area_file_path)
-  global_rdata_type_checking(rdata_path = cwp_grid_file_path)
-  global_logical_checking(logical_object = template_checking)
-  global_integer_checking(integer_object = template_year)
-  global_export_path_checking(export_path = table_export_path)
+  if (codama::r_type_checking(r_object = balbaya_con,
+                              type = "PostgreSQLConnection",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = balbaya_con,
+                                   type = "PostgreSQLConnection",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = observe_bycatch_path,
+                              type = "character",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = observe_bycatch_path,
+                                   type = "character",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = period,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = period,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = gear,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = gear,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = flag,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = flag,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  fao_area_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return(codama::file_path_checking(file_path =  fao_area_file_path,
+                                      extension = "RData",
+                                      output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  eez_area_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return(codama::file_path_checking(file_path =  eez_area_file_path,
+                                      extension = "RData",
+                                      output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  cwp_grid_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return(codama::file_path_checking(file_path =  cwp_grid_file_path,
+                                      extension = "RData",
+                                      output = "message"))
+  }
+  if (codama::r_type_checking(r_object = template_checking,
+                              type = "logical",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = template_checking,
+                                   type = "logical",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = template_year,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = template_year,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = table_export_path,
+                              type = "character",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = table_export_path,
+                                   type = "character",
+                                   length = 1L,
+                                   output = "message"))
+  }
   # landing data extraction ----
   cat(format(x = Sys.time(),
              format = "%Y-%m-%d %H:%M:%S"),
@@ -192,9 +306,9 @@ fdi_tablea_catch_summary <- function(balbaya_con,
       sep = "")
   observe_bycatch <- lapply(X = list.files(path = observe_bycatch_path),
                             FUN = function(file_name) {
-                              read.csv2(file.path(observe_bycatch_path,
-                                                  file_name),
-                                        stringsAsFactors = FALSE)
+                              utils::read.csv2(file.path(observe_bycatch_path,
+                                                         file_name),
+                                               stringsAsFactors = FALSE)
                             })
   observe_bycatch <- do.call("rbind",
                              observe_bycatch) %>%

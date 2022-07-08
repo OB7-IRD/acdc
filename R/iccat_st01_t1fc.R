@@ -2,10 +2,28 @@
 #' @title ICCAT ST01 - Task 1 Fleet characteristics form design
 #' @description Processes (data extraction, quality checks and design) for the ICCAT submission form ST01-T1FC.
 #' @param data_input_type Object of class \code{\link[base]{character}} expected. Type of input for data extraction. You can choose between "csv_form" or "database".
-#' @param outputs_path Object of class \code{\link[base]{character}} expected. By default NULL. Form file path location. File extension expected is .csv with field separator character as ";" and decimal point  as ".".
+#' @param form_path Object of class \code{\link[base]{character}} expected. By default NULL. Form file path location. File extension expected is .csv with field separator character as ";" and decimal point  as ".".
 #' @export
+#' @importFrom codama r_type_checking file_path_checking vectors_comparisons
+#' @importFrom dplyr mutate
+#' @importFrom utils read.table
 iccat_st01_t1fc <- function(data_input_type,
                             form_path = NULL) {
+  # global variables assignement ----
+  metier <- NULL
+  supra_region <- NULL
+  ICCATSerialNo <- NULL
+  NatRegNo <- NULL
+  IRCS <- NULL
+  VesselName <- NULL
+  FlagVesCd <- NULL
+  PortZone <- NULL
+  GearGrpCd <- NULL
+  LOAm <- NULL
+  Tnage <- NULL
+  TonType <- NULL
+  YearC <- NULL
+  FishDatl <- NULL
   # arguments verification ----
   if (codama::r_type_checking(r_object = data_input_type,
                               type = "character",
@@ -29,10 +47,10 @@ iccat_st01_t1fc <- function(data_input_type,
   }
   # data extraction ----
   if (data_input_type == "csv_form") {
-    iccat_st01_t1fc <- read.table(file = form_path,
-                                  header = TRUE,
-                                  sep = ";",
-                                  dec = ".")
+    iccat_st01_t1fc <- utils::read.table(file = form_path,
+                                         header = TRUE,
+                                         sep = ";",
+                                         dec = ".")
   } else if (data_input_type == "database") {
     stop(format(x = Sys.time(),
                 "%Y-%m-%d %H:%M:%S"),
@@ -76,7 +94,7 @@ iccat_st01_t1fc <- function(data_input_type,
                                    FishDatl = as.integer(x = FishDatl))
   # specific verifications
   # FlagVesCd
-  iccat_reporting_flags_and_vess*el_countries_flags <- read.csv2(file = system.file("referentials",
+  iccat_reporting_flags_and_vessel_countries_flags <- read.csv2(file = system.file("referentials",
                                                                                    "iccat_reporting_flags_and_vessel_countries_flags.csv",
                                                                                    package = "acdc"))
 

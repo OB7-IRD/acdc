@@ -1,6 +1,22 @@
+#' @name fdi_tableg_effort
+#' @title Table G effort generation (FDI process)
+#' @description Process for generation and optionally extraction of the FDI table G (effort).
+#' @param balbaya_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the balbaya database.
+#' @param period {\link[base]{integer}} expected. Year period for data extractions.
+#' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
+#' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
+#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.
+#' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .RData.
+#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
+#' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
+#' @return The process returns a double list with the FDI table G in the first one and in the second one one accessory outputs useful for another FDI table generation process ("effort_rectangle").
 #' @export
+#' @importFrom DBI sqlInterpolate SQL dbGetQuery
+#' @importFrom dplyr mutate case_when select group_by summarise n_distinct inner_join
+#' @importFrom furdeb marine_area_overlay
 fdi_tableg_effort <- function(balbaya_con,
-                              periode,
+                              period,
                               gear,
                               flag,
                               fao_area_file_path,
@@ -8,7 +24,118 @@ fdi_tableg_effort <- function(balbaya_con,
                               template_checking = TRUE,
                               template_year = NULL,
                               table_export_path = NULL) {
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on FDI table G generation.\n",
+      sep = "")
+  # global variables assignement ----
+  period <- NULL
+  gear_type <- NULL
+  target_assemblage <- NULL
+  hrsea <- NULL
+  totseadays <- NULL
+  engine_power <- NULL
+  vessel_volume_m3 <- NULL
+  totfishdays <- NULL
+  vessel_id <- NULL
+  totkwdaysatsea <- NULL
+  totgtdaysatsea <- NULL
+  totkwfishdays <- NULL
+  totgtfishdays <- NULL
+  totgtfishdays <- NULL
+  kwhrsea <- NULL
+  gthrsea <- NULL
+  major_fao <- NULL
+  subarea_fao <- NULL
+  division_fao <- NULL
+  best_fao_area <- NULL
+  eez <- NULL
+  country <- NULL
+  year <- NULL
+  quarter <- NULL
+  vessel_length <- NULL
+  fishing_tech <- NULL
+  mesh_size_range <- NULL
+  sub_region <- NULL
+  eez_indicator <- NULL
+  geo_indicator <- NULL
+  specon_tech <- NULL
+  deep <- NULL
+  metier <- NULL
+  supra_region <- NULL
+  # arguments verifications ----
+  if (codama::r_type_checking(r_object = balbaya_con,
+                              type = "PostgreSQLConnection",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = balbaya_con,
+                                   type = "PostgreSQLConnection",
+                                   length = 1L,
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = period,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = period,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = gear,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = gear,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = flag,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = flag,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  fao_area_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return(codama::file_path_checking(file_path =  fao_area_file_path,
+                                      extension = "RData",
+                                      output = "message"))
+  }
+  if (codama::file_path_checking(file_path =  eez_area_file_path,
+                                 extension = "RData",
+                                 output = "logical") != TRUE) {
+    return( codama::file_path_checking(file_path =  eez_area_file_path,
+                                       extension = "RData",
+                                       output = "message"))
+  }
+  if (codama::r_type_checking(r_object = template_checking,
+                              type = "logical",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = template_checking,
+                                   type = "logical",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = template_year,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = template_year,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = table_export_path,
+                              type = "character",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = table_export_path,
+                                   type = "character",
+                                   length = 1L,
+                                   output = "message"))
+  }
   # effort data extraction ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start process on effort data.\n",
+      sep = "")
   balbaya_effort_query <- paste(readLines(con = system.file("sql",
                                                             "fdi",
                                                             "balbaya_effort_fdi.sql",
@@ -16,8 +143,8 @@ fdi_tableg_effort <- function(balbaya_con,
                                 collapse = '\n')
   balbaya_effort_query <- DBI::sqlInterpolate(conn = balbaya_con,
                                               sql = balbaya_effort_query,
-                                              periode = DBI::SQL(paste0(periode,
-                                                                        collapse = ", ")),
+                                              period = DBI::SQL(paste0(period,
+                                                                       collapse = ", ")),
                                               flag = DBI::SQL(paste0(flag,
                                                                      collapse = ", ")),
                                               gear = DBI::SQL(paste0(gear,
@@ -62,16 +189,16 @@ fdi_tableg_effort <- function(balbaya_con,
                                   totgtfishdays = totfishdays * (0.2 + 0.02 * log(vessel_volume_m3)) * vessel_volume_m3,
                                   kwhrsea = hrsea * engine_power * 0.73539875,
                                   gthrsea = hrsea * (0.2 + 0.02 * log(vessel_volume_m3)) * vessel_volume_m3)
-  balbaya_effort <- furdeb::marine_area_overlay(data = balbaya_effort,
-                                                overlay_expected = "fao_eez_area",
-                                                longitude_name = "longitude",
-                                                latitude_name = "latitude",
-                                                fao_area_file_path = fao_area_file_path,
-                                                fao_overlay_level = "division",
-                                                auto_selection_fao = TRUE,
-                                                eez_area_file_path = eez_area_file_path,
-                                                for_fdi_use = TRUE,
-                                                silent = TRUE)
+  balbaya_effort <- suppressMessages(furdeb::marine_area_overlay(data = balbaya_effort,
+                                                                 overlay_expected = "fao_eez_area",
+                                                                 longitude_name = "longitude",
+                                                                 latitude_name = "latitude",
+                                                                 fao_area_file_path = fao_area_file_path,
+                                                                 fao_overlay_level = "division",
+                                                                 auto_selection_fao = TRUE,
+                                                                 eez_area_file_path = eez_area_file_path,
+                                                                 for_fdi_use = TRUE,
+                                                                 silent = TRUE))
   if (any(is.na(x = unique(x = balbaya_effort$best_fao_area)))) {
     cat(format(x = Sys.time(),
                format = "%Y-%m-%d %H:%M:%S"),
@@ -195,6 +322,10 @@ fdi_tableg_effort <- function(balbaya_con,
         fishing_tech == "HOK" ~ "Y",
         TRUE ~ "N"))
   names(balbaya_effort) <- toupper(names(balbaya_effort))
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on effort data.\n",
+      sep = "")
   # template checking ----
   if (template_checking == TRUE) {
     fdi_template_checking(fdi_table = balbaya_effort,
@@ -212,6 +343,10 @@ fdi_tableg_effort <- function(balbaya_con,
                      export_path = table_export_path,
                      table_id = "g")
   }
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful process on FDI table G generation.\n",
+      sep = "")
   return(list("fdi_tables" = list("table_g" = balbaya_effort),
               "ad_hoc_tables" = list("effort_rectangle" = balbaya_effort_rectangle)))
 }
