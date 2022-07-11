@@ -5,6 +5,33 @@ template:
       api_key: eed07df6faae8f4ca61ef473342aba20
       index_name: acdc
 
+reference:
+- title: "FDI processes and functions"
+  desc: >
+    Processes and functions related to the Fisheries Dependent Information (FDI) data call.
+- contents:
+  - fdi_tablea_catch_summary
+  - fdi_tabled_discard_length
+  - fdi_tablef_landings_length
+  - fdi_tableg_effort
+  - fdi_tableh_landings_rectangle
+  - fdi_tablei_effort_rectangle
+  - fdi_tablej_capacity
+  - fdi_template_checking
+  - fdi_table_export
+  - fdi_table_identification
+- title: "ICCAT processes and functions"
+  desc: >
+    Processes and functions related to the International Commission for the Conservation of Atlantic Tunas annual data call.
+- contents:
+  - iccat_st01_t1fc
+
+articles:
+- title: data calls processes description
+  navbar: ~
+  contents:
+  - fisheries_dependent_information_data_call
+
 url: https://ob7-ird.github.io/acdc/
 
 authors:

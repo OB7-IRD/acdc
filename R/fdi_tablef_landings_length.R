@@ -39,7 +39,6 @@ fdi_tablef_landings_length <- function(balbaya_con,
       " - Start process on FDI table F generation.\n",
       sep = "")
   # global variables assignement ----
-  period <- NULL
   country <- NULL
   year <- NULL
   quarter <- NULL
@@ -52,7 +51,6 @@ fdi_tablef_landings_length <- function(balbaya_con,
   retained_tons <- NULL
   fishing_mode <- NULL
   cwp <- NULL
-  cwp_grid_5deg_5deg <- NULL
   longitude_decimal_degree <- NULL
   latitude_decimal_degree <- NULL
   totwghtlandg <- NULL
@@ -219,7 +217,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
   balbaya_landing_cwp <- dplyr::bind_cols(balbaya_landing_cwp,
                                           (furdeb::lat_lon_cwp_manipulation(manipulation_process = "cwp_to_lat_lon",
                                                                             data_cwp = as.character(balbaya_landing_cwp$cwp),
-                                                                            referential_grid_file_path = cwp_grid_5deg_5deg,
+                                                                            referential_grid_file_path = cwp_grid_file_path,
                                                                             input_cwp_format = "centroid",
                                                                             output_degree_cwp_parameter = "centroid",
                                                                             output_degree_format = "decimal_degree",
@@ -373,7 +371,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
   sardara_cas <- dplyr::bind_cols(sardara_cas,
                                   (furdeb::lat_lon_cwp_manipulation(manipulation_process = "cwp_to_lat_lon",
                                                                     data_cwp = sardara_cas$cwp,
-                                                                    referential_grid_file_path = cwp_grid_5deg_5deg,
+                                                                    referential_grid_file_path = cwp_grid_file_path,
                                                                     input_cwp_format = "centroid",
                                                                     output_degree_cwp_parameter = "centroid",
                                                                     output_degree_format = "decimal_degree",

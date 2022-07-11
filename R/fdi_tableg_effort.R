@@ -29,7 +29,6 @@ fdi_tableg_effort <- function(balbaya_con,
       " - Start process on FDI table G generation.\n",
       sep = "")
   # global variables assignement ----
-  period <- NULL
   gear_type <- NULL
   target_assemblage <- NULL
   hrsea <- NULL

@@ -34,7 +34,7 @@ devtools::install_github("https://github.com/OB7-IRD/acdc",
 ### Development version
 
 To get a bug fix or to use a feature from the development version, you
-can install the development version of t3 from GitHub.
+can install the development version of acdc from GitHub.
 
 ``` r
 devtools::install_github("https://github.com/OB7-IRD/acdc",

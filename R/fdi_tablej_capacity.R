@@ -28,7 +28,6 @@ fdi_tablej_capacity <- function(balbaya_con,
       " - Start process on FDI table J generation.\n",
       sep = "")
   # global variables assignement ----
-  period <- NULL
   country <- NULL
   year <- NULL
   vessel_id <- NULL
@@ -168,14 +167,14 @@ fdi_tablej_capacity <- function(balbaya_con,
                                                                                             collapse = ", ")))
   balbaya_capacity_principal_sub_region <- DBI::dbGetQuery(conn = balbaya_con,
                                                            statement = balbaya_capacity_principal_sub_region_query)
-  balbaya_capacity_principal_sub_region <- furdeb::marine_area_overlay(data = balbaya_capacity_principal_sub_region,
-                                                                       overlay_expected = "fao_area",
-                                                                       longitude_name = "longitude",
-                                                                       latitude_name = "latitude",
-                                                                       fao_area_file_path = fao_area_file_path,
-                                                                       fao_overlay_level = "division",
-                                                                       auto_selection_fao = TRUE,
-                                                                       silent = TRUE)
+  balbaya_capacity_principal_sub_region <- suppressMessages(furdeb::marine_area_overlay(data = balbaya_capacity_principal_sub_region,
+                                                                                        overlay_expected = "fao_area",
+                                                                                        longitude_name = "longitude",
+                                                                                        latitude_name = "latitude",
+                                                                                        fao_area_file_path = fao_area_file_path,
+                                                                                        fao_overlay_level = "division",
+                                                                                        auto_selection_fao = TRUE,
+                                                                                        silent = TRUE))
   if (any(is.na(x = unique(x = balbaya_capacity_principal_sub_region$best_fao_area)))) {
     cat(format(x = Sys.time(),
                format = "%Y-%m-%d %H:%M:%S"),
