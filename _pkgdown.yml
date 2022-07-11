@@ -19,7 +19,7 @@ reference:
   - fdi_tablej_capacity
   - fdi_template_checking
   - fdi_table_export
-  - fdi_table_identification
+  - fdi_template_identification
 - title: "ICCAT processes and functions"
   desc: >
     Processes and functions related to the International Commission for the Conservation of Atlantic Tunas annual data call.
