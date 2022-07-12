@@ -9,7 +9,7 @@
 #' @return The process returns a list with the FDI table D inside.
 #' @export
 #' @importFrom codama r_type_checking
-#' @importFrom dplyr mutate rowwise case_when select inner_join rename
+#' @importFrom dplyr mutate rowwise case_when select inner_join
 fdi_tabled_discard_length <- function(observe_discard_path,
                                       tablea_catch_summary,
                                       template_checking = TRUE,
@@ -119,11 +119,6 @@ fdi_tabled_discard_length <- function(observe_discard_path,
                              "domain_discards" = "DOMAIN_DISCARDS",
                              "nep_sub_region" = "NEP_SUB_REGION",
                              "species" = "SPECIES")) %>%
-    dplyr::mutate(discard_cv = "NK",
-                  discard_ci_upper = "NK",
-                  discard_ci_lower = "NK",
-                  total_sampled_trips = "NK") %>%
-    dplyr::rename(total_trips = no_samples) %>%
     dplyr::select(country,
                   year,
                   domain_discards,
