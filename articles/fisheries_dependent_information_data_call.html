@@ -121,8 +121,12 @@
 <h2 id="version">2022 version</h2>
 <p>Github tag for scripts apply in 2022: 1.0</p>
 <p>Github tag for 2022 documentation associated: 1.0</p>
-<p>Specific configuration and parameters is available below.</p>
+<p>To compile it on your computer use the following code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"OB7-IRD/acdc@v1.0"</span>,</span>
+<span>                         INSTALL_opts<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"--no-multiarch"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Specific configuration and parameters is available below.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># setup</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OB7-IRD/acdc" class="external-link">acdc</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OB7-IRD/furdeb" class="external-link">furdeb</a></span><span class="op">)</span></span>
@@ -172,7 +176,7 @@
 <span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span></code></pre></div>
 <h2 id="global-script-process">Global script process</h2>
 <p>The global script process to generate the tables is available below. Be aware that you have the process divided step by step but also at the end through a shortcut function. Use parameters and configuration above in sections related to the year of production.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># process step by step</span></span>
 <span><span class="va">tablea</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_tablea_catch_summary.html">fdi_tablea_catch_summary</a></span><span class="op">(</span>balbaya_con <span class="op">=</span> <span class="va">balbaya_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                   observe_bycatch_path <span class="op">=</span> <span class="va">observe_bycatch_path</span>,</span>
@@ -235,7 +239,7 @@
 <span>                              template_checking <span class="op">=</span> <span class="va">template_checking</span>,</span>
 <span>                              template_year <span class="op">=</span> <span class="va">template_year</span>,</span>
 <span>                              table_export_path <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"output_path"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># shortcut function</span></span>
 <span><span class="va">fdi_tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_shortcut_function.html">fdi_shortcut_function</a></span><span class="op">(</span>balbaya_con <span class="op">=</span> <span class="va">balbaya_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                    sardara_con <span class="op">=</span> <span class="va">sardara_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
