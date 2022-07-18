@@ -51,4 +51,5 @@ Remotes:
     OB7-IRD/codama,
     OB7-IRD/furdeb
 Suggests: 
-    knitr (>= 1.39)
+    knitr (>= 1.39),
+    markdown (>= 1.1)

@@ -17,6 +17,7 @@ reference:
   - fdi_tableh_landings_rectangle
   - fdi_tablei_effort_rectangle
   - fdi_tablej_capacity
+  - fdi_shortcut_function
   - fdi_template_checking
   - fdi_tables_consistency
   - fdi_table_export
