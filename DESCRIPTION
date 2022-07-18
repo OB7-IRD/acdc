@@ -46,7 +46,7 @@ Imports:
     readxl (>= 1.4.0),
     stringr (>= 1.4.0),
     furdeb (>= 0.9.0),
-    utils (>= 4.2.1)
+    utils
 Remotes: 
     OB7-IRD/codama,
     OB7-IRD/furdeb
