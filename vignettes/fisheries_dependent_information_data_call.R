@@ -5,7 +5,7 @@ knitr::opts_chunk$set(
 )
 
 ## ---- eval = FALSE, echo = TRUE-----------------------------------------------
-#  devtools::install_github("OB7-IRD/acdc@v1.0",
+#  devtools::install_github("OB7-IRD/acdc@v1.0.0",
 #                           INSTALL_opts=c("--no-multiarch"))
 
 ## ---- eval = FALSE, echo = TRUE-----------------------------------------------
