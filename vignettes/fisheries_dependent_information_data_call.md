@@ -35,6 +35,14 @@ Github tag for scripts apply in 2022: 1.0
 
 Github tag for 2022 documentation associated: 1.0
 
+To compile it on your computer use the following code:
+
+
+```r
+devtools::install_github("OB7-IRD/acdc@v1.0",
+                         INSTALL_opts=c("--no-multiarch"))
+```
+
 Specific configuration and parameters is available below.
 
 

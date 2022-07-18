@@ -20,6 +20,7 @@ This R package provides processes for supporting data calls productions. These p
 \item{\code{\link{fdi_tableh_landings_rectangle}}}
 \item{\code{\link{fdi_tablei_effort_rectangle}}}
 \item{\code{\link{fdi_tablej_capacity}}}
+\item{\code{\link{fdi_shortcut_function}}}
 \item{\code{\link{fdi_template_checking}}}
 \item{\code{\link{fdi_tables_consistency}}}
 \item{\code{\link{fdi_table_export}}}

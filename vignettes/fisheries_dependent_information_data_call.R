@@ -5,6 +5,10 @@ knitr::opts_chunk$set(
 )
 
 ## ---- eval = FALSE, echo = TRUE-----------------------------------------------
+#  devtools::install_github("OB7-IRD/acdc@v1.0",
+#                           INSTALL_opts=c("--no-multiarch"))
+
+## ---- eval = FALSE, echo = TRUE-----------------------------------------------
 #  # setup
 #  library(acdc)
 #  library(furdeb)
