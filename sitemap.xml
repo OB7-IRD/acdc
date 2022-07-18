@@ -19,6 +19,12 @@
     <loc>https://ob7-ird.github.io/acdc/index.html</loc>
   </url>
   <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/acdc-package.html</loc>
+  </url>
+  <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/fdi_shortcut_function.html</loc>
+  </url>
+  <url>
     <loc>https://ob7-ird.github.io/acdc/reference/fdi_table_export.html</loc>
   </url>
   <url>
@@ -44,6 +50,9 @@
   </url>
   <url>
     <loc>https://ob7-ird.github.io/acdc/reference/fdi_tablej_capacity.html</loc>
+  </url>
+  <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/fdi_tables_consistency.html</loc>
   </url>
   <url>
     <loc>https://ob7-ird.github.io/acdc/reference/fdi_template_checking.html</loc>
