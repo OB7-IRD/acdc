@@ -3,7 +3,7 @@
 #' @description Process for generation and optionally extraction of the FDI table H (landings by rectangle).
 #' @param tablea_bycatch_retained Output "bycatch_retained" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
 #' @param tablea_landing_rectangle Output "landing_rectangle" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
-#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param template_checking {\link[base]{logical}} expected. By default FALSE. Checking FDI table generated regarding the official FDI template.
 #' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a list with the FDI table H inside.
@@ -13,7 +13,7 @@
 #' @importFrom dplyr select rename mutate group_by summarise full_join case_when
 fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                                           tablea_landing_rectangle,
-                                          template_checking = TRUE,
+                                          template_checking = FALSE,
                                           template_year = NULL,
                                           table_export_path = NULL) {
   cat(format(x = Sys.time(),

@@ -2,7 +2,7 @@
 #' @title Table I effort by rectangle generation (FDI process)
 #' @description Process for generation and optionally extraction of the FDI table I (effort by rectangle).
 #' @param tableg_effort_rectangle Output "effort_rectangle" of the function {\link[acdc]{fdi_tableg_effort}}.
-#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param template_checking {\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.
 #' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a list with the FDI table I inside.
@@ -10,7 +10,7 @@
 #' @importFrom furdeb lat_long_to_csquare
 #' @importFrom dplyr mutate rename select group_by summarise select case_when
 fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
-                                        template_checking = TRUE,
+                                        template_checking = FALSE,
                                         template_year = NULL,
                                         table_export_path = NULL) {
   cat(format(x = Sys.time(),

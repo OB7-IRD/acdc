@@ -7,7 +7,7 @@
 fdi_tableh_landings_rectangle(
   tablea_bycatch_retained,
   tablea_landing_rectangle,
-  template_checking = TRUE,
+  template_checking = FALSE,
   template_year = NULL,
   table_export_path = NULL
 )
@@ -17,7 +17,7 @@ fdi_tableh_landings_rectangle(
 
 \item{tablea_landing_rectangle}{Output "landing_rectangle" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
 
-\item{template_checking}{{\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.}
+\item{template_checking}{{\link[base]{logical}} expected. By default FALSE. Checking FDI table generated regarding the official FDI template.}
 
 \item{template_year}{{\link[base]{integer}} expected. By default NULL. Template year.}
 

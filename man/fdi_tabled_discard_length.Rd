@@ -7,7 +7,7 @@
 fdi_tabled_discard_length(
   observe_discard_path,
   tablea_catch_summary,
-  template_checking = TRUE,
+  template_checking = FALSE,
   template_year = NULL,
   table_export_path = NULL
 )
@@ -17,7 +17,7 @@ fdi_tabled_discard_length(
 
 \item{tablea_catch_summary}{{\link[base]{list}} expected. Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
 
-\item{template_checking}{{\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.}
+\item{template_checking}{{\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.}
 
 \item{template_year}{{\link[base]{integer}} expected. By default NULL. Template year.}
 

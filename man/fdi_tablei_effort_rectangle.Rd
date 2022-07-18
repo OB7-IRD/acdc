@@ -6,7 +6,7 @@
 \usage{
 fdi_tablei_effort_rectangle(
   tableg_effort_rectangle,
-  template_checking = TRUE,
+  template_checking = FALSE,
   template_year = NULL,
   table_export_path = NULL
 )
@@ -14,7 +14,7 @@ fdi_tablei_effort_rectangle(
 \arguments{
 \item{tableg_effort_rectangle}{Output "effort_rectangle" of the function {\link[acdc]{fdi_tableg_effort}}.}
 
-\item{template_checking}{{\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.}
+\item{template_checking}{{\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.}
 
 \item{template_year}{{\link[base]{integer}} expected. By default NULL. Template year.}
 

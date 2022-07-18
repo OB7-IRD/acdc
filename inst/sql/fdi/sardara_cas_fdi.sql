@@ -1,5 +1,8 @@
 SELECT
-	p.c_pav_iso::text AS country
+	CASE
+		WHEN p.c_pav_iso::text = 'MYT' THEN 'FRA'
+		ELSE p.c_pav_iso::text
+	END::text AS country
 	,t.an::integer AS year
 	,t.n_trim::integer AS quarter
 	,m.c_g_engin::numeric AS gear

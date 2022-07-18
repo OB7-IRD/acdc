@@ -10,7 +10,10 @@ SELECT
 	,avg(vessel_length_m) AS avgloa
 FROM 
 (SELECT DISTINCT
-	f.c_pays_fao::text AS country
+	CASE
+		WHEN f.c_pays_fao::text = 'MYT' THEN 'FRA'
+		ELSE f.c_pays_fao::text
+	END::text AS country
 	,EXTRACT(YEAR FROM t.d_dbq)::integer AS year
 	,CASE
 		WHEN v.v_l_ht < 10 THEN 'VL0010'

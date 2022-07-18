@@ -1,6 +1,9 @@
 WITH balbaya_trip AS 
 (SELECT
-	f.c_pays_fao::text AS country
+	CASE
+		WHEN f.c_pays_fao::text = 'MYT' THEN 'FRA'
+		ELSE f.c_pays_fao::text
+	END::text AS country
 	,EXTRACT(YEAR FROM t.d_dbq)::integer AS YEAR
 	,t.c_bat::integer AS vessel_id
 	,CASE
@@ -43,7 +46,10 @@ ORDER BY
 	,fishing_tech),
 balbaya_capacity_effort AS 
 (SELECT DISTINCT
-	f.c_pays_fao::text AS country
+	CASE
+		WHEN f.c_pays_fao::text = 'MYT' THEN 'FRA'
+		ELSE f.c_pays_fao::text
+	END::text AS country
 	,EXTRACT(YEAR FROM t.d_dbq)::integer AS year
 	,t.c_bat::integer AS vessel_id 
 	,CASE

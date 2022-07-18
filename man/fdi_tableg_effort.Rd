@@ -11,7 +11,7 @@ fdi_tableg_effort(
   flag,
   fao_area_file_path,
   eez_area_file_path,
-  template_checking = TRUE,
+  template_checking = FALSE,
   template_year = NULL,
   table_export_path = NULL
 )
@@ -25,11 +25,11 @@ fdi_tableg_effort(
 
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selection for data extractions.}
 
-\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.}
+\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.}
 
-\item{eez_area_file_path}{{\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .RData.}
+\item{eez_area_file_path}{{\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata.}
 
-\item{template_checking}{{\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.}
+\item{template_checking}{{\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.}
 
 \item{template_year}{{\link[base]{integer}} expected. By default NULL. Template year.}
 

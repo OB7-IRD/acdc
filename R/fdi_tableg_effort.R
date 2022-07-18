@@ -5,9 +5,9 @@
 #' @param period {\link[base]{integer}} expected. Year period for data extractions.
 #' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
 #' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
-#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.
-#' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .RData.
-#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.
+#' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata.
+#' @param template_checking {\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.
 #' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a double list with the FDI table G in the first one and in the second one one accessory outputs useful for another FDI table generation process ("effort_rectangle").
@@ -21,7 +21,7 @@ fdi_tableg_effort <- function(balbaya_con,
                               flag,
                               fao_area_file_path,
                               eez_area_file_path,
-                              template_checking = TRUE,
+                              template_checking = FALSE,
                               template_year = NULL,
                               table_export_path = NULL) {
   cat(format(x = Sys.time(),
@@ -94,17 +94,17 @@ fdi_tableg_effort <- function(balbaya_con,
                                    output = "message"))
   }
   if (codama::file_path_checking(file_path =  fao_area_file_path,
-                                 extension = "RData",
+                                 extension = "Rdata",
                                  output = "logical") != TRUE) {
     return(codama::file_path_checking(file_path =  fao_area_file_path,
-                                      extension = "RData",
+                                      extension = "Rdata",
                                       output = "message"))
   }
   if (codama::file_path_checking(file_path =  eez_area_file_path,
-                                 extension = "RData",
+                                 extension = "Rdata",
                                  output = "logical") != TRUE) {
     return( codama::file_path_checking(file_path =  eez_area_file_path,
-                                       extension = "RData",
+                                       extension = "Rdata",
                                        output = "message"))
   }
   if (codama::r_type_checking(r_object = template_checking,

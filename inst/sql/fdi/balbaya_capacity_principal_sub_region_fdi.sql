@@ -1,5 +1,8 @@
 SELECT
-	f.c_pays_fao::text AS country
+	CASE
+		WHEN f.c_pays_fao::text = 'MYT' THEN 'FRA'
+		ELSE f.c_pays_fao::text
+	END::text AS country
 	,extract(year from act.d_dbq)::integer AS year
 	,act.c_bat::integer AS vessel_id
 	,CASE

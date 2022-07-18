@@ -3,7 +3,7 @@
 #' @description Process for generation and optionally extraction of the FDI table D (NAO OFR discards length).
 #' @param observe_discard_path {\link[base]{character}} expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
 #' @param tablea_catch_summary {\link[base]{list}} expected. Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
-#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param template_checking {\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.
 #' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a list with the FDI table D inside.
@@ -12,7 +12,7 @@
 #' @importFrom dplyr mutate rowwise case_when select inner_join
 fdi_tabled_discard_length <- function(observe_discard_path,
                                       tablea_catch_summary,
-                                      template_checking = TRUE,
+                                      template_checking = FALSE,
                                       template_year = NULL,
                                       table_export_path = NULL) {
   cat(format(x = Sys.time(),
@@ -88,7 +88,11 @@ fdi_tabled_discard_length <- function(observe_discard_path,
                             })
   observe_discard <- do.call("rbind",
                              observe_discard) %>%
-    dplyr::mutate(nep_sub_region = "NA") %>%
+    dplyr::mutate(nep_sub_region = "NA",
+                  country = dplyr::case_when(
+                    country == "MYT" ~ "FRA",
+                    TRUE ~ country
+                  )) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
       mean_weight_at_length = dplyr::case_when(

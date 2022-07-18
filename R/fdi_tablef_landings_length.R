@@ -9,9 +9,9 @@
 #' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
 #' @param tablea_bycatch_retained Output "bycatch_retained" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
 #' @param tablea_catch_summary Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
-#' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .RData.
-#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .RData.
-#' @param template_checking {\link[base]{logical}} expected. By default TRUE. Checking FDI table generated regarding the official FDI template.
+#' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .Rdata.
+#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.
+#' @param template_checking {\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.
 #' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a list with the FDI table F inside.
@@ -31,7 +31,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                        tablea_catch_summary,
                                        cwp_grid_file_path,
                                        fao_area_file_path,
-                                       template_checking = TRUE,
+                                       template_checking = FALSE,
                                        template_year = NULL,
                                        table_export_path = NULL) {
   cat(format(x = Sys.time(),
@@ -121,17 +121,17 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                    output = "message"))
   }
   if (codama::file_path_checking(file_path =  cwp_grid_file_path,
-                                 extension = "RData",
+                                 extension = "Rdata",
                                  output = "logical") != TRUE) {
     return(codama::file_path_checking(file_path =  cwp_grid_file_path,
-                                      extension = "RData",
+                                      extension = "Rdata",
                                       output = "message"))
   }
   if (codama::file_path_checking(file_path =  fao_area_file_path,
-                                 extension = "RData",
+                                 extension = "Rdata",
                                  output = "logical") != TRUE) {
     return(codama::file_path_checking(file_path =  fao_area_file_path,
-                                      extension = "RData",
+                                      extension = "Rdata",
                                       output = "message"))
   }
   if (codama::r_type_checking(r_object = template_checking,
@@ -359,15 +359,16 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                                                   collapse = ", ")))
   sardara_cas <- DBI::dbGetQuery(conn = sardara_con,
                                  statement = sardara_cas_query) %>%
-    dplyr::mutate(cwp = paste0("6",
-                               cwp),
-                  vessel_length = dplyr::case_when(gear == 1 ~ "VL2440",
-                                                   gear == 2 ~ "VL40XX",
-                                                   TRUE ~ "error"),
-                  metier = dplyr::case_when(gear == 1 ~ "LHP_LPF_0_0_0",
-                                            gear == 2 ~ "PS_LPF_0_0_0",
-                                            gear == 3 ~ "LLD_LPF_0_0_0",
-                                            TRUE ~ "error"))
+    dplyr::mutate(
+      cwp = paste0("6",
+                   cwp),
+      vessel_length = dplyr::case_when(gear == 1 ~ "VL2440",
+                                       gear == 2 ~ "VL40XX",
+                                       TRUE ~ "error"),
+      metier = dplyr::case_when(gear == 1 ~ "LHP_LPF_0_0_0",
+                                gear == 2 ~ "PS_LPF_0_0_0",
+                                gear == 3 ~ "LLD_LPF_0_0_0",
+                                TRUE ~ "error"))
   sardara_cas <- dplyr::bind_cols(sardara_cas,
                                   (furdeb::lat_lon_cwp_manipulation(manipulation_process = "cwp_to_lat_lon",
                                                                     data_cwp = sardara_cas$cwp,
