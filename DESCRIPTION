@@ -1,7 +1,7 @@
 Package: acdc
 Type: Package
 Title: Automatic Compliance for Data Calls
-Version: 0.0.9
+Version: 1.0.0
 Authors@R: 
     c(person(given = "Mathieu",
              family = "Depetris",
