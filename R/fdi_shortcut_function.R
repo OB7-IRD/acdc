@@ -9,10 +9,6 @@
 #' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
 #' @param observe_bycatch_path {\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
 #' @param observe_discard_path {\link[base]{character}} expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
-#' @param tablea_catch_summary {\link[base]{list}} expected. Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
-#' @param tablea_bycatch_retained Output "bycatch_retained" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
-#' @param tablea_landing_rectangle Output "landing_rectangle" of the function {\link[acdc]{fdi_tablea_catch_summary}}.
-#' @param tableg_effort_rectangle Output "effort_rectangle" of the function {\link[acdc]{fdi_tableg_effort}}.
 #' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.
 #' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata.
 #' @param cwp_grid_1deg_1deg {\link[base]{character}} expected. File path of the CWP area grid of 1° by 1°. The file format has to be .Rdata.
@@ -30,10 +26,6 @@ fdi_shortcut_function <- function(balbaya_con,
                                   flag,
                                   observe_bycatch_path,
                                   observe_discard_path,
-                                  tablea_catch_summary,
-                                  tablea_bycatch_retained,
-                                  tablea_landing_rectangle,
-                                  tableg_effort_rectangle,
                                   fao_area_file_path,
                                   eez_area_file_path,
                                   cwp_grid_1deg_1deg,

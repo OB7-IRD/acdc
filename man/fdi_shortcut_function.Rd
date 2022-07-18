@@ -13,10 +13,6 @@ fdi_shortcut_function(
   flag,
   observe_bycatch_path,
   observe_discard_path,
-  tablea_catch_summary,
-  tablea_bycatch_retained,
-  tablea_landing_rectangle,
-  tableg_effort_rectangle,
   fao_area_file_path,
   eez_area_file_path,
   cwp_grid_1deg_1deg,
@@ -42,14 +38,6 @@ fdi_shortcut_function(
 \item{observe_bycatch_path}{{\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
 
 \item{observe_discard_path}{{\link[base]{character}} expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
-
-\item{tablea_catch_summary}{{\link[base]{list}} expected. Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
-
-\item{tablea_bycatch_retained}{Output "bycatch_retained" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
-
-\item{tablea_landing_rectangle}{Output "landing_rectangle" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
-
-\item{tableg_effort_rectangle}{Output "effort_rectangle" of the function {\link[acdc]{fdi_tableg_effort}}.}
 
 \item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.}
 
