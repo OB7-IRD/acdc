@@ -157,9 +157,30 @@ rwp_table_2_1 <- function(reference_period_start,
   reference_period <- c(reference_period_start:reference_period_end)
   # data imports ----
   if (eurostat == TRUE) {
-    eurostat <- global_load_eurostat_data(path = file.path(path_input,
-                                                           "eurostat"))
+    eurostat_data <- global_load_eurostat_data(path = file.path(path_input,
+                                                                "eurostat"))
   }
-
-
+  if (rcg_stats == TRUE) {
+    stop(format(x = Sys.time(),
+                format = "%Y-%m-%d %H:%M:%S"),
+         " - Error, process associated to \"rcg_stats\" argument not developed yet.\n")
+  }
+  if (national_stats == TRUE) {
+    stop(format(x = Sys.time(),
+                format = "%Y-%m-%d %H:%M:%S"),
+         " - Error, process associated to \"national_stats\" argument not developed yet.\n")
+  }
+  if (fides == TRUE) {
+    fides_data <- global_load_fides_data(fides_format = TRUE,
+                                         reference_period = reference_period,
+                                         path = file.path(path_input,
+                                                          "fides"),
+                                         country = country)
+  }
+  if (fides_common == TRUE) {
+    stop(format(x = Sys.time(),
+                format = "%Y-%m-%d %H:%M:%S"),
+         " - Error, process associated to \"fides_common\" argument not developed yet.\n")
+  }
 }
+

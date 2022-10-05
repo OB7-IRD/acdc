@@ -58,9 +58,9 @@ global_load_eurostat_data <- function(path) {
         sep = "")
     return(eurostat_files_final)
   } else {
-    return(cat(format(x = Sys.time(),
-                      format = "%Y-%m-%d %H:%M:%S"),
-               " - Error, no eurostat file found for the path selected.\n",
-               sep = ""))
+    stop(format(x = Sys.time(),
+                format = "%Y-%m-%d %H:%M:%S"),
+         " - Error, no eurostat file found for the path selected.\n",
+         sep = "")
   }
 }
