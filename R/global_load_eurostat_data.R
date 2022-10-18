@@ -46,7 +46,10 @@ global_load_eurostat_data <- function(path) {
                                                                                           pattern = "[:digit:]{4}"))
                                      for (column_name in stringr::str_extract(string = names(x = eurostat_file_ori)[-1],
                                                                               pattern = "[:digit:]{4}")) {
-                                       eurostat_file_final[, column_name] <- suppressWarnings(expr = as.numeric(x = eurostat_file_final[, column_name]))
+                                       eurostat_file_final[, column_name] <- as.numeric(x = stringr::str_replace_all(eurostat_file_final[, column_name],
+                                                                                                                     c("^[:blank:]*[[:digit:]+[:punct:][:digit:]+][:blank:]*[:alpha:]*$" = NA_character_,
+                                                                                                                       "(^[:digit:]+[:punct:]*[:digit:]*)[:blank:]*[:alpha:]+$" = "\\1",
+                                                                                                                       "[:blank:]+$" = "")))
                                      }
                                      eurostat_file_final
                                    })

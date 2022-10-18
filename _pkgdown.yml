@@ -27,6 +27,13 @@ reference:
     Processes and functions related to the International Commission for the Conservation of Atlantic Tunas annual data call.
 - contents:
   - iccat_st01_t1fc
+- title: "RWP processes and functions"
+  desc: >
+    Processes and functions associated to the creation of Regional Work Plan (RWP).
+- contents:
+  - rwp_table_2_1
+  - global_load_eurostat_data
+  - global_load_fides_data
 
 articles:
 - title: data calls processes description

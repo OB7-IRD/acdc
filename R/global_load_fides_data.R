@@ -1,7 +1,7 @@
 #' @name global_load_fides_data
 #' @title Load FIDES data
 #' @description Process for Load FIDES data from "official" FIDES files or a public alternative available on https://griffincarpenter.org/reports/european-fishing-quotas-2001-2021/.
-#' @param fides_format {\link[base]{logical}} expected. Specify her if you want to load data from "official" FIDES files.
+#' @param fides_format {\link[base]{character}} expected. Source of FIDES data. You can choose between "unique" for national extraction from FIDES data (one file per country and years), "common" for global FIDES data for all EU countries or "public" to use a public source (see link in the function description).
 #' @param reference_period {\link[base]{integer}} expected. Period of reference, in years.
 #' @param path {\link[base]{character}} expected. Input path directory where FIDES files are located.
 #' @param country {\link[base]{character}} expected. Country(ies) id(s) for data extraction associated. Use 3-alpha country.
@@ -12,7 +12,7 @@
 #' @importFrom readxl read_excel
 #' @importFrom stringr str_extract str_replace
 #' @importFrom utils read.csv
-global_load_fides_data <- function(fides_format = TRUE,
+global_load_fides_data <- function(fides_format = "common",
                                    reference_period,
                                    path = NULL,
                                    country = NULL) {
@@ -28,14 +28,21 @@ global_load_fides_data <- function(fides_format = TRUE,
   stock_group <- NULL
   level_description <- NULL
   adapted_quota_ori <- NULL
-    # global arguments verifications ----
+  level_code <- NULL
+  # global arguments verifications ----
   if (codama::r_type_checking(r_object = fides_format,
-                              type = "logical",
+                              type = "character",
                               length = as.integer(x = 1),
+                              allowed_values = c("unique",
+                                                 "common",
+                                                 "public"),
                               output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = fides_format,
-                                   type = "logical",
+                                   type = "character",
                                    length = as.integer(x = 1),
+                                   allowed_values = c("unique",
+                                                      "common",
+                                                      "public"),
                                    output = "message"))
   }
   if (codama::r_type_checking(r_object = reference_period,
@@ -53,7 +60,7 @@ global_load_fides_data <- function(fides_format = TRUE,
                                    output = "message"))
   }
   # process ----
-  if (fides_format == TRUE) {
+  if ((fides_format == "unique")) {
     # specific arguments verifications
     if (codama::r_type_checking(r_object = path,
                                 type = "character",
@@ -64,7 +71,7 @@ global_load_fides_data <- function(fides_format = TRUE,
                                      length = as.integer(x = 1),
                                      output = "message"))
     }
-    # first process
+    # process
     countries <- c(country,
                    "EU")
     fides_files <- unlist(x = lapply(X = countries,
@@ -93,7 +100,28 @@ global_load_fides_data <- function(fides_format = TRUE,
                                               sep = "")
                                         }
                                       }))
-  } else {
+  } else if (fides_format == "common") {
+    # specific arguments verifications
+    if (codama::r_type_checking(r_object = path,
+                                type = "character",
+                                length = as.integer(x = 1),
+                                output = "logical") != TRUE) {
+      return(codama::r_type_checking(r_object = path,
+                                     type = "character",
+                                     length = as.integer(x = 1),
+                                     output = "message"))
+    }
+    # process
+    countries <- c(country,
+                   "XEU")
+    fides_file <- read.table(file = file.path(path,
+                                              "export_quota_20220204tl.csv"),
+                             dec = ".",
+                             sep = ";",
+                             header = TRUE)
+    tac_final <- dplyr::filter(.data = fides_file,
+                               level_code %in% !!countries)
+  } else if (fides_format == "public") {
     # second process
     geo <- read.table(file = system.file("referentials",
                                          "geo.def",
@@ -149,6 +177,11 @@ global_load_fides_data <- function(fides_format = TRUE,
       dplyr::select(-country,
                     -geo,
                     -adapted_quota_ori)
+  } else {
+    stop(format(x = Sys.time(),
+                format = "%Y-%m-%d %H:%M:%S"),
+         " - Error, invalid \"fides_format\" argument.\n",
+         sep = "")
   }
   if (nrow(x = tac_final) == 0) {
     stop(format(x = Sys.time(),

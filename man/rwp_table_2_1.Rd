@@ -12,7 +12,6 @@ rwp_table_2_1(
   rcg_stats,
   national_stats,
   fides,
-  fides_common,
   rfmo,
   output_suffix = NULL,
   path_input,
@@ -33,9 +32,7 @@ rwp_table_2_1(
 
 \item{national_stats}{{\link[base]{logical}} expected. National landing statistics.}
 
-\item{fides}{{\link[base]{logical}} expected. Use national extraction from FIDES including a country and EEC.}
-
-\item{fides_common}{{\link[base]{logical}} expected. FIDEScommon is a Regional Coordination Group (RCG) extraction from FIDES and including all EU countries}
+\item{fides}{{\link[base]{character}} expected. {\link[base]{character}} expected. Source of FIDES data. You can choose between "unique" for national extraction from FIDES data (one file per country and years), "common" for global FIDES data for all EU countries or "public" to use a public source (https://griffincarpenter.org/reports/european-fishing-quotas-2001-2021/).}
 
 \item{rfmo}{{\link[base]{character}} expected. RFMO's list to include in output.}
 

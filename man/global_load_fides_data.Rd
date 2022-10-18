@@ -5,14 +5,14 @@
 \title{Load FIDES data}
 \usage{
 global_load_fides_data(
-  fides_format = TRUE,
+  fides_format = "common",
   reference_period,
   path = NULL,
   country = NULL
 )
 }
 \arguments{
-\item{fides_format}{{\link[base]{logical}} expected. Specify her if you want to load data from "official" FIDES files.}
+\item{fides_format}{{\link[base]{character}} expected. Source of FIDES data. You can choose between "unique" for national extraction from FIDES data (one file per country and years), "common" for global FIDES data for all EU countries or "public" to use a public source (see link in the function description).}
 
 \item{reference_period}{{\link[base]{integer}} expected. Period of reference, in years.}
 
