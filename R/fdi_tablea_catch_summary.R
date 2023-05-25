@@ -166,7 +166,7 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                                              "fdi",
                                                              "balbaya_landing_fdi.sql",
                                                              package = "acdc")),
-                                 collapse = '\n')
+                                 collapse = "\n")
   balbaya_landing_query <- DBI::sqlInterpolate(conn = balbaya_con,
                                                sql = balbaya_landing_query,
                                                period = DBI::SQL(paste0(period,

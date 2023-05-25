@@ -531,7 +531,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                     YEAR,
                                     DOMAIN_LANDINGS)) %>%
     dplyr::select(id_verif)
-  cons_tablea = cons_tablea$id_verif
+  cons_tablea <- cons_tablea$id_verif
   tablef_final <- tablef_final[! tablef_final$ID_VERIF %in% cons_tablea, -ncol(x = tablef_final)]
   cat(format(x = Sys.time(),
              format = "%Y-%m-%d %H:%M:%S"),

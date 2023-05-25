@@ -139,7 +139,7 @@ fdi_tableg_effort <- function(balbaya_con,
                                                             "fdi",
                                                             "balbaya_effort_fdi.sql",
                                                             package = "acdc")),
-                                collapse = '\n')
+                                collapse = "\n")
   balbaya_effort_query <- DBI::sqlInterpolate(conn = balbaya_con,
                                               sql = balbaya_effort_query,
                                               period = DBI::SQL(paste0(period,
