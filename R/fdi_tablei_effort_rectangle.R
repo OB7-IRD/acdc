@@ -42,6 +42,7 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
   rectangle_lon <- NULL
   totfishdays <- NULL
   # arguments verifications ----
+  browser()
   if (codama::r_type_checking(r_object = template_checking,
                               type = "logical",
                               output = "logical") != TRUE) {

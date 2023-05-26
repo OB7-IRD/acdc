@@ -5,7 +5,7 @@
 #' @param template_year {\link[base]{integer}} expected. Template year.
 #' @param table_id {\link[base]{character}} expected. Identification of the FDI table.
 #' @export
-#' @importFrom codama r_type_checking vectors_comparisons
+#' @importFrom codama r_type_checking vector_comparison
 #' @importFrom readxl read_xlsx
 fdi_template_checking <- function(fdi_table,
                                   template_year,
@@ -20,11 +20,43 @@ fdi_template_checking <- function(fdi_table,
                                    length = 1L,
                                    output = "message"))
   }
-  fdi_table_id_checking(table_id = table_id)
+  if (codama::r_type_checking(r_object = table_id,
+                              type = "character",
+                              length = 1L,
+                              allowed_value = c("a",
+                                                "b",
+                                                "c",
+                                                "d",
+                                                "e",
+                                                "f",
+                                                "g",
+                                                "h",
+                                                "i",
+                                                "j",
+                                                "k"),
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = table_id,
+                                   type = "character",
+                                   length = 1L,
+                                   allowed_value = c("a",
+                                                     "b",
+                                                     "c",
+                                                     "d",
+                                                     "e",
+                                                     "f",
+                                                     "g",
+                                                     "h",
+                                                     "i",
+                                                     "j",
+                                                     "k"),
+                                   output = "message"))
+  }
   # process ----
   cat(format(x = Sys.time(),
              format = "%Y-%m-%d %H:%M:%S"),
-      " - Start table A template checking.\n",
+      " - Start table ",
+      toupper(x = table_id),
+      " template checking.\n",
       sep = "")
   template_name <- fdi_template_identification(table_id = table_id)
   if (system.file("referentials",
@@ -49,10 +81,10 @@ fdi_template_checking <- function(fdi_table,
                                                 sheet = paste0("TABLE_",
                                                                toupper(x = table_id)),
                                                 col_names = TRUE)
-    if (codama::vectors_comparisons(first_vector = names(x = fdi_table),
-                                    second_vector = names(x = current_template_table),
-                                    comparison_type = "equality",
-                                    output = "logical") != TRUE) {
+    if (codama::vector_comparison(first_vector = names(x = fdi_table),
+                                  second_vector = names(x = current_template_table),
+                                  comparison_type = "equal",
+                                  output = "logical") != TRUE) {
       cat(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
           " - Warning: FDI table is not in line with ",

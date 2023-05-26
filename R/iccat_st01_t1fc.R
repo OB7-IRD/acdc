@@ -4,7 +4,7 @@
 #' @param data_input_type Object of class \code{\link[base]{character}} expected. Type of input for data extraction. You can choose between "csv_form" or "database".
 #' @param form_path Object of class \code{\link[base]{character}} expected. By default NULL. Form file path location. File extension expected is .csv with field separator character as ";" and decimal point  as ".".
 #' @export
-#' @importFrom codama r_type_checking file_path_checking vectors_comparisons
+#' @importFrom codama r_type_checking file_path_checking vector_comparison
 #' @importFrom dplyr mutate
 #' @importFrom utils read.table
 iccat_st01_t1fc <- function(data_input_type,
@@ -65,10 +65,10 @@ iccat_st01_t1fc <- function(data_input_type,
   iccat_st01_t1fc_variables <- read.csv2(file = system.file("referentials",
                                                             "iccat_st01_t1fc_variables.csv",
                                                             package = "acdc"))
-  if (codama::vectors_comparisons(first_vector = iccat_st01_t1fc_variables$iccat_st01_t1fc_argument,
-                                  second_vector = names(iccat_st01_t1fc),
-                                  comparison_type = "equality",
-                                  output = "logical") != TRUE) {
+  if (codama::vector_comparisons(first_vector = iccat_st01_t1fc_variables$iccat_st01_t1fc_argument,
+                                 second_vector = names(iccat_st01_t1fc),
+                                 comparison_type = "equality",
+                                 output = "logical") != TRUE) {
     cat(paste0(format(x = Sys.time(),
                       "%Y-%m-%d %H:%M:%S"),
                " - Failure,",

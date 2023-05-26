@@ -49,6 +49,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
   totvallandg <- NULL
   confidential <- NULL
   # arguments verifications ----
+  browser()
   if (codama::r_type_checking(r_object = template_checking,
                               type = "logical",
                               output = "logical") != TRUE) {

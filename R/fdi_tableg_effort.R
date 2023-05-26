@@ -63,6 +63,7 @@ fdi_tableg_effort <- function(balbaya_con,
   metier <- NULL
   supra_region <- NULL
   # arguments verifications ----
+  browser()
   if (codama::r_type_checking(r_object = balbaya_con,
                               type = "PostgreSQLConnection",
                               length = 1L,

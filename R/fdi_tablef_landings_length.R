@@ -169,6 +169,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
                     sub_region,
                     nep_sub_region,
                     metier,
+                    metier_7,
                     school_type,
                     vessel_length,
                     species) %>%
@@ -271,21 +272,22 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                        nep_sub_region = dplyr::case_when(
                                          major_fao == 27 ~ "error_need_nep_sub_region",
                                          TRUE ~ "NA"),
-                                       metier = paste(dplyr::case_when(engin == 1 ~ "PS",
-                                                                       engin == 2 ~ "LHP",
-                                                                       engin == 3 ~ "LLD",
+                                       metier = paste(dplyr::case_when(engin == 1 ~ "PS_LPF_>0",
+                                                                       engin == 2 ~ "LHP_LPF_0",
                                                                        TRUE ~ "error"),
-                                                      "LPF",
                                                       "0",
                                                       "0",
-                                                      "0",
-                                                      sep = "_")) %>%
+                                                      sep = "_"),
+                                       metier_7 = paste(metier,
+                                                        "TRO",
+                                                        sep = "_")) %>%
     dplyr::group_by(country,
                     year,
                     quarter,
                     sub_region,
                     nep_sub_region,
                     metier,
+                    metier_7,
                     fishing_mode,
                     vessel_length,
                     species) %>%
@@ -299,6 +301,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
                             "sub_region",
                             "nep_sub_region",
                             "metier",
+                            "metier_7",
                             "fishing_mode",
                             "vessel_length",
                             "species")) %>%
@@ -332,6 +335,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
                   -sub_region,
                   -nep_sub_region,
                   -metier,
+                  -metier_7,
                   -fishing_mode,
                   -vessel_length,
                   -retained_tons)
@@ -433,6 +437,10 @@ fdi_tablef_landings_length <- function(balbaya_con,
                              collapse = '\n')
   t3_lwr_coef <- DBI::dbGetQuery(conn = t3_con,
                                  statement = t3_lwr_coef_query)
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Be patient, the function still working.\n",
+      sep = "")
   sardara_cas <- sardara_cas %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
