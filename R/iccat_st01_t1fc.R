@@ -65,18 +65,18 @@ iccat_st01_t1fc <- function(data_input_type,
   iccat_st01_t1fc_variables <- read.csv2(file = system.file("referentials",
                                                             "iccat_st01_t1fc_variables.csv",
                                                             package = "acdc"))
-  if (codama::vector_comparisons(first_vector = iccat_st01_t1fc_variables$iccat_st01_t1fc_argument,
-                                 second_vector = names(iccat_st01_t1fc),
-                                 comparison_type = "equality",
-                                 output = "logical") != TRUE) {
+  if (codama::vector_comparison(first_vector = iccat_st01_t1fc_variables$iccat_st01_t1fc_argument,
+                                second_vector = names(iccat_st01_t1fc),
+                                comparison_type = "equality",
+                                output = "logical") != TRUE) {
     cat(paste0(format(x = Sys.time(),
                       "%Y-%m-%d %H:%M:%S"),
                " - Failure,",
                " problem in the global structure regarding variables names.\n"))
-    return(codama::vectors_comparisons(first_vector = iccat_st01_t1fc_variables$iccat_st01_t1fc_argument,
-                                       second_vector = names(iccat_st01_t1fc),
-                                       comparison_type = "equality",
-                                       output = "report"))
+    return(codama::vector_comparison(first_vector = iccat_st01_t1fc_variables$iccat_st01_t1fc_argument,
+                                     second_vector = names(iccat_st01_t1fc),
+                                     comparison_type = "equality",
+                                     output = "report"))
   }
   # typing
   iccat_st01_t1fc <- dplyr::mutate(.data = iccat_st01_t1fc,

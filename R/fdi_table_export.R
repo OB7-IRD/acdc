@@ -20,7 +20,37 @@ fdi_table_export <- function(fdi_table,
                                    length = 1L,
                                    output = "message"))
   }
-  fdi_table_id_checking(table_id = table_id)
+  if (codama::r_type_checking(r_object = table_id,
+                              type = "character",
+                              length = 1L,
+                              allowed_value = c("a",
+                                                "b",
+                                                "c",
+                                                "d",
+                                                "e",
+                                                "f",
+                                                "g",
+                                                "h",
+                                                "i",
+                                                "j",
+                                                "k"),
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = table_id,
+                                   type = "character",
+                                   length = 1L,
+                                   allowed_value = c("a",
+                                                     "b",
+                                                     "c",
+                                                     "d",
+                                                     "e",
+                                                     "f",
+                                                     "g",
+                                                     "h",
+                                                     "i",
+                                                     "j",
+                                                     "k"),
+                                   output = "message"))
+  }
   # process ----
   cat(format(x = Sys.time(),
              format = "%Y-%m-%d %H:%M:%S"),

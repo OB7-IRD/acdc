@@ -30,6 +30,7 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
   target_assemblage <- NULL
   mesh_size_range <- NULL
   metier <- NULL
+  metier_7 <- NULL
   supra_region <- NULL
   geo_indicator <- NULL
   specon_tech <- NULL
@@ -38,11 +39,10 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
   eez_indicator <- NULL
   c_square <- NULL
   rectangle_type <- NULL
-  rectangle_lat <- NULL
-  rectangle_lon <- NULL
+  latitude <- NULL
+  longitude <- NULL
   totfishdays <- NULL
   # arguments verifications ----
-  browser()
   if (codama::r_type_checking(r_object = template_checking,
                               type = "logical",
                               output = "logical") != TRUE) {
@@ -76,11 +76,9 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                                                           latitude_name = "latitude",
                                                           longitude_name = "longitude") %>%
     dplyr::mutate(rectangle_type = "NA",
-                  rectangle_lat = "NA",
-                  rectangle_lon = "NA") %>%
+                  latitude = "NA",
+                  longitude = "NA") %>%
     dplyr::rename(c_square = grid_square_0.5) %>%
-    dplyr::select(-latitude,
-                  -longitude) %>%
     dplyr::group_by(country,
                     year,
                     quarter,
@@ -90,6 +88,7 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                     target_assemblage,
                     mesh_size_range,
                     metier,
+                    metier_7,
                     supra_region,
                     geo_indicator,
                     specon_tech,
@@ -98,8 +97,8 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                     eez_indicator,
                     c_square,
                     rectangle_type,
-                    rectangle_lat,
-                    rectangle_lon) %>%
+                    latitude,
+                    longitude) %>%
     dplyr::summarise(totfishdays = sum(totfishdays),
                      .groups = "drop") %>%
     dplyr::select(country,
@@ -111,6 +110,7 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                   target_assemblage,
                   mesh_size_range,
                   metier,
+                  metier_7,
                   supra_region,
                   sub_region,
                   eez_indicator,
@@ -118,8 +118,8 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                   specon_tech,
                   deep,
                   rectangle_type,
-                  rectangle_lat,
-                  rectangle_lon,
+                  latitude,
+                  longitude,
                   c_square,
                   totfishdays) %>%
     dplyr::mutate(

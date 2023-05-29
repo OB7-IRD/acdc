@@ -46,6 +46,7 @@ fdi_tablea_catch_summary <- function(balbaya_con,
   fishing_tech <- NULL
   mesh_size_range <- NULL
   metier <- NULL
+  metier_7 <- NULL
   fishing_mode <- NULL
   domain_landings <- NULL
   latitude <- NULL

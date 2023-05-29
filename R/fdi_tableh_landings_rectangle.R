@@ -30,6 +30,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
   target_assemblage <- NULL
   mesh_size_range <- NULL
   metier <- NULL
+  metier_7 <- NULL
   supra_region <- NULL
   geo_indicator <- NULL
   specon_tech <- NULL
@@ -41,15 +42,12 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
   grid_square_0.5 <- NULL
   c_square <- NULL
   rectangle_type <- NULL
-  rectangle_lat <- NULL
-  rectangle_lon <- NULL
   latitude <- NULL
   longitude <- NULL
   totwghtlandg <- NULL
   totvallandg <- NULL
   confidential <- NULL
   # arguments verifications ----
-  browser()
   if (codama::r_type_checking(r_object = template_checking,
                               type = "logical",
                               output = "logical") != TRUE) {
@@ -91,6 +89,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                   target_assemblage,
                   mesh_size_range,
                   metier,
+                  metier_7,
                   supra_region,
                   geo_indicator,
                   specon_tech,
@@ -102,8 +101,8 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                   grid_square_0.5) %>%
     dplyr::rename(c_square = grid_square_0.5) %>%
     dplyr::mutate(rectangle_type = "NA",
-                  rectangle_lat = "NA",
-                  rectangle_lon = "NA") %>%
+                  latitude = "NA",
+                  longitude = "NA") %>%
     dplyr::group_by(country,
                     year,
                     quarter,
@@ -113,6 +112,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                     target_assemblage,
                     mesh_size_range,
                     metier,
+                    metier_7,
                     supra_region,
                     geo_indicator,
                     specon_tech,
@@ -122,8 +122,8 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                     eez_indicator,
                     c_square,
                     rectangle_type,
-                    rectangle_lat,
-                    rectangle_lon) %>%
+                    latitude,
+                    longitude) %>%
     dplyr::summarise(retained_tons = sum(retained_tons),
                      .groups = "drop")
   balbaya_landing_rectangle <- furdeb::lat_long_to_csquare(data = tablea_landing_rectangle,
@@ -131,11 +131,9 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                                                            latitude_name = "latitude",
                                                            longitude_name = "longitude") %>%
     dplyr::mutate(rectangle_type = "NA",
-                  rectangle_lat = "NA",
-                  rectangle_lon = "NA") %>%
+                  latitude = "NA",
+                  longitude = "NA") %>%
     dplyr::rename(c_square = grid_square_0.5) %>%
-    dplyr::select(-latitude,
-                  -longitude) %>%
     dplyr::group_by(country,
                     year,
                     quarter,
@@ -145,6 +143,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                     target_assemblage,
                     mesh_size_range,
                     metier,
+                    metier_7,
                     supra_region,
                     geo_indicator,
                     specon_tech,
@@ -154,8 +153,8 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                     eez_indicator,
                     c_square,
                     rectangle_type,
-                    rectangle_lat,
-                    rectangle_lon) %>%
+                    latitude,
+                    longitude) %>%
     dplyr::summarise(totwghtlandg = sum(totwghtlandg),
                      .groups = "drop")
   tableh_final <- balbaya_landing_rectangle %>%
@@ -169,6 +168,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                             "target_assemblage",
                             "mesh_size_range",
                             "metier",
+                            "metier_7",
                             "supra_region",
                             "geo_indicator",
                             "specon_tech",
@@ -178,8 +178,8 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                             "eez_indicator",
                             "c_square",
                             "rectangle_type",
-                            "rectangle_lat",
-                            "rectangle_lon")) %>%
+                            "latitude",
+                            "longitude")) %>%
     dplyr::mutate(
       totwghtlandg = dplyr::case_when(
         is.na(x = totwghtlandg) ~ 0,
@@ -202,6 +202,7 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                   target_assemblage,
                   mesh_size_range,
                   metier,
+                  metier_7,
                   supra_region,
                   sub_region,
                   eez_indicator,
@@ -209,8 +210,8 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                   specon_tech,
                   deep,
                   rectangle_type,
-                  rectangle_lat,
-                  rectangle_lon,
+                  latitude,
+                  longitude,
                   c_square,
                   species,
                   totwghtlandg,

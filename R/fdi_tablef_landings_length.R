@@ -58,6 +58,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
   metier_1 <- NULL
   metier_2 <- NULL
   metier_3 <- NULL
+  metier_7 <- NULL
   domain_landings <- NULL
   mean_weight_at_length <- NULL
   weight_unit <- NULL
@@ -432,7 +433,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
                                  TRUE ~ "NA"))
   t3_lwr_coef_query <- paste(readLines(con = system.file("sql",
                                                          "fdi",
-                                                         "balbaya_lwr_fdi.sql",
+                                                         "t3_lwr_fdi.sql",
                                                          package = "acdc")),
                              collapse = '\n')
   t3_lwr_coef <- DBI::dbGetQuery(conn = t3_con,

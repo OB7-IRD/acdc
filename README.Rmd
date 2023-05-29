@@ -56,7 +56,6 @@ Working in progress for this section. Be patient.
 
 ```{r, message = FALSE}
 library(acdc)
-# Next steps example will be added later
 ```
 
 ## Getting help
