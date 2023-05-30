@@ -64,6 +64,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,18 +91,21 @@
 
       
 
-      </header><script src="fisheries_dependent_information_data_call_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Fisheries Dependent Information Data Call</h1>
-                        <h4 data-toc-skip class="author">Mathieu Depetris<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
+                        <h4 data-toc-skip class="author">Mathieu
+Depetris<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
 </h4>
-                        <h4 data-toc-skip class="author">Laurent Floc’h<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>
+                        <h4 data-toc-skip class="author">Laurent
+Floc’h<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>
 </h4>
-                        <h4 data-toc-skip class="author">Philippe Sabarros<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
+                        <h4 data-toc-skip class="author">Philippe
+Sabarros<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
 </h4>
             
-            <h4 data-toc-skip class="date">18/07/2022</h4>
+            <h4 data-toc-skip class="date">xx/xx/2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/OB7-IRD/acdc/blob/HEAD/vignettes/fisheries_dependent_information_data_call.Rmd" class="external-link"><code>vignettes/fisheries_dependent_information_data_call.Rmd</code></a></small>
       <div class="hidden name"><code>fisheries_dependent_information_data_call.Rmd</code></div>
@@ -109,24 +115,100 @@
     
     
 <div style="text-align: justify">
-<h2 id="fisheries-dependent-information-data-call">Fisheries Dependent Information Data Call</h2>
-<p>The Scientific Fisheries Dependent Information (FDI) database was developed to support the management of fishing effort management regimes. With a transition to area-based multi-annual plans there was an opportunity to both rationalise the data base and move to the collection of an EU wide data set of fishing capacity, effort, landings, and discards. In 2018 the Commission requested the STECF to collect and review data in relation to a newly specified Fisheries Dependent Information Database. Expert working groups (STECF EWG-18-11, STECF 19-11, STECF 20-10) reviewed both the data supplied and the appropriateness of the data call with respect to:</p>
+<div class="section level2">
+<h2 id="fisheries-dependent-information-data-call">Fisheries Dependent Information Data Call<a class="anchor" aria-label="anchor" href="#fisheries-dependent-information-data-call"></a>
+</h2>
+<p>The Scientific Fisheries Dependent Information (FDI) database was
+developed to support the management of fishing effort management
+regimes. With a transition to area-based multi-annual plans there was an
+opportunity to both rationalise the data base and move to the collection
+of an EU wide data set of fishing capacity, effort, landings, and
+discards. In 2018 the Commission requested the STECF to collect and
+review data in relation to a newly specified Fisheries Dependent
+Information Database. Expert working groups (STECF EWG-18-11, STECF
+19-11, STECF 20-10) reviewed both the data supplied and the
+appropriateness of the data call with respect to:</p>
 <ul>
-<li>Completeness of data in terms of areas of fishing, types of fleet segment and gear operated and species identified;</li>
+<li>Completeness of data in terms of areas of fishing, types of fleet
+segment and gear operated and species identified;</li>
 <li>Completeness of data in terms of type of data requested;</li>
-<li>The level of compatibility between the effort data in the FDI database and that submitted to the Mediterranean and Black Sea data call;</li>
-<li>The level of compatibility between the landings data in the FDI database and that submitted to the Mediterranean and Black Sea data call for those species listed.</li>
+<li>The level of compatibility between the effort data in the FDI
+database and that submitted to the Mediterranean and Black Sea data
+call;</li>
+<li>The level of compatibility between the landings data in the FDI
+database and that submitted to the Mediterranean and Black Sea data call
+for those species listed.</li>
 </ul>
 <p>More information is available on the offical data call webpage: <a href="https://datacollection.jrc.ec.europa.eu/dc/fdi" class="external-link uri">https://datacollection.jrc.ec.europa.eu/dc/fdi</a></p>
-<h2 id="version">2022 version</h2>
+</div>
+<div class="section level2">
+<h2 id="version">2023 version<a class="anchor" aria-label="anchor" href="#version"></a>
+</h2>
+<p>Github tag for scripts apply in 2023: to do</p>
+<p>Github tag for 2023 documentation associated: to do</p>
+<p>To compile it on your computer use the following code:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"OB7-IRD/acdc@vx.x.x"</span>,</span>
+<span>                         INSTALL_opts<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"--no-multiarch"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Specific configuration and parameters is available below:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># setup</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OB7-IRD/acdc" class="external-link">acdc</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OB7-IRD/furdeb" class="external-link">furdeb</a></span><span class="op">)</span></span>
+<span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/furdeb/man/configuration_file.html" class="external-link">configuration_file</a></span><span class="op">(</span>path_file <span class="op">=</span> <span class="st">"D:/projets_themes/data_calls/fdi/2023/data/fdi_2023_configuration_file.yml"</span>,</span>
+<span>                             silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># not apply scientific format for number (may cause problems for cwp maniuplation)</span></span>
+<span><span class="va">scipen_defaut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"scipen"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"scipen"</span> <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="co"># parameters definition ----</span></span>
+<span><span class="va">period</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2013</span><span class="op">:</span><span class="fl">2022</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># 1 = PS, 2 = BB and 3 = LL</span></span>
+<span><span class="va">gear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># for the French fleet, 1 = France &amp; 41 = Mayotte</span></span>
+<span><span class="va">flag</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">41</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># checking</span></span>
+<span><span class="va">template_checking</span> <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="va">template_year</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span></span>
+<span><span class="co"># shapes</span></span>
+<span><span class="va">fao_area_file_path</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/FAO_AREAS_CWP_NOCOASTLINE/FAO_AREAS_CWP_NOCOASTLINE.Rdata"</span></span>
+<span><span class="va">eez_area_file_path</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/Intersect_EEZ_IHO_v4_2020/Intersect_EEZ_IHO_v4_2020.Rdata"</span></span>
+<span><span class="va">cwp_grid_1deg_1deg</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-1deg_x_1deg/cwp-grid-map-1deg_x_1deg.Rdata"</span></span>
+<span><span class="va">cwp_grid_5deg_5deg</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-5deg_x_5deg/cwp-grid-map-5deg_x_5deg.Rdata"</span></span>
+<span><span class="co"># csv files locations ----</span></span>
+<span><span class="va">observe_bycatch_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">config</span><span class="op">[[</span><span class="st">"wd_path"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>                                  <span class="st">"data"</span>,</span>
+<span>                                  <span class="st">"by_catch"</span><span class="op">)</span></span>
+<span><span class="va">observe_discard_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">config</span><span class="op">[[</span><span class="st">"wd_path"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>                                  <span class="st">"data"</span>,</span>
+<span>                                  <span class="st">"discards"</span><span class="op">)</span></span>
+<span><span class="co"># databases connections ----</span></span>
+<span><span class="va">t3_con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a></span><span class="op">(</span>db_user <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">login</span>,</span>
+<span>                                  db_password <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">password</span>,</span>
+<span>                                  db_dbname <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dbname</span>,</span>
+<span>                                  db_host <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">host</span>,</span>
+<span>                                  db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span>
+<span><span class="va">balbaya_con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a></span><span class="op">(</span>db_user <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"balbaya_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">login</span>,</span>
+<span>                                       db_password <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"balbaya_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">password</span>,</span>
+<span>                                       db_dbname <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"balbaya_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dbname</span>,</span>
+<span>                                       db_host <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"balbaya_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">host</span>,</span>
+<span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"balbaya_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span>
+<span><span class="va">sardara_con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a></span><span class="op">(</span>db_user <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">login</span>,</span>
+<span>                                       db_password <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">password</span>,</span>
+<span>                                       db_dbname <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dbname</span>,</span>
+<span>                                       db_host <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">host</span>,</span>
+<span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="version-1">2022 version<a class="anchor" aria-label="anchor" href="#version-1"></a>
+</h2>
 <p>Github tag for scripts apply in 2022: 1.0.0</p>
 <p>Github tag for 2022 documentation associated: 1.0.0</p>
 <p>To compile it on your computer use the following code:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"OB7-IRD/acdc@v1.0.0"</span>,</span>
 <span>                         INSTALL_opts<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"--no-multiarch"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Specific configuration and parameters is available below.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Specific configuration and parameters is available below:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># setup</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OB7-IRD/acdc" class="external-link">acdc</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OB7-IRD/furdeb" class="external-link">furdeb</a></span><span class="op">)</span></span>
@@ -174,9 +256,14 @@
 <span>                                       db_dbname <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dbname</span>,</span>
 <span>                                       db_host <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">host</span>,</span>
 <span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span></code></pre></div>
-<h2 id="global-script-process">Global script process</h2>
-<p>The global script process to generate the tables is available below. Be aware that you have the process divided step by step but also at the end through a shortcut function. Use parameters and configuration above in sections related to the year of production.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="global-script-process">Global script process<a class="anchor" aria-label="anchor" href="#global-script-process"></a>
+</h3>
+<p>The global script process to generate the tables is available below.
+Be aware that you have the process divided step by step but also at the
+end through a shortcut function. Use parameters and configuration above
+in sections related to the year of production.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># process step by step</span></span>
 <span><span class="va">tablea</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_tablea_catch_summary.html">fdi_tablea_catch_summary</a></span><span class="op">(</span>balbaya_con <span class="op">=</span> <span class="va">balbaya_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                   observe_bycatch_path <span class="op">=</span> <span class="va">observe_bycatch_path</span>,</span>
@@ -239,7 +326,7 @@
 <span>                              template_checking <span class="op">=</span> <span class="va">template_checking</span>,</span>
 <span>                              template_year <span class="op">=</span> <span class="va">template_year</span>,</span>
 <span>                              table_export_path <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"output_path"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># shortcut function</span></span>
 <span><span class="va">fdi_tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_shortcut_function.html">fdi_shortcut_function</a></span><span class="op">(</span>balbaya_con <span class="op">=</span> <span class="va">balbaya_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                    sardara_con <span class="op">=</span> <span class="va">sardara_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
@@ -264,8 +351,14 @@
 <span>                                     tableh <span class="op">=</span> <span class="va">fdi_tables</span><span class="op">$</span><span class="va">fdi_tables</span><span class="op">$</span><span class="va">table_h</span>,</span>
 <span>                                     tablei <span class="op">=</span> <span class="va">fdi_tables</span><span class="op">$</span><span class="va">fdi_tables</span><span class="op">$</span><span class="va">table_i</span>,</span>
 <span>                                     tablea_bycatch_retained <span class="op">=</span> <span class="va">fdi_tables</span><span class="op">$</span><span class="va">ad_hoc_tables</span><span class="op">$</span><span class="va">bycatch_retained</span><span class="op">)</span></span></code></pre></div>
-<h2 id="effort-table-specifications">Effort table specifications</h2>
-<p>The table G aims to provide effort summary in specific format. A brief description and explanation of each variable is provided below.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="effort-table-specifications">Effort table specifications<a class="anchor" aria-label="anchor" href="#effort-table-specifications"></a>
+</h2>
+<p>The table G aims to provide effort summary in specific format. A
+brief description and explanation of each variable is provided
+below.</p>
 <ul>
 <li>Days at sea <span class="math display">\[
 totseadays =  \frac{hrsea}{24}
@@ -286,7 +379,7 @@ totgtdaysatsea = totseadays * enginepower * 0.73539875
 <li>Fishing effort in Gross Tonnage (GT) * days at sea</li>
 </ul>
 <p><span class="math display">\[
-totgtdaysatsea = totseadays * GT 
+totgtdaysatsea = totseadays * GT
 \]</span> GT = K.V</p>
 <p>K = 0.2 + 0.02 * log10(V))</p>
 <p>V = volume in m<sup>3</sup></p>
@@ -296,7 +389,8 @@ totgtdaysatsea = totseadays * GT
 <p><span class="math display">\[
 totfishdays = \frac{fishingtime}{dayfishingtime}
 \]</span> fishingtime = fishing time</p>
-<p>dayfishingtime = duration day of fishing, 12 in the Atlantic Ocean and 13 in the Indian Ocean</p>
+<p>dayfishingtime = duration day of fishing, 12 in the Atlantic Ocean
+and 13 in the Indian Ocean</p>
 <ul>
 <li>Fishing effort in kW-days</li>
 </ul>
@@ -319,7 +413,7 @@ totgtfishdays = totfishdays * GT
 <li>KW hours at sea</li>
 </ul>
 <p><span class="math display">\[
-kwhrsea = hrsea * enginepower * 0.73539875 
+kwhrsea = hrsea * enginepower * 0.73539875
 \]</span></p>
 <p>hrsea = hours at sea</p>
 <p>enginepower = engine power</p>
@@ -335,7 +429,8 @@ gthrsea = hrsea * GT
 <p>K = 0.2 + 0.02 * log10(V))</p>
 <p>V = volume in m<sup>3</sup></p>
 </div>
-<div class="footnotes">
+</div>
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
 <li id="fn1"><p>IRD, <a href="mailto:mathieu.depetris@ird.fr" class="email">mathieu.depetris@ird.fr</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
@@ -360,7 +455,7 @@ gthrsea = hrsea * GT
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

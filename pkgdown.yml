@@ -1,9 +1,9 @@
-pandoc: 2.7.3
-pkgdown: 2.0.6
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   fisheries_dependent_information_data_call: fisheries_dependent_information_data_call.html
-last_built: 2022-10-18T11:35Z
+last_built: 2023-05-30T09:23Z
 urls:
   reference: https://ob7-ird.github.io/acdc/reference
   article: https://ob7-ird.github.io/acdc/articles

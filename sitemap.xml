@@ -19,6 +19,9 @@
     <loc>https://ob7-ird.github.io/acdc/index.html</loc>
   </url>
   <url>
+    <loc>https://ob7-ird.github.io/acdc/news/index.html</loc>
+  </url>
+  <url>
     <loc>https://ob7-ird.github.io/acdc/reference/acdc-package.html</loc>
   </url>
   <url>
@@ -26,9 +29,6 @@
   </url>
   <url>
     <loc>https://ob7-ird.github.io/acdc/reference/fdi_table_export.html</loc>
-  </url>
-  <url>
-    <loc>https://ob7-ird.github.io/acdc/reference/fdi_table_id_checking.html</loc>
   </url>
   <url>
     <loc>https://ob7-ird.github.io/acdc/reference/fdi_tablea_catch_summary.html</loc>
@@ -61,12 +61,6 @@
     <loc>https://ob7-ird.github.io/acdc/reference/fdi_template_identification.html</loc>
   </url>
   <url>
-    <loc>https://ob7-ird.github.io/acdc/reference/global_load_eurostat_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ob7-ird.github.io/acdc/reference/global_load_fides_data.html</loc>
-  </url>
-  <url>
     <loc>https://ob7-ird.github.io/acdc/reference/iccat_st01_t1fc.html</loc>
   </url>
   <url>
@@ -74,8 +68,5 @@
   </url>
   <url>
     <loc>https://ob7-ird.github.io/acdc/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://ob7-ird.github.io/acdc/reference/rwp_table_2_1.html</loc>
   </url>
 </urlset>
