@@ -7,7 +7,7 @@
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a list with the FDI table I inside.
 #' @export
-#' @importFrom furdeb lat_long_to_csquare
+#' @importFrom furdeb latitude_longitude_to_csquare
 #' @importFrom dplyr mutate rename select group_by summarise select case_when
 fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                                         template_checking = FALSE,
@@ -50,14 +50,16 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
                                    type = "logical",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = template_year,
+  if ((! is.null(x = template_year))
+      && codama::r_type_checking(r_object = template_year,
                               type = "integer",
                               output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = template_year,
                                    type = "integer",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = table_export_path,
+  if ((! is.null(x = table_export_path))
+      && codama::r_type_checking(r_object = table_export_path,
                               type = "character",
                               length = 1L,
                               output = "logical") != TRUE) {
@@ -71,10 +73,10 @@ fdi_tablei_effort_rectangle <- function(tableg_effort_rectangle,
              format = "%Y-%m-%d %H:%M:%S"),
       " - Start process on effort data.\n",
       sep = "")
-  balbaya_effort_rectangle <- furdeb::lat_long_to_csquare(data = tableg_effort_rectangle,
-                                                          grid_square = 0.5,
-                                                          latitude_name = "latitude",
-                                                          longitude_name = "longitude") %>%
+  balbaya_effort_rectangle <- furdeb::latitude_longitude_to_csquare(data = tableg_effort_rectangle,
+                                                                    grid_square = 0.5,
+                                                                    latitude_name = "latitude",
+                                                                    longitude_name = "longitude") %>%
     dplyr::mutate(rectangle_type = "NA",
                   latitude = "NA",
                   longitude = "NA") %>%

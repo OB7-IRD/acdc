@@ -6,16 +6,16 @@
 #' @param period {\link[base]{integer}} expected. Year period for data extractions.
 #' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
 #' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
-#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.
-#' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata.
-#' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .Rdata.
+#' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata or .RData extension.
+#' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata or .RData extension.
+#' @param cwp_grid_file_path {\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .Rdata or .RData extension.
 #' @param template_checking {\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.
 #' @param template_year {\link[base]{integer}} expected. By default NULL. Template year.
 #' @param table_export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return The process returns a double list with the FDI table A in the first one and in the second one two accessory outputs useful for the other FDI table generation processes ("landing_rectangle" and "bycatch_retained").
 #' @export
 #' @importFrom DBI sqlInterpolate SQL dbGetQuery
-#' @importFrom furdeb marine_area_overlay
+#' @importFrom furdeb marine_area_overlay latitude_longitude_cwp_manipulation
 #' @importFrom dplyr mutate case_when rowwise select group_by summarise bind_cols rename full_join
 #' @importFrom codama file_path_checking r_type_checking
 #' @importFrom utils read.csv2
@@ -115,24 +115,30 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                    output = "message"))
   }
   if (codama::file_path_checking(file_path =  fao_area_file_path,
-                                 extension = "Rdata",
+                                 extension = c("Rdata",
+                                               "RData"),
                                  output = "logical") != TRUE) {
     return(codama::file_path_checking(file_path =  fao_area_file_path,
-                                      extension = "Rdata",
+                                      extension = c("Rdata",
+                                                    "RData"),
                                       output = "message"))
   }
   if (codama::file_path_checking(file_path =  eez_area_file_path,
-                                 extension = "Rdata",
+                                 extension = c("Rdata",
+                                               "RData"),
                                  output = "logical") != TRUE) {
     return(codama::file_path_checking(file_path =  eez_area_file_path,
-                                      extension = "Rdata",
+                                      extension = c("Rdata",
+                                                    "RData"),
                                       output = "message"))
   }
   if (codama::file_path_checking(file_path =  cwp_grid_file_path,
-                                 extension = "Rdata",
+                                 extension = c("Rdata",
+                                               "RData"),
                                  output = "logical") != TRUE) {
     return(codama::file_path_checking(file_path =  cwp_grid_file_path,
-                                      extension = "Rdata",
+                                      extension = c("Rdata",
+                                                    "RData"),
                                       output = "message"))
   }
   if (codama::r_type_checking(r_object = template_checking,
@@ -142,14 +148,16 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                    type = "logical",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = template_year,
+  if ((! is.null(x = template_year))
+      && codama::r_type_checking(r_object = template_year,
                               type = "integer",
                               output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = template_year,
                                    type = "integer",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = table_export_path,
+  if ((! is.null(x = table_export_path))
+      && codama::r_type_checking(r_object = table_export_path,
                               type = "character",
                               length = 1L,
                               output = "logical") != TRUE) {
@@ -323,21 +331,20 @@ fdi_tablea_catch_summary <- function(balbaya_con,
       sep = "")
   observe_bycatch <- lapply(X = list.files(path = observe_bycatch_path),
                             FUN = function(file_name) {
-                              utils::read.csv2(file.path(observe_bycatch_path,
-                                                         file_name),
-                                               stringsAsFactors = FALSE)
+                              utils::read.csv(file.path(observe_bycatch_path,
+                                                        file_name),
+                                              stringsAsFactors = FALSE)
                             })
   observe_bycatch <- do.call("rbind",
                              observe_bycatch) %>%
+    dplyr::rename(cwp = cwp11) %>%
     dplyr::mutate(cwp = as.character(x = cwp))
   observe_bycatch <- dplyr::bind_cols(observe_bycatch,
-                                      (furdeb::lat_lon_cwp_manipulation(manipulation_process = "cwp_to_lat_lon",
-                                                                        data_cwp = observe_bycatch$cwp,
-                                                                        referential_grid_file_path = cwp_grid_file_path,
-                                                                        input_cwp_format = "centroid",
-                                                                        output_degree_cwp_parameter = "centroid",
-                                                                        output_degree_format = "decimal_degree",
-                                                                        output_cwp_format = "centroid_7") %>%
+                                      (furdeb::latitude_longitude_cwp_manipulation(manipulation_process = "cwp_to_latitude_longitude",
+                                                                                   data_cwp = observe_bycatch$cwp,
+                                                                                   referential_grid_file_path = cwp_grid_file_path,
+                                                                                   output_degree_parameter = "centroid",
+                                                                                   output_degree_format = "decimal_degree") %>%
                                          dplyr::mutate(longitude_decimal_degree = as.numeric(longitude_decimal_degree),
                                                        latitude_decimal_degree = as.numeric(latitude_decimal_degree)) %>%
                                          dplyr::select(-cwp)))

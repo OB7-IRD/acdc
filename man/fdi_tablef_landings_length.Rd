@@ -37,9 +37,9 @@ fdi_tablef_landings_length(
 
 \item{tablea_catch_summary}{Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
 
-\item{cwp_grid_file_path}{{\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .Rdata.}
+\item{cwp_grid_file_path}{{\link[base]{character}} expected. File path of the CWP area grid. The file format has to be .Rdata or .RData extension.}
 
-\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.}
+\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata or RData extension.}
 
 \item{template_checking}{{\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.}
 

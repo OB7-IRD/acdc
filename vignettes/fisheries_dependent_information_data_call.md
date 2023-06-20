@@ -4,7 +4,7 @@ author:
   - Mathieu Depetris^[IRD, mathieu.depetris@ird.fr]
   - Laurent Floc'h^[IRD, laurent.floch@ird.fr]
   - Philippe Sabarros^[IRD, philippe.sabarros@ird.fr]
-date: "18/07/2022"
+date: "xx/xx/2023"
 output: rmarkdown::html_vignette
 description: |
   Description of Fisheries Dependent Information and associated processes.
@@ -29,6 +29,71 @@ The Scientific Fisheries Dependent Information (FDI) database was developed to s
 
 More information is available on the offical data call webpage: https://datacollection.jrc.ec.europa.eu/dc/fdi
 
+## 2023 version
+
+Github tag for scripts apply in 2023: to do
+
+Github tag for 2023 documentation associated: to do 
+
+To compile it on your computer use the following code:
+
+
+```r
+devtools::install_github("OB7-IRD/acdc@vx.x.x",
+                         INSTALL_opts=c("--no-multiarch"))
+```
+
+Specific configuration and parameters is available below:
+
+
+```r
+# setup
+library(acdc)
+library(furdeb)
+config <- configuration_file(path_file = "D:/projets_themes/data_calls/fdi/2023/data/fdi_2023_configuration_file.yml",
+                             silent = TRUE)
+# not apply scientific format for number (may cause problems for cwp maniuplation)
+scipen_defaut <- options("scipen")
+options("scipen" = 100)
+# parameters definition ----
+period <- as.integer(x = c(2013:2022))
+# 1 = PS, 2 = BB and 3 = LL
+gear <- as.integer(x = c(1, 2, 3))
+# for the French fleet, 1 = France & 41 = Mayotte
+flag <- as.integer(x = c(1, 41))
+# checking
+template_checking = TRUE
+template_year = as.integer(x = 2023)
+# shapes
+fao_area_file_path <- "D:/developpement/shapes/FAO_AREAS_CWP_NOCOASTLINE/FAO_AREAS_CWP_NOCOASTLINE.Rdata"
+eez_area_file_path <- "D:/developpement/shapes/Intersect_EEZ_IHO_v4_2020/Intersect_EEZ_IHO_v4_2020.Rdata"
+cwp_grid_1deg_1deg <- "D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-1deg_x_1deg/cwp-grid-map-1deg_x_1deg.Rdata"
+cwp_grid_5deg_5deg <- "D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-5deg_x_5deg/cwp-grid-map-5deg_x_5deg.Rdata"
+# csv files locations ----
+observe_bycatch_path <- file.path(config[["wd_path"]],
+                                  "data",
+                                  "by_catch")
+observe_discard_path <- file.path(config[["wd_path"]],
+                                  "data",
+                                  "discards")
+# databases connections ----
+t3_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["t3_prod_vmot7"]]$login,
+                                  db_password = config[["databases_configuration"]][["t3_prod_vmot7"]]$password,
+                                  db_dbname = config[["databases_configuration"]][["t3_prod_vmot7"]]$dbname,
+                                  db_host = config[["databases_configuration"]][["t3_prod_vmot7"]]$host,
+                                  db_port = config[["databases_configuration"]][["t3_prod_vmot7"]]$port)
+balbaya_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["balbaya_vmot5"]]$login,
+                                       db_password = config[["databases_configuration"]][["balbaya_vmot5"]]$password,
+                                       db_dbname = config[["databases_configuration"]][["balbaya_vmot5"]]$dbname,
+                                       db_host = config[["databases_configuration"]][["balbaya_vmot5"]]$host,
+                                       db_port = config[["databases_configuration"]][["balbaya_vmot5"]]$port)
+sardara_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["sardara_vmot5"]]$login,
+                                       db_password = config[["databases_configuration"]][["sardara_vmot5"]]$password,
+                                       db_dbname = config[["databases_configuration"]][["sardara_vmot5"]]$dbname,
+                                       db_host = config[["databases_configuration"]][["sardara_vmot5"]]$host,
+                                       db_port = config[["databases_configuration"]][["sardara_vmot5"]]$port)
+```
+
 ## 2022 version
 
 Github tag for scripts apply in 2022: 1.0.0
@@ -43,7 +108,7 @@ devtools::install_github("OB7-IRD/acdc@v1.0.0",
                          INSTALL_opts=c("--no-multiarch"))
 ```
 
-Specific configuration and parameters is available below.
+Specific configuration and parameters is available below:
 
 
 ```r
@@ -96,7 +161,7 @@ sardara_con <- postgresql_dbconnection(db_user = config[["databases_configuratio
                                        db_port = config[["databases_configuration"]][["sardara_vmot5"]]$port)
 ```
 
-## Global script process
+### Global script process
 
 The global script process to generate the tables is available below. Be aware that you have the process divided step by step but also at the end through a shortcut function. Use parameters and configuration above in sections related to the year of production.
 

@@ -59,14 +59,16 @@ fdi_tabled_discard_length <- function(observe_discard_path,
                                    type = "logical",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = template_year,
+  if ((! is.null(x = template_year))
+      && codama::r_type_checking(r_object = template_year,
                               type = "integer",
                               output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = template_year,
                                    type = "integer",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = table_export_path,
+  if ((! is.null(x = table_export_path))
+      && codama::r_type_checking(r_object = table_export_path,
                               type = "character",
                               length = 1L,
                               output = "logical") != TRUE) {

@@ -9,7 +9,7 @@
 #' @return The process returns a list with the FDI table H inside.
 #' @export
 #' @importFrom codama r_type_checking
-#' @importFrom furdeb lat_long_to_csquare
+#' @importFrom furdeb latitude_longitude_to_csquare
 #' @importFrom dplyr select rename mutate group_by summarise full_join case_when
 fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                                           tablea_landing_rectangle,
@@ -55,14 +55,16 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                                    type = "logical",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = template_year,
+  if ((! is.null(x = template_year))
+      && codama::r_type_checking(r_object = template_year,
                               type = "integer",
                               output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = template_year,
                                    type = "integer",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = table_export_path,
+  if ((! is.null(x = table_export_path))
+      && codama::r_type_checking(r_object = table_export_path,
                               type = "character",
                               length = 1L,
                               output = "logical") != TRUE) {
@@ -76,10 +78,10 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
              format = "%Y-%m-%d %H:%M:%S"),
       " - Start process on bycatch and landing data.\n",
       sep = "")
-  observe_bycatch_retained_tableh <- furdeb::lat_long_to_csquare(data = tablea_bycatch_retained,
-                                                                 grid_square = 0.5,
-                                                                 latitude_name = "latitude_decimal_degree",
-                                                                 longitude_name = "longitude_decimal_degree") %>%
+  observe_bycatch_retained_tableh <- furdeb::latitude_longitude_to_csquare(data = tablea_bycatch_retained,
+                                                                           grid_square = 0.5,
+                                                                           latitude_name = "latitude_decimal_degree",
+                                                                           longitude_name = "longitude_decimal_degree") %>%
     dplyr::select(country,
                   year,
                   quarter,
@@ -126,10 +128,10 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
                     longitude) %>%
     dplyr::summarise(retained_tons = sum(retained_tons),
                      .groups = "drop")
-  balbaya_landing_rectangle <- furdeb::lat_long_to_csquare(data = tablea_landing_rectangle,
-                                                           grid_square = 0.5,
-                                                           latitude_name = "latitude",
-                                                           longitude_name = "longitude") %>%
+  balbaya_landing_rectangle <- furdeb::latitude_longitude_to_csquare(data = tablea_landing_rectangle,
+                                                                     grid_square = 0.5,
+                                                                     latitude_name = "latitude",
+                                                                     longitude_name = "longitude") %>%
     dplyr::mutate(rectangle_type = "NA",
                   latitude = "NA",
                   longitude = "NA") %>%

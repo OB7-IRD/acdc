@@ -25,9 +25,9 @@ fdi_tableg_effort(
 
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selection for data extractions.}
 
-\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.}
+\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata or .RData extension.}
 
-\item{eez_area_file_path}{{\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata.}
+\item{eez_area_file_path}{{\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata or .RData extension.}
 
 \item{template_checking}{{\link[base]{logical}} expected. By default FALSE Checking FDI table generated regarding the official FDI template.}
 
