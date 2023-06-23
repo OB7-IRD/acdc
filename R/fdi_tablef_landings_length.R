@@ -265,6 +265,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
   }
   balbaya_landing_cwp <- dplyr::mutate(.data = balbaya_landing_cwp,
                                        sub_region = dplyr::case_when(
+                                         best_fao_area %in% c("41.1.4") ~ "41.1",
                                          best_fao_area %in% c("47.A.0",
                                                               "47.A.1") ~ "47.A",
                                          best_fao_area %in% c("47.B.1") ~ "47.B",
@@ -424,6 +425,7 @@ fdi_tablef_landings_length <- function(balbaya_con,
   }
   sardara_cas <- dplyr::mutate(.data = sardara_cas,
                                sub_region = dplyr::case_when(
+                                 best_fao_area %in% c("41.1.4") ~ "41.1",
                                  best_fao_area %in% c("47.A.0",
                                                       "47.A.1") ~ "47.A",
                                  best_fao_area %in% c("47.B.1") ~ "47.B",

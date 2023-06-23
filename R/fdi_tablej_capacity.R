@@ -205,6 +205,7 @@ fdi_tablej_capacity <- function(balbaya_con,
   }
   balbaya_capacity_principal_sub_region <- dplyr::mutate(.data = balbaya_capacity_principal_sub_region,
                                                          sub_region = dplyr::case_when(
+                                                           best_fao_area %in% c("41.1.4") ~ "41.1",
                                                            best_fao_area %in% c("47.A.0",
                                                                                 "47.A.1") ~ "47.A",
                                                            best_fao_area %in% c("47.B.1") ~ "47.B",

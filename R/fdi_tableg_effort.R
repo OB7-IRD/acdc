@@ -245,6 +245,7 @@ fdi_tableg_effort <- function(balbaya_con,
   }
   balbaya_effort <- dplyr::mutate(.data = balbaya_effort,
                                   sub_region = dplyr::case_when(
+                                    best_fao_area %in% c("41.1.4") ~ "41.1",
                                     best_fao_area %in% c("47.A.0",
                                                          "47.A.1") ~ "47.A",
                                     best_fao_area %in% c("47.B.1") ~ "47.B",

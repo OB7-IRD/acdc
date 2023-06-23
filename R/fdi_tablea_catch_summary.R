@@ -199,15 +199,16 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                                                   silent = TRUE))
   balbaya_landing <- dplyr::mutate(.data = balbaya_landing,
                                    sub_region = dplyr::case_when(
+                                     best_fao_area %in% c("41.1.4") ~ "41.1",
                                      best_fao_area %in% c("47.A.0",
                                                           "47.A.1") ~ "47.A",
                                      best_fao_area %in% c("47.B.1") ~ "47.B",
                                      best_fao_area %in% c("47.1.1",
                                                           "47.1.2",
                                                           "47.1.3",
-                                                          "41.1.4",
-                                                          "41.1.5",
-                                                          "41.1.6") ~ "47.1",
+                                                          "47.1.4",
+                                                          "47.1.5",
+                                                          "47.1.6") ~ "47.1",
                                      best_fao_area %in% c("47.2.2") ~ "47.2",
                                      best_fao_area %in% c("34.2") ~ "34.2.0",
                                      TRUE ~ best_fao_area
@@ -363,6 +364,7 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                                                   silent = TRUE)) %>%
     dplyr::mutate(
       sub_region = dplyr::case_when(
+        best_fao_area %in% c("41.1.4") ~ "41.1",
         best_fao_area %in% c("47.A.0",
                              "47.A.1") ~ "47.A",
         best_fao_area %in% c("47.B.1") ~ "47.B",
