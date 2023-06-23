@@ -194,7 +194,9 @@ fdi_tableh_landings_rectangle <- function(tablea_bycatch_retained,
       totvallandg = "NK",
       confidential = dplyr::case_when(
         fishing_tech == "HOK" ~ "A",
-        TRUE ~ "N")) %>%
+        TRUE ~ "N"),
+      specon_tech = "NK",
+      deep = "NK") %>%
     dplyr::select(country,
                   year,
                   quarter,

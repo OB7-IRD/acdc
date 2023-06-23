@@ -4,7 +4,7 @@ author:
   - Mathieu Depetris^[IRD, mathieu.depetris@ird.fr]
   - Laurent Floc'h^[IRD, laurent.floch@ird.fr]
   - Philippe Sabarros^[IRD, philippe.sabarros@ird.fr]
-date: "xx/xx/2023"
+date: "23/06/2023"
 output: rmarkdown::html_vignette
 description: |
   Description of Fisheries Dependent Information and associated processes.
@@ -61,21 +61,24 @@ period <- as.integer(x = c(2013:2022))
 gear <- as.integer(x = c(1, 2, 3))
 # for the French fleet, 1 = France & 41 = Mayotte
 flag <- as.integer(x = c(1, 41))
+ocean <- c("Atlantic",
+           "Indian")
+program <- as.character(c("fr.ird.referential.ps.common.Program#1239832686262#0.31033946454061234",
+                          "fr.ird.referential.ps.common.Program#1308048349668#0.7314513252652438",
+                          "fr.ird.referential.ps.common.Program#1363095174385#0.011966550987014823",
+                          "fr.ird.referential.ps.common.Program#1373642516190#0.998459307142491"))
 # checking
 template_checking = TRUE
 template_year = as.integer(x = 2023)
 # shapes
 fao_area_file_path <- "D:/developpement/shapes/FAO_AREAS_CWP_NOCOASTLINE/FAO_AREAS_CWP_NOCOASTLINE.Rdata"
 eez_area_file_path <- "D:/developpement/shapes/Intersect_EEZ_IHO_v4_2020/Intersect_EEZ_IHO_v4_2020.Rdata"
-cwp_grid_1deg_1deg <- "D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-1deg_x_1deg/cwp-grid-map-1deg_x_1deg.Rdata"
-cwp_grid_5deg_5deg <- "D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-5deg_x_5deg/cwp-grid-map-5deg_x_5deg.Rdata"
+cwp_grid_1deg_1deg <- "D:/developpement/shapes/fao_cwp_grid/cwp-grid-map-1deg_x_1deg/cwp-grid-map-1deg_x_1deg.RData"
+cwp_grid_5deg_5deg <- "D:/developpement/shapes/fao_cwp_grid/cwp-grid-map-5deg_x_5deg/cwp-grid-map-5deg_x_5deg.RData"
 # csv files locations ----
 observe_bycatch_path <- file.path(config[["wd_path"]],
                                   "data",
                                   "by_catch")
-observe_discard_path <- file.path(config[["wd_path"]],
-                                  "data",
-                                  "discards")
 # databases connections ----
 t3_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["t3_prod_vmot7"]]$login,
                                   db_password = config[["databases_configuration"]][["t3_prod_vmot7"]]$password,
@@ -92,6 +95,11 @@ sardara_con <- postgresql_dbconnection(db_user = config[["databases_configuratio
                                        db_dbname = config[["databases_configuration"]][["sardara_vmot5"]]$dbname,
                                        db_host = config[["databases_configuration"]][["sardara_vmot5"]]$host,
                                        db_port = config[["databases_configuration"]][["sardara_vmot5"]]$port)
+observe_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["observe_vmot6"]]$login,
+                                       db_password = config[["databases_configuration"]][["observe_vmot6"]]$password,
+                                       db_dbname = config[["databases_configuration"]][["observe_vmot6"]]$dbname,
+                                       db_host = config[["databases_configuration"]][["observe_vmot6"]]$host,
+                                       db_port = config[["databases_configuration"]][["observe_vmot6"]]$port)
 ```
 
 ## 2022 version
@@ -180,7 +188,12 @@ tablea <- fdi_tablea_catch_summary(balbaya_con = balbaya_con[[2]],
                                    template_year = template_year,
                                    table_export_path = config[["output_path"]])
 
-tabled <- fdi_tabled_discard_length(observe_discard_path = observe_discard_path,
+tabled <- fdi_tabled_discard_length(observe_con = observe_con[[2]],
+                                    period = period,
+                                    ocean = ocean,
+                                    program = program,
+                                    flag = flag,
+                                    fao_area_file_path = fao_area_file_path,
                                     tablea_catch_summary = tablea[["fdi_tables"]][["table_a"]],
                                     template_checking = template_checking,
                                     template_year = template_year,
@@ -237,11 +250,13 @@ tablej <- fdi_tablej_capacity(balbaya_con = balbaya_con[[2]],
 fdi_tables <- fdi_shortcut_function(balbaya_con = balbaya_con[[2]],
                                     sardara_con = sardara_con[[2]],
                                     t3_con = t3_con[[2]],
+                                    observe_con = observe_con[[2]],
                                     period = period,
                                     gear = gear,
                                     flag = flag,
+                                    ocean = ocean,
+                                    program = program,
                                     observe_bycatch_path = observe_bycatch_path,
-                                    observe_discard_path = observe_discard_path,
                                     fao_area_file_path = fao_area_file_path,
                                     eez_area_file_path = eez_area_file_path,
                                     cwp_grid_1deg_1deg = cwp_grid_1deg_1deg,
