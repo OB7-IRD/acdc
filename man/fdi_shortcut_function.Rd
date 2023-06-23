@@ -8,11 +8,13 @@ fdi_shortcut_function(
   balbaya_con,
   sardara_con,
   t3_con,
+  observe_con,
   period,
   gear,
   flag,
+  ocean,
+  program,
   observe_bycatch_path,
-  observe_discard_path,
   fao_area_file_path,
   eez_area_file_path,
   cwp_grid_1deg_1deg,
@@ -29,15 +31,19 @@ fdi_shortcut_function(
 
 \item{t3_con}{{\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the t3 database.}
 
+\item{observe_con}{{\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the observe database.}
+
 \item{period}{{\link[base]{integer}} expected. Year period for data extractions.}
 
 \item{gear}{{\link[base]{integer}}. Gear(s) selection for data extractions.}
 
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selection for data extractions.}
 
-\item{observe_bycatch_path}{{\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
+\item{ocean}{{\link[base]{character}} expected. Ocean(s) of interest.}
 
-\item{observe_discard_path}{{\link[base]{character}} expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
+\item{program}{{\link[base]{character}} expected. Programs of interest.}
+
+\item{observe_bycatch_path}{{\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
 
 \item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.}
 

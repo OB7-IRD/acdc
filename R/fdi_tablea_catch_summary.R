@@ -59,6 +59,7 @@ fdi_tablea_catch_summary <- function(balbaya_con,
   deep <- NULL
   totwghtlandg <- NULL
   cwp <- NULL
+  cwp11 <- NULL
   longitude_decimal_degree <- NULL
   latitude_decimal_degree <- NULL
   fao_code <- NULL
@@ -557,7 +558,10 @@ fdi_tablea_catch_summary <- function(balbaya_con,
     dplyr::mutate(totvallandg = dplyr::case_when(
       is.na(x = totvallandg) ~ "NK",
       TRUE ~ as.character(x = totvallandg)
-    )) %>%
+    ),
+    nep_sub_region = "NA",
+    specon_tech = "NA",
+    deep = "NA") %>%
     dplyr::select(country,
                   year,
                   quarter,

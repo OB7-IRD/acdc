@@ -5,7 +5,12 @@
 \title{Table D NAO OFR discards length generation (FDI process)}
 \usage{
 fdi_tabled_discard_length(
-  observe_discard_path,
+  observe_con,
+  period,
+  ocean,
+  program,
+  flag,
+  fao_area_file_path,
   tablea_catch_summary,
   template_checking = FALSE,
   template_year = NULL,
@@ -13,7 +18,17 @@ fdi_tabled_discard_length(
 )
 }
 \arguments{
-\item{observe_discard_path}{{\link[base]{character}} expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).}
+\item{observe_con}{{\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the observe database.}
+
+\item{period}{{\link[base]{integer}} expected. Year(s) period for data extraction(s).}
+
+\item{ocean}{{\link[base]{character}} expected. Ocean(s) of interest.}
+
+\item{program}{{\link[base]{character}} expected. Programs of interest.}
+
+\item{flag}{{\link[base]{integer}} expected. Flag(s) selection for data extraction(s).}
+
+\item{fao_area_file_path}{{\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata or .RData extension.}
 
 \item{tablea_catch_summary}{{\link[base]{list}} expected. Output "table_a" of the function {\link[acdc]{fdi_tablea_catch_summary}}.}
 

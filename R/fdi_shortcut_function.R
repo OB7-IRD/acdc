@@ -4,11 +4,13 @@
 #' @param balbaya_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the balbaya database.
 #' @param sardara_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the sardara database.
 #' @param t3_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the t3 database.
+#' @param observe_con {\link[base]{list}} expected. Output of the function {\link[furdeb]{postgresql_dbconnection}} for a connection to the observe database.
 #' @param period {\link[base]{integer}} expected. Year period for data extractions.
 #' @param gear {\link[base]{integer}}. Gear(s) selection for data extractions.
 #' @param flag {\link[base]{integer}} expected. Flag(s) selection for data extractions.
+#' @param ocean {\link[base]{character}} expected. Ocean(s) of interest.
+#' @param program {\link[base]{character}} expected. Programs of interest.
 #' @param observe_bycatch_path {\link[base]{character}} expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
-#' @param observe_discard_path {\link[base]{character}} expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).
 #' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata.
 #' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata.
 #' @param cwp_grid_1deg_1deg {\link[base]{character}} expected. File path of the CWP area grid of 1° by 1°. The file format has to be .Rdata.
@@ -21,11 +23,13 @@
 fdi_shortcut_function <- function(balbaya_con,
                                   sardara_con,
                                   t3_con,
+                                  observe_con,
                                   period,
                                   gear,
                                   flag,
+                                  ocean,
+                                  program,
                                   observe_bycatch_path,
-                                  observe_discard_path,
                                   fao_area_file_path,
                                   eez_area_file_path,
                                   cwp_grid_1deg_1deg,
@@ -51,7 +55,12 @@ fdi_shortcut_function <- function(balbaya_con,
                                          table_export_path = table_export_path)
   # table d process ----
   fdi_tables <- furdeb::list_logical_merge(first_list = fdi_tables,
-                                           second_list = fdi_tabled_discard_length(observe_discard_path = observe_discard_path,
+                                           second_list = fdi_tabled_discard_length(observe_con = observe_con,
+                                                                                   period = period,
+                                                                                   ocean = ocean,
+                                                                                   program = program,
+                                                                                   flag = flag,
+                                                                                   fao_area_file_path = fao_area_file_path,
                                                                                    tablea_catch_summary = fdi_tables[["fdi_tables"]][["table_a"]],
                                                                                    template_checking = template_checking,
                                                                                    template_year = template_year,
