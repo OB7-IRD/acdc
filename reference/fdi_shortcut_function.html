@@ -72,11 +72,13 @@
 <span>  <span class="va">balbaya_con</span>,</span>
 <span>  <span class="va">sardara_con</span>,</span>
 <span>  <span class="va">t3_con</span>,</span>
+<span>  <span class="va">observe_con</span>,</span>
 <span>  <span class="va">period</span>,</span>
 <span>  <span class="va">gear</span>,</span>
 <span>  <span class="va">flag</span>,</span>
+<span>  <span class="va">ocean</span>,</span>
+<span>  <span class="va">program</span>,</span>
 <span>  <span class="va">observe_bycatch_path</span>,</span>
-<span>  <span class="va">observe_discard_path</span>,</span>
 <span>  <span class="va">fao_area_file_path</span>,</span>
 <span>  <span class="va">eez_area_file_path</span>,</span>
 <span>  <span class="va">cwp_grid_1deg_1deg</span>,</span>
@@ -101,6 +103,10 @@
 <dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> expected. Output of the function <a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a> for a connection to the t3 database.</p></dd>
 
 
+<dt>observe_con</dt>
+<dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> expected. Output of the function <a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a> for a connection to the observe database.</p></dd>
+
+
 <dt>period</dt>
 <dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a> expected. Year period for data extractions.</p></dd>
 
@@ -113,12 +119,16 @@
 <dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a> expected. Flag(s) selection for data extractions.</p></dd>
 
 
+<dt>ocean</dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Ocean(s) of interest.</p></dd>
+
+
+<dt>program</dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Programs of interest.</p></dd>
+
+
 <dt>observe_bycatch_path</dt>
 <dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Directory path of the bycatch data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).</p></dd>
-
-
-<dt>observe_discard_path</dt>
-<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).</p></dd>
 
 
 <dt>fao_area_file_path</dt>

@@ -69,7 +69,12 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fdi_tabled_discard_length</span><span class="op">(</span></span>
-<span>  <span class="va">observe_discard_path</span>,</span>
+<span>  <span class="va">observe_con</span>,</span>
+<span>  <span class="va">period</span>,</span>
+<span>  <span class="va">ocean</span>,</span>
+<span>  <span class="va">program</span>,</span>
+<span>  <span class="va">flag</span>,</span>
+<span>  <span class="va">fao_area_file_path</span>,</span>
 <span>  <span class="va">tablea_catch_summary</span>,</span>
 <span>  template_checking <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  template_year <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -79,8 +84,28 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>observe_discard_path</dt>
-<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Directory path of the discards data extractions. Check this input with Philippe Sabarros (philippe.sabarros@ird.fr).</p></dd>
+    <dl><dt>observe_con</dt>
+<dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> expected. Output of the function <a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a> for a connection to the observe database.</p></dd>
+
+
+<dt>period</dt>
+<dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a> expected. Year(s) period for data extraction(s).</p></dd>
+
+
+<dt>ocean</dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Ocean(s) of interest.</p></dd>
+
+
+<dt>program</dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. Programs of interest.</p></dd>
+
+
+<dt>flag</dt>
+<dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a> expected. Flag(s) selection for data extraction(s).</p></dd>
+
+
+<dt>fao_area_file_path</dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a> expected. File path of the FAO area grid. The file format has to be .Rdata or .RData extension.</p></dd>
 
 
 <dt>tablea_catch_summary</dt>

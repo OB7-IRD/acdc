@@ -105,7 +105,7 @@ Floc’h<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>
 Sabarros<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
 </h4>
             
-            <h4 data-toc-skip class="date">xx/xx/2023</h4>
+            <h4 data-toc-skip class="date">23/06/2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/OB7-IRD/acdc/blob/HEAD/vignettes/fisheries_dependent_information_data_call.Rmd" class="external-link"><code>vignettes/fisheries_dependent_information_data_call.Rmd</code></a></small>
       <div class="hidden name"><code>fisheries_dependent_information_data_call.Rmd</code></div>
@@ -166,21 +166,24 @@ for those species listed.</li>
 <span><span class="va">gear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># for the French fleet, 1 = France &amp; 41 = Mayotte</span></span>
 <span><span class="va">flag</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">41</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ocean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Atlantic"</span>,</span>
+<span>           <span class="st">"Indian"</span><span class="op">)</span></span>
+<span><span class="va">program</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fr.ird.referential.ps.common.Program#1239832686262#0.31033946454061234"</span>,</span>
+<span>                          <span class="st">"fr.ird.referential.ps.common.Program#1308048349668#0.7314513252652438"</span>,</span>
+<span>                          <span class="st">"fr.ird.referential.ps.common.Program#1363095174385#0.011966550987014823"</span>,</span>
+<span>                          <span class="st">"fr.ird.referential.ps.common.Program#1373642516190#0.998459307142491"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># checking</span></span>
 <span><span class="va">template_checking</span> <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="va">template_year</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span></span>
 <span><span class="co"># shapes</span></span>
 <span><span class="va">fao_area_file_path</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/FAO_AREAS_CWP_NOCOASTLINE/FAO_AREAS_CWP_NOCOASTLINE.Rdata"</span></span>
 <span><span class="va">eez_area_file_path</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/Intersect_EEZ_IHO_v4_2020/Intersect_EEZ_IHO_v4_2020.Rdata"</span></span>
-<span><span class="va">cwp_grid_1deg_1deg</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-1deg_x_1deg/cwp-grid-map-1deg_x_1deg.Rdata"</span></span>
-<span><span class="va">cwp_grid_5deg_5deg</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/fao_cwp_grid/cwp-cwp-grid-map-5deg_x_5deg/cwp-grid-map-5deg_x_5deg.Rdata"</span></span>
+<span><span class="va">cwp_grid_1deg_1deg</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/fao_cwp_grid/cwp-grid-map-1deg_x_1deg/cwp-grid-map-1deg_x_1deg.RData"</span></span>
+<span><span class="va">cwp_grid_5deg_5deg</span> <span class="op">&lt;-</span> <span class="st">"D:/developpement/shapes/fao_cwp_grid/cwp-grid-map-5deg_x_5deg/cwp-grid-map-5deg_x_5deg.RData"</span></span>
 <span><span class="co"># csv files locations ----</span></span>
 <span><span class="va">observe_bycatch_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">config</span><span class="op">[[</span><span class="st">"wd_path"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                  <span class="st">"data"</span>,</span>
 <span>                                  <span class="st">"by_catch"</span><span class="op">)</span></span>
-<span><span class="va">observe_discard_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">config</span><span class="op">[[</span><span class="st">"wd_path"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>                                  <span class="st">"data"</span>,</span>
-<span>                                  <span class="st">"discards"</span><span class="op">)</span></span>
 <span><span class="co"># databases connections ----</span></span>
 <span><span class="va">t3_con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a></span><span class="op">(</span>db_user <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">login</span>,</span>
 <span>                                  db_password <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"t3_prod_vmot7"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">password</span>,</span>
@@ -196,7 +199,12 @@ for those species listed.</li>
 <span>                                       db_password <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">password</span>,</span>
 <span>                                       db_dbname <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dbname</span>,</span>
 <span>                                       db_host <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">host</span>,</span>
-<span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span></code></pre></div>
+<span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"sardara_vmot5"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span>
+<span><span class="va">observe_con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/furdeb/man/postgresql_dbconnection.html" class="external-link">postgresql_dbconnection</a></span><span class="op">(</span>db_user <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"observe_vmot6"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">login</span>,</span>
+<span>                                       db_password <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"observe_vmot6"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">password</span>,</span>
+<span>                                       db_dbname <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"observe_vmot6"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">dbname</span>,</span>
+<span>                                       db_host <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"observe_vmot6"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">host</span>,</span>
+<span>                                       db_port <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"databases_configuration"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"observe_vmot6"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">port</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="version-1">2022 version<a class="anchor" aria-label="anchor" href="#version-1"></a>
@@ -277,7 +285,12 @@ in sections related to the year of production.</p>
 <span>                                   template_year <span class="op">=</span> <span class="va">template_year</span>,</span>
 <span>                                   table_export_path <span class="op">=</span> <span class="va">config</span><span class="op">[[</span><span class="st">"output_path"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tabled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_tabled_discard_length.html">fdi_tabled_discard_length</a></span><span class="op">(</span>observe_discard_path <span class="op">=</span> <span class="va">observe_discard_path</span>,</span>
+<span><span class="va">tabled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_tabled_discard_length.html">fdi_tabled_discard_length</a></span><span class="op">(</span>observe_con <span class="op">=</span> <span class="va">observe_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>                                    period <span class="op">=</span> <span class="va">period</span>,</span>
+<span>                                    ocean <span class="op">=</span> <span class="va">ocean</span>,</span>
+<span>                                    program <span class="op">=</span> <span class="va">program</span>,</span>
+<span>                                    flag <span class="op">=</span> <span class="va">flag</span>,</span>
+<span>                                    fao_area_file_path <span class="op">=</span> <span class="va">fao_area_file_path</span>,</span>
 <span>                                    tablea_catch_summary <span class="op">=</span> <span class="va">tablea</span><span class="op">[[</span><span class="st">"fdi_tables"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"table_a"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                    template_checking <span class="op">=</span> <span class="va">template_checking</span>,</span>
 <span>                                    template_year <span class="op">=</span> <span class="va">template_year</span>,</span>
@@ -331,11 +344,13 @@ in sections related to the year of production.</p>
 <span><span class="va">fdi_tables</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fdi_shortcut_function.html">fdi_shortcut_function</a></span><span class="op">(</span>balbaya_con <span class="op">=</span> <span class="va">balbaya_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                    sardara_con <span class="op">=</span> <span class="va">sardara_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                    t3_con <span class="op">=</span> <span class="va">t3_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>                                    observe_con <span class="op">=</span> <span class="va">observe_con</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>                                    period <span class="op">=</span> <span class="va">period</span>,</span>
 <span>                                    gear <span class="op">=</span> <span class="va">gear</span>,</span>
 <span>                                    flag <span class="op">=</span> <span class="va">flag</span>,</span>
+<span>                                    ocean <span class="op">=</span> <span class="va">ocean</span>,</span>
+<span>                                    program <span class="op">=</span> <span class="va">program</span>,</span>
 <span>                                    observe_bycatch_path <span class="op">=</span> <span class="va">observe_bycatch_path</span>,</span>
-<span>                                    observe_discard_path <span class="op">=</span> <span class="va">observe_discard_path</span>,</span>
 <span>                                    fao_area_file_path <span class="op">=</span> <span class="va">fao_area_file_path</span>,</span>
 <span>                                    eez_area_file_path <span class="op">=</span> <span class="va">eez_area_file_path</span>,</span>
 <span>                                    cwp_grid_1deg_1deg <span class="op">=</span> <span class="va">cwp_grid_1deg_1deg</span>,</span>
