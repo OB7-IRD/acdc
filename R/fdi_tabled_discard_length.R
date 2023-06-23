@@ -19,7 +19,7 @@ fdi_tabled_discard_length <- function(observe_discard_path,
              format = "%Y-%m-%d %H:%M:%S"),
       " - Start process on FDI table D generation.\n",
       sep = "")
-  # global variables assignement ----
+  # global variables assignment ----
   totwghtlandg <- NULL
   discards <- NULL
   no_samples <- NULL

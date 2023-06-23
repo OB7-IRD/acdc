@@ -150,17 +150,17 @@ fdi_tablea_catch_summary <- function(balbaya_con,
   }
   if ((! is.null(x = template_year))
       && codama::r_type_checking(r_object = template_year,
-                              type = "integer",
-                              output = "logical") != TRUE) {
+                                 type = "integer",
+                                 output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = template_year,
                                    type = "integer",
                                    output = "message"))
   }
   if ((! is.null(x = table_export_path))
       && codama::r_type_checking(r_object = table_export_path,
-                              type = "character",
-                              length = 1L,
-                              output = "logical") != TRUE) {
+                                 type = "character",
+                                 length = 1L,
+                                 output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = table_export_path,
                                    type = "character",
                                    length = 1L,
@@ -205,7 +205,10 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                      best_fao_area %in% c("47.1.1",
                                                           "47.1.2",
                                                           "47.1.3",
-                                                          "41.1.4") ~ "47.1",
+                                                          "41.1.4",
+                                                          "41.1.5",
+                                                          "41.1.6") ~ "47.1",
+                                     best_fao_area %in% c("47.2.2") ~ "47.2",
                                      best_fao_area %in% c("34.2") ~ "34.2.0",
                                      TRUE ~ best_fao_area
                                    ),
@@ -266,13 +269,13 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                                            sep = "_"),
                                    supra_region = "OFR",
                                    geo_indicator = "IWE",
-                                   specon_tech = "NA",
-                                   deep = "NA") %>%
+                                   specon_tech = NA_character_,
+                                   deep = NA_character_) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(nep_sub_region = ifelse(test = unlist(strsplit(x = sub_region,
                                                                  split = "[.]"))[[1]] == "27",
                                           yes = "error",
-                                          no = "NA"))
+                                          no = NA_character_))
   balbaya_landing_rectangle <- dplyr::select(.data = balbaya_landing,
                                              country,
                                              year,
@@ -366,7 +369,10 @@ fdi_tablea_catch_summary <- function(balbaya_con,
         best_fao_area %in% c("47.1.1",
                              "47.1.2",
                              "47.1.3",
-                             "41.1.4") ~ "47.1",
+                             "47.1.4",
+                             "47.1.5",
+                             "47.1.6") ~ "47.1",
+        best_fao_area %in% c("47.2.2") ~ "47.2",
         best_fao_area %in% c("34.2") ~ "34.2.0",
         TRUE ~ best_fao_area),
       country = "FRA",
@@ -379,9 +385,9 @@ fdi_tablea_catch_summary <- function(balbaya_con,
       metier_7 = "PS_LPF_>0_0_0_TRO",
       supra_region = "OFR",
       geo_indicator = "IWE",
-      nep_sub_region = "NA",
-      specon_tech = "NA",
-      deep = "NA",
+      nep_sub_region = NA_character_,
+      specon_tech = NA_character_,
+      deep = NA_character_,
       species = as.character(fao_code),
       retained_tons = dplyr::case_when(
         is.na(retained_tons) ~ 0,
@@ -494,7 +500,7 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                             "deep",
                             "species")) %>%
     dplyr::mutate(discards = ifelse(test = fishing_tech == "HOK",
-                                    yes = "NK",
+                                    yes = 0,
                                     no = ifelse(test = is.na(discards),
                                                 yes = 0,
                                                 no = round(x = discards,
@@ -520,7 +526,36 @@ fdi_tablea_catch_summary <- function(balbaya_con,
                                         no = "N"),
                   totvallandg = ifelse(test = totwghtlandg == 0,
                                        yes = 0,
-                                       no = "NK")) %>%
+                                       no = NA_real_)) %>%
+    dplyr::group_by(country,
+                    year,
+                    quarter,
+                    vessel_length,
+                    fishing_tech,
+                    gear_type,
+                    target_assemblage,
+                    mesh_size_range,
+                    metier,
+                    metier_7,
+                    domain_discards,
+                    domain_landings,
+                    supra_region,
+                    sub_region,
+                    eez_indicator,
+                    geo_indicator,
+                    nep_sub_region,
+                    specon_tech,
+                    deep,
+                    species,
+                    confidential) %>%
+    dplyr::summarise(totwghtlandg = sum(totwghtlandg),
+                     totvallandg = sum(totvallandg),
+                     discards = sum(discards),
+                     .groups = "drop") %>%
+    dplyr::mutate(totvallandg = dplyr::case_when(
+      is.na(x = totvallandg) ~ "NK",
+      TRUE ~ as.character(x = totvallandg)
+    )) %>%
     dplyr::select(country,
                   year,
                   quarter,

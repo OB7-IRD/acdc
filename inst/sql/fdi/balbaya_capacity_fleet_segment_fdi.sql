@@ -35,7 +35,7 @@ FROM
 	-- Length over all of the vessel
 	,v.v_l_ht::numeric AS vessel_length_m
 FROM
-	public.maree t
+	public.maree_fdi t
 	INNER JOIN public.bateau v ON (t.c_bat=v.c_bat)
 	INNER JOIN public.pavillon f ON (f.c_pav_b=v.c_pav_b)
 	INNER JOIN public.type_bateau vt ON (v.c_typ_b=vt.c_typ_b)

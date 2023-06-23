@@ -251,7 +251,10 @@ fdi_tableg_effort <- function(balbaya_con,
                                     best_fao_area %in% c("47.1.1",
                                                          "47.1.2",
                                                          "47.1.3",
-                                                         "41.1.4") ~ "47.1",
+                                                         "47.1.4",
+                                                         "47.1.5",
+                                                         "47.1.6") ~ "47.1",
+                                    best_fao_area %in% c("47.2.2") ~ "47.2",
                                     best_fao_area %in% c("34.2") ~ "34.2.0",
                                     TRUE ~ best_fao_area))
   balbaya_effort_rectangle <- balbaya_effort %>%

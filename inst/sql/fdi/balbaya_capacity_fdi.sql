@@ -24,7 +24,7 @@ WITH balbaya_trip AS
 	-- Number of trips	
 	,count(*)::integer AS tottrips
 FROM
-	public.maree t
+	public.maree_fdi t
 	INNER JOIN public.bateau v ON (t.c_bat=v.c_bat)
 	INNER JOIN public.pavillon f ON (f.c_pav_b=v.c_pav_b)
 	INNER JOIN public.type_bateau vt ON (v.c_typ_b=vt.c_typ_b)
@@ -74,7 +74,7 @@ balbaya_capacity_effort AS
 	-- V volume in m3
 	,((0.2 + 0.02 * log(v.v_ct_m3)) * v.v_ct_m3)::numeric AS totgt
 FROM
-	public.maree t
+	public.maree_fdi t
 	INNER JOIN public.bateau v ON (t.c_bat=v.c_bat)
 	INNER JOIN public.pavillon f ON (f.c_pav_b=v.c_pav_b)
 	INNER JOIN public.type_bateau vt ON (v.c_typ_b=vt.c_typ_b)
