@@ -210,7 +210,7 @@ fdi_tabled_discard_length <- function(observe_con,
                                                 best_fao_area %in% c("47.2.2") ~ "47.2",
                                                 best_fao_area %in% c("34.2") ~ "34.2.0",
                                                 TRUE ~ best_fao_area)) %>% # find best fao area
-    dplyr::mutate(nep_sub_region = NA_character_) %>% # add nep sub region
+    dplyr::mutate(nep_sub_region = "NA") %>% # add nep sub region
     dplyr::mutate(country = dplyr::case_when(country == "MYT" ~ "FRA",
                                              TRUE ~ country)) %>% # recode MYT as FRA
     dplyr::mutate(quarter = lubridate::quarter(observe_sample_discard$observation_date)) %>% # add quarter
