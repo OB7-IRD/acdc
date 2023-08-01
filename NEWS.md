@@ -1,4 +1,4 @@
-# acdc X.X.X - 2023-XX-XX
+# acdc 1.0.0 - 2023-08-01
 
 ## Added
 * Add new variable "metier_7" link to metier level 7 definiton. Referential associated was taking from the ICES RCGs website (https://github.com/ices-eg/RCGs/tree/master/Metiers/Reference_lists) and stored in the package "inst" directory.
