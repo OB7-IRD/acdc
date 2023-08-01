@@ -18,6 +18,7 @@
 #' @importFrom tidyr uncount
 #' @importFrom furdeb marine_area_overlay
 #' @importFrom lubridate quarter
+#' @importFrom stringr str_replace fixed
 #' @export
 fdi_tabled_discard_length <- function(observe_con,
                                       period,
@@ -243,7 +244,11 @@ fdi_tabled_discard_length <- function(observe_con,
                     length) %>%
     dplyr::summarise(no_length = sum(count),
                      mean_weight_at_length = mean(weight),
-                     .groups = "drop") # aggregate samples
+                     .groups = "drop") %>% # aggregate samples
+    dplyr::mutate(mean_weight_at_length = dplyr::case_when(
+      is.na(x = mean_weight_at_length) ~ "NK",
+      TRUE ~ as.character(x = mean_weight_at_length)
+    ))
   observe_sample_discard_agg <- observe_sample_discard_agg %>%
     dplyr::left_join(observe_sampling_stratum,
                      by = c("country",
