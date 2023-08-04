@@ -31,9 +31,11 @@ More information is available on the offical data call webpage: https://datacoll
 
 ## 2023 version
 
-Github tag for scripts apply in 2023: to do
+Github tag for scripts apply in 2023: 1.1.0
 
-Github tag for 2023 documentation associated: to do 
+Github 2023 documentation associated:
+
+https://ob7-ird.github.io/acdc/articles/fisheries_dependent_information_data_call.html#version 
 
 To compile it on your computer use the following code:
 
@@ -106,7 +108,9 @@ observe_con <- postgresql_dbconnection(db_user = config[["databases_configuratio
 
 Github tag for scripts apply in 2022: 1.0.0
 
-Github tag for 2022 documentation associated: 1.0.0
+Github 2022 documentation associated: 
+
+https://ob7-ird.github.io/acdc/articles/fisheries_dependent_information_data_call.html#version-1
 
 To compile it on your computer use the following code:
 
