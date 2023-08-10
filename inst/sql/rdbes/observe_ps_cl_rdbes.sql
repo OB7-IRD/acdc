@@ -10,13 +10,18 @@ select
 	hcf.harbour_country_fao::text as landing_country_fao
 	,co.iso3code::text as vessel_fleet_country_fao
 	,t.enddate::date as landing_date
-	,a.latitude::numeric as latitude_dec
-	,a.longitude::numeric as longitude_dec
+	,a.latitude::numeric as latitude_decimal
+	,a.longitude::numeric as longitude_decimal
 	,s.code::integer as specie_code
-	,s.scientificlabel::text as specie_scientific_name
 	,s.faocode::text as "CLspecFAO"
-	,vt.code::integer as vessel_type
-	,c.weight::numeric as "CLsciWeight"
+	,s.scientificlabel::text as specie_scientific_name
+	,sf.code::integer as specie_fate_code
+	,sf.label1::text as specie_fate_label
+	,v.topiaid::text as "CLencrypVesIds"
+	,v.code::integer as vessel_code
+	,vt.code::integer as vessel_type_code
+	,vt.label2::text as vessel_type_label
+	,c.weight::numeric as "CLoffWeight"
 	,hcf.harbour_locode::text as "CLloc"
 	,v.length::numeric as vessel_length
 from
@@ -29,7 +34,8 @@ from
 	join harbour_country_fao hcf on (t.landingharbour = hcf.harbour_topiaid)
 	join common.species s on (c.species = s.topiaid)
 	join common.vesseltype vt on (v.vesseltype = vt.topiaid)
+	join ps_common.speciesfate sf on (c.speciesfate = sf.topiaid)
 where
 	extract (year from t.enddate) in (?year_time_period)
-	and co.code in ('?fleet')
+	and co.code in (?fleet)
 ;

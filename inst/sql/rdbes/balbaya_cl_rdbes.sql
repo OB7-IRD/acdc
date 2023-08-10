@@ -1,12 +1,16 @@
 select
+	--b.c_bat::integer as vessel_code
+	--,a.d_act::date as activity_date
+	--a.n_act::integer as activity_number
+	--,cp.c_cat_p::integer as weight_category
 	p.c_pays_fao::text as landing_country_fao
 	,pa.c_pays_fao::text as vessel_fleet_country_fao
-	,c.d_act::date as landing_date
-	,a.v_la_act::numeric as latitude_dec
-	,a.v_lo_act::numeric as longitude_dec
+	,a.d_dbq::date as landing_date
+	,a.v_la_act::numeric as latitude_balbaya
+	,a.v_lo_act::numeric as longitude_balbaya
 	,c.c_esp::integer as specie_code
-	,e.l_esp_s ::text as specie_scientific_name
 	,e.c_esp_fao::text as "CLspecFAO"
+	,e.l_esp_s ::text as specie_scientific_name
 	,tb.c_engin::integer as vessel_type
 	,c.v_poids_capt::numeric as "CLsciWeight"
 	,p.c_locode::text as "CLloc"
