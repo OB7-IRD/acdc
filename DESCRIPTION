@@ -48,7 +48,8 @@ Imports:
     furdeb (>= 0.9.0),
     utils,
     lubridate (>= 1.9.2),
-    tidyr (>= 1.3.0)
+    tidyr (>= 1.3.0),
+    worrms (>= 0.4.3)
 Remotes: 
     OB7-IRD/codama,
     OB7-IRD/furdeb
