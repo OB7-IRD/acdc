@@ -79,6 +79,10 @@ rdbes_cl <- function(observe_con,
   vessel_name <- NULL
   worms_aphia_id <- NULL
   # 2 - Arguments verifications ----
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Start arguments verifications.\n",
+      sep = "")
   if (codama::r_type_checking(r_object = observe_con,
                               type = "list",
                               length = 2L,
@@ -139,26 +143,30 @@ rdbes_cl <- function(observe_con,
                                    length = 1L,
                                    output = "message"))
   }
+  cat(format(x = Sys.time(),
+             format = "%Y-%m-%d %H:%M:%S"),
+      " - Successful arguments verifications.\n",
+      sep = "")
   # 3 - Databases extractions ----
   cat(format(x = Sys.time(),
              format = "%Y-%m-%d %H:%M:%S"),
       " - Start databases extractions.\n",
       sep = "")
-  observe_ps_cl_data_query <- paste(readLines(con = system.file("sql",
-                                                                "rdbes",
-                                                                "observe_ps_cl_rdbes.sql",
-                                                                package = "acdc")),
-                                    collapse = "\n")
-  observe_ps_cl_data_query <- DBI::sqlInterpolate(conn = observe_con[[2]],
-                                                  sql = observe_ps_cl_data_query,
-                                                  year_time_period = DBI::SQL(paste0(year_time_period,
-                                                                                     collapse = ", ")),
-                                                  fleet = DBI::SQL(paste0("'",
-                                                                          paste0(fleet,
-                                                                                 collapse = "', '"),
-                                                                          "'")))
-  observe_ps_cl_data <- DBI::dbGetQuery(conn = observe_con[[2]],
-                                        statement = observe_ps_cl_data_query)
+  observe_ps_bb_cl_data_query <- paste(readLines(con = system.file("sql",
+                                                                   "rdbes",
+                                                                   "observe_ps_bb_cl_rdbes.sql",
+                                                                   package = "acdc")),
+                                       collapse = "\n")
+  observe_ps_bb_cl_data_query <- DBI::sqlInterpolate(conn = observe_con[[2]],
+                                                     sql = observe_ps_bb_cl_data_query,
+                                                     year_time_period = DBI::SQL(paste0(year_time_period,
+                                                                                        collapse = ", ")),
+                                                     fleet = DBI::SQL(paste0("'",
+                                                                             paste0(fleet,
+                                                                                    collapse = "', '"),
+                                                                             "'")))
+  observe_ps_bb_cl_data <- DBI::dbGetQuery(conn = observe_con[[2]],
+                                           statement = observe_ps_bb_cl_data_query)
   balbaya_cl_data_query <- paste(readLines(con = system.file("sql",
                                                              "rdbes",
                                                              "balbaya_cl_rdbes.sql",
@@ -200,16 +208,16 @@ rdbes_cl <- function(observe_con,
       " - Start data design.\n",
       sep = "")
   # area and co.
-  observe_ps_cl_data_final <- furdeb::marine_area_overlay(data = observe_ps_cl_data,
-                                                          overlay_expected = "fao_eez_area",
-                                                          longitude_name = "longitude_decimal",
-                                                          latitude_name = "latitude_decimal",
-                                                          fao_area_file_path = fao_area_file_path,
-                                                          fao_overlay_level = "division",
-                                                          auto_selection_fao = TRUE,
-                                                          eez_area_file_path = eez_area_file_path,
-                                                          for_fdi_use = TRUE,
-                                                          silent = TRUE) %>%
+  observe_ps_bb_cl_data_final <- furdeb::marine_area_overlay(data = observe_ps_bb_cl_data,
+                                                             overlay_expected = "fao_eez_area",
+                                                             longitude_name = "longitude_decimal",
+                                                             latitude_name = "latitude_decimal",
+                                                             fao_area_file_path = fao_area_file_path,
+                                                             fao_overlay_level = "division",
+                                                             auto_selection_fao = TRUE,
+                                                             eez_area_file_path = eez_area_file_path,
+                                                             for_fdi_use = TRUE,
+                                                             silent = TRUE) %>%
     dplyr::rename(CLarea = best_fao_area)
   balbaya_cl_data_final <- furdeb::marine_area_overlay(data = balbaya_cl_data,
                                                        overlay_expected = "fao_eez_area",
@@ -227,7 +235,7 @@ rdbes_cl <- function(observe_con,
              format = "%Y-%m-%d %H:%M:%S"),
       " - Warning, check the code regarding non dynamic worms aphia id definition.\n",
       sep = "")
-  observe_ps_cl_data_specie <- tidyr::tibble("specie_scientific_name" = unique(observe_ps_cl_data_final$specie_scientific_name)) %>%
+  observe_ps_bb_cl_data_specie <- tidyr::tibble("specie_scientific_name" = unique(observe_ps_bb_cl_data_final$specie_scientific_name)) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(worms_aphia_id = as.character(x = tryCatch(worrms::wm_name2id(name = specie_scientific_name),
                                                              error = function(a) {NA_character_})),
@@ -238,22 +246,22 @@ rdbes_cl <- function(observe_con,
                     specie_scientific_name == "Sphyraena barracuda" ~ "345843",
                     TRUE ~ worms_aphia_id
                   ))
-  if (any(is.na(x = observe_ps_cl_data_specie$worms_aphia_id))) {
+  if (any(is.na(x = observe_ps_bb_cl_data_specie$worms_aphia_id))) {
     cat(format(x = Sys.time(),
                format = "%Y-%m-%d %H:%M:%S"),
         " - Warning, at least one specie not match with the worms aphia id referential.\n",
         "The follwing specie(s) will be remove from the data production:\n",
-        paste0(dplyr::filter(.data = observe_ps_cl_data_specie,
+        paste0(dplyr::filter(.data = observe_ps_bb_cl_data_specie,
                              is.na(x = worms_aphia_id))$specie_scientific_name,
                collapse = "; "),
         ".\n",
-        "Check in the process the dataset \"observe_ps_cl_data_final\" for more details.\n",
+        "Check in the process the dataset \"observe_ps_bb_cl_data_final\" for more details.\n",
         sep = "")
   }
-  observe_ps_cl_data_final <- dplyr::inner_join(x = observe_ps_cl_data_final,
-                                                y = dplyr::filter(.data = observe_ps_cl_data_specie,
-                                                                  ! is.na(x = worms_aphia_id)),
-                                                by = "specie_scientific_name") %>%
+  observe_ps_bb_cl_data_final <- dplyr::inner_join(x = observe_ps_bb_cl_data_final,
+                                                   y = dplyr::filter(.data = observe_ps_bb_cl_data_specie,
+                                                                     ! is.na(x = worms_aphia_id)),
+                                                   by = "specie_scientific_name") %>%
     dplyr::rename(CLspecCode = worms_aphia_id)
   balbaya_cl_data_specie <- tidyr::tibble("specie_scientific_name" = unique(balbaya_cl_data_final$specie_scientific_name)) %>%
     dplyr::rowwise() %>%
@@ -284,7 +292,7 @@ rdbes_cl <- function(observe_con,
                                              by = "specie_scientific_name") %>%
     dplyr::rename(CLspecCode = worms_aphia_id)
   # others
-  observe_ps_cl_data_final <- observe_ps_cl_data_final %>%
+  observe_ps_bb_cl_data_final <- observe_ps_bb_cl_data_final %>%
     dplyr::left_join(referential_iso_3166[, c("alpha_3_code",
                                               "alpha_2_code")],
                      by = c("landing_country_fao" = "alpha_3_code")) %>%
@@ -305,6 +313,7 @@ rdbes_cl <- function(observe_con,
                     major_fao == "27" ~ "ices_statistical_area_missing",
                     TRUE ~ "-9"
                   ),
+                  CLdSoucstatRect = "EstPosData",
                   CLgsaSubarea = dplyr::case_when(
                     major_fao == "37" ~ "gsa_sub_area_missing",
                     TRUE ~ "NotApplicable"
@@ -381,6 +390,7 @@ rdbes_cl <- function(observe_con,
                     major_fao == "27" ~ "ices_statistical_area_missing",
                     TRUE ~ "-9"
                   ),
+                  CLdSoucstatRect = "EstPosData",
                   CLgsaSubarea = dplyr::case_when(
                     major_fao == "37" ~ "gsa_sub_area_missing",
                     TRUE ~ "NotApplicable"
@@ -426,39 +436,39 @@ rdbes_cl <- function(observe_con,
                   CLtotOffLanVal = "Unknown",
                   CLconfiFlag = "N")
   # confidentiality variable
-  observe_ps_cl_data_vessel <- observe_ps_cl_data_final %>%
+  observe_ps_bb_cl_data_vessel <- observe_ps_bb_cl_data_final %>%
     dplyr::group_by(CLyear,
                     CLquar,
                     CLmonth,
                     CLarea) %>%
     dplyr::summarise(vessel_count = dplyr::n_distinct(vessel_code),
                      .groups = "drop")
-  if (dim(x = dplyr::filter(.data = observe_ps_cl_data_vessel,
+  if (dim(x = dplyr::filter(.data = observe_ps_bb_cl_data_vessel,
                             vessel_count < 3))[1] != 0) {
-    observe_ps_cl_data_vessel_confidential <- dplyr::filter(.data = observe_ps_cl_data_vessel,
-                                                            vessel_count < 3) %>%
+    observe_ps_bb_cl_data_vessel_confidential <- dplyr::filter(.data = observe_ps_bb_cl_data_vessel,
+                                                               vessel_count < 3) %>%
       dplyr::mutate(CLFDIconCod_observe = "A")
-    observe_ps_cl_data_final <- dplyr::left_join(x = observe_ps_cl_data_final,
-                                                 y = dplyr::select(.data = observe_ps_cl_data_vessel_confidential,
-                                                                   -vessel_count),
-                                                 by = c("CLyear",
-                                                        "CLquar",
-                                                        "CLmonth",
-                                                        "CLarea")) %>%
+    observe_ps_bb_cl_data_final <- dplyr::left_join(x = observe_ps_bb_cl_data_final,
+                                                    y = dplyr::select(.data = observe_ps_bb_cl_data_vessel_confidential,
+                                                                      -vessel_count),
+                                                    by = c("CLyear",
+                                                           "CLquar",
+                                                           "CLmonth",
+                                                           "CLarea")) %>%
       dplyr::mutate(CLFDIconCod_observe = dplyr::case_when(
         is.na(x = CLFDIconCod_observe) ~ "N",
         TRUE ~ CLFDIconCod_observe
       ))
   } else {
-    observe_ps_cl_data_final <- dplyr::mutate(CLFDIconCod_observe == "N")
+    observe_ps_bb_cl_data_final <- dplyr::mutate(CLFDIconCod_observe == "N")
   }
-  observe_ps_cl_data_final <- dplyr::inner_join(x = observe_ps_cl_data_final,
-                                                y = dplyr::rename(.data = observe_ps_cl_data_vessel,
-                                                                  "CLnumUniqVes_observe" = "vessel_count"),
-                                                by = c("CLyear",
-                                                       "CLquar",
-                                                       "CLmonth",
-                                                       "CLarea"))
+  observe_ps_bb_cl_data_final <- dplyr::inner_join(x = observe_ps_bb_cl_data_final,
+                                                   y = dplyr::rename(.data = observe_ps_bb_cl_data_vessel,
+                                                                     "CLnumUniqVes_observe" = "vessel_count"),
+                                                   by = c("CLyear",
+                                                          "CLquar",
+                                                          "CLmonth",
+                                                          "CLarea"))
   balbaya_cl_data_vessel <- balbaya_cl_data_final %>%
     dplyr::group_by(CLyear,
                     CLquar,
@@ -497,7 +507,7 @@ rdbes_cl <- function(observe_con,
                                                                -vessel_name),
                                              by = "vessel_code")
   # final design and selection
-  observe_ps_cl_data_supreme <- observe_ps_cl_data_final %>%
+  observe_ps_bb_cl_data_supreme <- observe_ps_bb_cl_data_final %>%
     dplyr::group_by(CLrecType,
                     CLlanCou,
                     CLvesFlagCou,
@@ -506,6 +516,7 @@ rdbes_cl <- function(observe_con,
                     CLmonth,
                     CLarea,
                     CLstatRect,
+                    CLdSoucstatRect,
                     CLgsaSubarea,
                     CLfreshWatNam,
                     CLeconZone,
@@ -540,6 +551,7 @@ rdbes_cl <- function(observe_con,
                     CLmonth,
                     CLarea,
                     CLstatRect,
+                    CLdSoucstatRect,
                     CLgsaSubarea,
                     CLfreshWatNam,
                     CLeconZone,
@@ -566,7 +578,7 @@ rdbes_cl <- function(observe_con,
     dplyr::summarise(CLsciWeight = sum(CLsciWeight),
                      .groups = "drop")
   cl_data <- dplyr::full_join(x = balbaya_cl_data_supreme,
-                              y = observe_ps_cl_data_supreme,
+                              y = observe_ps_bb_cl_data_supreme,
                               by = c("CLrecType",
                                      "CLlanCou",
                                      "CLvesFlagCou",
@@ -575,6 +587,7 @@ rdbes_cl <- function(observe_con,
                                      "CLmonth",
                                      "CLarea",
                                      "CLstatRect",
+                                     "CLdSoucstatRect",
                                      "CLgsaSubarea",
                                      "CLfreshWatNam",
                                      "CLeconZone",
@@ -636,6 +649,7 @@ rdbes_cl <- function(observe_con,
                   CLmonth,
                   CLarea,
                   CLstatRect,
+                  CLdSoucstatRect,
                   CLgsaSubarea,
                   CLfreshWatNam,
                   CLeconZone,
