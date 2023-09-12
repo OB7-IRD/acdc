@@ -11,7 +11,7 @@ rdbes_cl(
   fao_area_file_path,
   eez_area_file_path,
   year_time_period,
-  fleet,
+  flag,
   export_path = NULL
 )
 }
@@ -26,7 +26,7 @@ rdbes_cl(
 
 \item{year_time_period}{{\link[base]{integer}} expected. Year(s) selected associated to the databases queries extractions.}
 
-\item{fleet}{{\link[base]{integer}} expected. Fleet(s) selected associated to the databases queries extractions.}
+\item{flag}{{\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.}
 
 \item{export_path}{{\link[base]{character}} expected. By default NULL. Directory path associated for the export.}
 }

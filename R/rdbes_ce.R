@@ -6,7 +6,7 @@
 #' @param fao_area_file_path {\link[base]{character}} expected. File path of the FAO area grid. The file format has to be .Rdata or .RData extension.
 #' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata or .RData extension.
 #' @param year_time_period {\link[base]{integer}} expected. Year(s) selected associated to the databases queries extractions.
-#' @param fleet {\link[base]{integer}} expected. Fleet(s) selected associated to the databases queries extractions.
+#' @param flag {\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.
 #' @param export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return A R object with the RDBES table CE with potentially a csv extraction associated.
 #' @export
@@ -15,7 +15,7 @@ rdbes_cl <- function(observe_con,
                      fao_area_file_path,
                      eez_area_file_path,
                      year_time_period,
-                     fleet,
+                     flag,
                      export_path = NULL) {
   cat(format(x = Sys.time(),
              format = "%Y-%m-%d %H:%M:%S"),
@@ -53,10 +53,10 @@ rdbes_cl <- function(observe_con,
                                    type = "integer",
                                    output = "message"))
   }
-  if (codama::r_type_checking(r_object = fleet,
+  if (codama::r_type_checking(r_object = flag,
                               type = "integer",
                               output = "logical") != TRUE) {
-    return(codama::r_type_checking(r_object = fleet,
+    return(codama::r_type_checking(r_object = flag,
                                    type = "integer",
                                    output = "message"))
   }
@@ -106,8 +106,8 @@ rdbes_cl <- function(observe_con,
                                                sql = balbaya_ce_data_query,
                                                year_time_period = DBI::SQL(paste0(year_time_period,
                                                                                   collapse = ", ")),
-                                               fleet = DBI::SQL(paste0(fleet,
-                                                                       collapse = ", ")))
+                                               flag = DBI::SQL(paste0(flag,
+                                                                      collapse = ", ")))
   balbaya_ce_data <- DBI::dbGetQuery(conn = balbaya_con[[2]],
                                      statement = balbaya_ce_data_query)
   cat(format(x = Sys.time(),
@@ -153,7 +153,7 @@ rdbes_cl <- function(observe_con,
   tmp <- balbaya_ce_data_final %>%
     dplyr::left_join(referential_iso_3166[, c("alpha_3_code",
                                               "alpha_2_code")],
-                     by = c("vessel_fleet_country_fao" = "alpha_3_code")) %>%
+                     by = c("vessel_flag_country_fao" = "alpha_3_code")) %>%
     dplyr::rename(CLvesFlagCou = alpha_2_code) %>%
     dplyr::mutate(CErecType = "CL",
                   CEyear = lubridate::year(x = landing_date),

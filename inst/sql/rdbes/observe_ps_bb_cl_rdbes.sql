@@ -8,7 +8,7 @@ with harbour_country_fao as (
 		join common.country co on (h.country = co.topiaid))
 select
 	hcf.harbour_country_fao::text as landing_country_fao
-	,co.iso3code::text as vessel_fleet_country_fao
+	,co.iso3code::text as vessel_flag_country_fao
 	,t.enddate::date as landing_date
 	,a.latitude::numeric as latitude_decimal
 	,a.longitude::numeric as longitude_decimal
@@ -30,12 +30,12 @@ from
 	join ps_logbook.route r on (a.route = r.topiaid)
 	join ps_common.trip t on (r.trip = t.topiaid)
 	join common.vessel v on (t.vessel = v.topiaid)
-	join common.country co on (v.fleetcountry = co.topiaid)
+	join common.country co on (v.flagcountry = co.topiaid)
 	join harbour_country_fao hcf on (t.landingharbour = hcf.harbour_topiaid)
 	join common.species s on (c.species = s.topiaid)
 	join common.vesseltype vt on (v.vesseltype = vt.topiaid)
 	join ps_common.speciesfate sf on (c.speciesfate = sf.topiaid)
 where
 	extract (year from t.enddate) in (?year_time_period)
-	and co.code in (?fleet)
+	and co.code in (?flag)
 ;
