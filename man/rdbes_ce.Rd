@@ -2,16 +2,16 @@
 % Please edit documentation in R/rdbes_ce.R
 \name{rdbes_ce}
 \alias{rdbes_ce}
-\alias{rdbes_cl}
 \title{Table Commercial Effort (CE) generation (RDBES process)}
 \usage{
-rdbes_cl(
+rdbes_ce(
   observe_con,
   balbaya_con,
   fao_area_file_path,
   eez_area_file_path,
   year_time_period,
   flag,
+  major_fao_area_filter = NULL,
   export_path = NULL
 )
 }
@@ -27,6 +27,8 @@ rdbes_cl(
 \item{year_time_period}{{\link[base]{integer}} expected. Year(s) selected associated to the databases queries extractions.}
 
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.}
+
+\item{major_fao_area_filter}{{\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.}
 
 \item{export_path}{{\link[base]{character}} expected. By default NULL. Directory path associated for the export.}
 }

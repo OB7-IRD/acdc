@@ -7,77 +7,108 @@
 #' @param eez_area_file_path {\link[base]{character}} expected. File path of the EEZ area grid. The file format has to be .Rdata or .RData extension.
 #' @param year_time_period {\link[base]{integer}} expected. Year(s) selected associated to the databases queries extractions.
 #' @param flag {\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.
+#' @param major_fao_area_filter {\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.
+#' @param digit_accuracy {\link[base]{integer}} expected. By default 1. Indicating the number of decimal places to be used.
 #' @param export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return A R object with the RDBES table CL with potentially a csv extraction associated.
 #' @export
-#' @importFrom utils write.csv2
 #' @importFrom codama r_type_checking file_path_checking
 #' @importFrom DBI sqlInterpolate SQL dbGetQuery
 #' @importFrom furdeb marine_area_overlay
+#' @importFrom dplyr rename filter select setdiff inner_join rowwise mutate case_when left_join group_by reframe full_join n_distinct
 #' @importFrom tidyr tibble
-#' @importFrom dplyr full_join select n_distinct summarise group_by mutate case_when filter inner_join rename rowwise left_join
 #' @importFrom worrms wm_name2id
 #' @importFrom lubridate year quarter month
+#' @importFrom stringr str_flatten
+#' @importFrom utils write.csv
 rdbes_cl <- function(observe_con,
                      balbaya_con,
                      fao_area_file_path,
                      eez_area_file_path,
                      year_time_period,
                      flag,
+                     major_fao_area_filter = NULL,
+                     digit_accuracy = 1L,
                      export_path = NULL) {
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
           " - Start process on RDBES table CL generation.",
           sep = "")
   # 1 - Global variables assignement ----
-  CLFDIconCod <- NULL
-  CLFDIconCod_balbaya <- NULL
-  CLFDIconCod_observe <- NULL
-  CLIBmitiDev <- NULL
-  CLarea <- NULL
-  CLcatchCat <- NULL
-  CLconfiFlag <- NULL
-  CLdSouSciWeig <- NULL
-  CLdTypSciWeig <- NULL
-  CLdeepSeaReg <- NULL
-  CLeconZone <- NULL
-  CLencrypVesIds <- NULL
-  CLexpDiff <- NULL
-  CLfishTech <- NULL
-  CLfreshWatNam <- NULL
-  CLgeoInd <- NULL
-  CLgsaSubarea <- NULL
-  CLlanCou <- NULL
-  CLlandCat <- NULL
-  CLloc <- NULL
-  CLmetier6 <- NULL
-  CLmonth <- NULL
-  CLnatFishAct <- NULL
-  CLnumUniqVes <- NULL
-  CLnumUniqVes_balbaya <- NULL
-  CLnumUniqVes_observe <- NULL
-  CLoffWeight <- NULL
-  CLquar <- NULL
-  CLrecType <- NULL
-  CLregDisCat <- NULL
-  CLsciWeight <- NULL
-  CLspeConTech <- NULL
-  CLspecCode <- NULL
-  CLspecFAO <- NULL
-  CLstatRect <- NULL
-  CLsupReg <- NULL
-  CLtotOffLanVal <- NULL
-  CLvesFlagCou <- NULL
-  CLvesLenCat <- NULL
-  CLyear <- NULL
-  alpha_2_code <- NULL
   best_fao_area <- NULL
-  landing_date <- NULL
-  specie_scientific_name <- NULL
-  vessel_code <- NULL
-  vessel_count <- NULL
+  eez_indicator <- NULL
+  major_fao <- NULL
+  latitude_decimal <- NULL
+  longitude_decimal <- NULL
+  subarea_fao <- NULL
+  division_fao <- NULL
+  eez <- NULL
   vessel_name <- NULL
+  vessel_id <- NULL
+  specie_scientific_name <- NULL
   worms_aphia_id <- NULL
+  alpha_2_code <- NULL
+  landing_date <- NULL
+  CLspecFAO <- NULL
+  CLencrypVesIds <- NULL
+  CLloc <- NULL
+  CLarea <- NULL
+  CLeconZoneIndi <- NULL
+  CLspecCode <- NULL
+  CLlanCou <- NULL
+  CLvesFlagCou <- NULL
+  CLeconZone <- NULL
+  CLrecType <- NULL
+  CLyear <- NULL
+  CLquar <- NULL
+  CLmonth <- NULL
+  CLlandCat <- NULL
+  CLcatchCat <- NULL
+  CLregDisCat <- NULL
+  vessel_type_code <- NULL
+  vessel_length <- NULL
+  CLoffWeight <- NULL
+  CLsciWeight <- NULL
+  CLsciWeightErrMeaValTyp <- NULL
+  CLsciWeightErrMeaValFirst <- NULL
+  CLsciWeightErrMeaValSecond <- NULL
+  CLvalErrMeaValTyp <- NULL
+  CLvalErrMeaValFirst <- NULL
+  CLvalErrMeaValSecond <- NULL
+  CLnumFishInCatchErrMeaValTyp <- NULL
+  CLnumFishInCatchErrMeaValFirst <- NULL
+  CLnumFishInCatchErrMeaValSecond <- NULL
+  CLsciWeightQualBias <- NULL
+  CLdTypSciWeig <- NULL
+  CLdSouSciWeig <- NULL
+  CLsampScheme <- NULL
+  CLdSouLanVal <- NULL
+  CLstatRect <- NULL
+  CLdSoucstatRect <- NULL
+  CLfishManUnit <- NULL
+  CLgsaSubarea <- NULL
+  CLjurisdArea <- NULL
+  CLfishAreaCat <- NULL
+  CLfreshWatNam <- NULL
+  CLsizeCatScale <- NULL
+  CLsizeCat <- NULL
+  CLnatFishAct <- NULL
+  CLmetier6 <- NULL
+  CLIBmitiDev <- NULL
+  CLvesLenCat <- NULL
+  CLfishTech <- NULL
+  CLmesSizRan <- NULL
+  CLsupReg <- NULL
+  CLgeoInd <- NULL
+  CLspeConTech <- NULL
+  CLdeepSeaReg <- NULL
+  CLFDIconCod <- NULL
+  CLexpDiff <- NULL
+  CLtotOffLanVal <- NULL
+  CLtotNumFish <- NULL
+  CLnumUniqVes <- NULL
+  CLcom <- NULL
+  CLconfiFlag <- NULL
   # 2 - Arguments verifications ----
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -132,6 +163,22 @@ rdbes_cl <- function(observe_con,
                                       extension = c("Rdata",
                                                     "RData"),
                                       output = "message"))
+  }
+  if (codama::r_type_checking(r_object = major_fao_area_filter,
+                              type = "integer",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = major_fao_area_filter,
+                                   type = "integer",
+                                   output = "message"))
+  }
+  if (codama::r_type_checking(r_object = digit_accuracy,
+                              type = "integer",
+                              length = 1L,
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = digit_accuracy,
+                                   type = "integer",
+                                   length = 1L,
+                                   output = "message"))
   }
   if ((! is.null(x = export_path))
       && codama::r_type_checking(r_object = export_path,
@@ -218,7 +265,18 @@ rdbes_cl <- function(observe_con,
                                                              eez_area_file_path = eez_area_file_path,
                                                              for_fdi_use = TRUE,
                                                              silent = TRUE) %>%
-    dplyr::rename(CLarea = best_fao_area)
+    dplyr::rename(CLarea = best_fao_area,
+                  CLeconZoneIndi = eez_indicator)
+  if (! is.null(x = major_fao_area_filter)) {
+    observe_ps_bb_cl_data_final <- dplyr::filter(.data = observe_ps_bb_cl_data_final,
+                                                 major_fao %in% major_fao_area_filter)
+  }
+  observe_ps_bb_cl_data_final <- dplyr::select(.data = observe_ps_bb_cl_data_final,
+                                               -latitude_decimal,
+                                               -longitude_decimal,
+                                               -subarea_fao,
+                                               -division_fao,
+                                               -eez)
   balbaya_cl_data_final <- furdeb::marine_area_overlay(data = balbaya_cl_data,
                                                        overlay_expected = "fao_eez_area",
                                                        longitude_name = "longitude_decimal",
@@ -229,7 +287,35 @@ rdbes_cl <- function(observe_con,
                                                        eez_area_file_path = eez_area_file_path,
                                                        for_fdi_use = TRUE,
                                                        silent = TRUE) %>%
-    dplyr::rename(CLarea = best_fao_area)
+    dplyr::rename(CLarea = best_fao_area,
+                  CLeconZoneIndi = eez_indicator)
+  if (! is.null(x = major_fao_area_filter)) {
+    balbaya_cl_data_final <- dplyr::filter(.data = balbaya_cl_data_final,
+                                           major_fao %in% major_fao_area_filter)
+  }
+  balbaya_cl_data_final <- dplyr::select(.data = balbaya_cl_data_final,
+                                         -latitude_decimal,
+                                         -longitude_decimal,
+                                         -subarea_fao,
+                                         -division_fao,
+                                         -eez)
+  # vessel id
+  if (! all(unique(x = balbaya_cl_data_final$vessel_code) %in% referential_vessel$vessel_code)) {
+    stop(format(x = Sys.time(),
+                format = "%Y-%m-%d %H:%M:%S"),
+         " - At least one vessel id is not in the vessel referential.\n",
+         "Check the following vessel id(s):\n",
+         paste(dplyr::setdiff(x = unique(x = balbaya_cl_data_final$vessel_code),
+                              y = referential_vessel$vessel_code),
+               collapse = ", "),
+         sep = "")
+  } else {
+    balbaya_cl_data_final <- dplyr::inner_join(x = balbaya_cl_data_final,
+                                               y = dplyr::select(.data = referential_vessel,
+                                                                 -vessel_name),
+                                               by = "vessel_code") %>%
+      dplyr::rename(CLencrypVesIds = vessel_id)
+  }
   # specie code and name
   warning(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -306,24 +392,9 @@ rdbes_cl <- function(observe_con,
                      by = c("eez_country" = "alpha_3_code")) %>%
     dplyr::rename(CLeconZone = alpha_2_code) %>%
     dplyr::mutate(CLrecType = "CL",
-                  CLdSouLanVal = "Other",
                   CLyear = lubridate::year(x = landing_date),
                   CLquar = lubridate::quarter(x = landing_date),
                   CLmonth = lubridate::month(x = landing_date),
-                  CLstatRect = dplyr::case_when(
-                    major_fao == "27" ~ "ices_statistical_area_missing",
-                    TRUE ~ "-9"
-                  ),
-                  CLdSoucstatRect = "EstPosData",
-                  CLfishManUnit = NA,
-                  CLgsaSubarea = dplyr::case_when(
-                    major_fao == "37" ~ "gsa_sub_area_missing",
-                    TRUE ~ "NotApplicable"
-                  ),
-                  CLjurisdArea = NA,
-                  CLfishAreaCat = "NA",
-                  CLfreshWatNam = "NA",
-                  CLeconZoneIndi = NA,
                   CLlandCat = dplyr::case_when(
                     specie_fate_code == 6 ~ "Ind",
                     specie_fate_code == 11 ~ "None",
@@ -337,47 +408,27 @@ rdbes_cl <- function(observe_con,
                   CLregDisCat = dplyr::case_when(
                     specie_fate_code == 6 ~ "NotApplicable",
                     specie_fate_code == 11 ~ "NotKnown"
-                  ),
-                  CLsizeCatScale = NA,
-                  CLsizeCat = NA,
-                  CLnatFishAct = dplyr::case_when(
-                    vessel_type_code == 6 ~ "PS_LPF_>0_0_0_TRO",
-                    vessel_type_code == 2 ~ "LHP_LPF_0_0_0_MSP",
-                    TRUE ~ "national_fishing_activity_missing"
-                  ),
-                  CLmetier6 = dplyr::case_when(
-                    vessel_type_code == 6 ~ "PS_LPF_>0_0_0",
-                    vessel_type_code == 2 ~ "LHP_LPF_0_0_0",
-                    TRUE ~ "metier6_missing"
-                  ),
-                  CLIBmitiDev = "None",
-                  CLvesLenCat = dplyr::case_when(
-                    vessel_length < 6 ~ "VL0006",
-                    vessel_length >= 6 & vessel_length < 8 ~ "VL0608",
-                    vessel_length >= 8 & vessel_length < 10 ~ "VL0810",
-                    vessel_length >= 10 & vessel_length < 12 ~ "VL1012",
-                    vessel_length >= 12 & vessel_length < 15 ~ "VL0608",
-                    vessel_length >= 15 & vessel_length < 18 ~ "VL1518",
-                    vessel_length >= 18 & vessel_length < 24 ~ "VL0608",
-                    vessel_length >= 24 & vessel_length < 40 ~ "VL2440",
-                    vessel_length >= 40 ~ "VL40XX",
-                    TRUE ~ "NK"
-                  ),
-                  CLfishTech = dplyr::case_when(
-                    vessel_type_code == 6 ~ "PS",
-                    vessel_type_code == 2 ~ "HOK",
-                    TRUE ~ "fishing_technique_missing"
-                  ),
-                  CLmesSizRan = NA,
-                  CLsupReg = "OFR",
-                  CLgeoInd = "IWE",
-                  CLspeConTech = "NA",
-                  CLdeepSeaReg = "N",
-                  CLoffWeight = round(x = CLoffWeight,
-                                      digits = 1),
-                  CLtotOffLanVal = "Unknown",
-                  CLtotNumFish = NA,
-                  CLconfiFlag = "N")
+                  )) %>%
+    dplyr::group_by(CLspecFAO,
+                    CLencrypVesIds,
+                    CLloc,
+                    CLarea,
+                    CLeconZoneIndi,
+                    CLspecCode,
+                    CLlanCou,
+                    CLvesFlagCou,
+                    CLeconZone,
+                    CLrecType,
+                    CLyear,
+                    CLquar,
+                    CLmonth,
+                    CLlandCat,
+                    CLcatchCat,
+                    CLregDisCat,
+                    vessel_type_code,
+                    vessel_length) %>%
+    dplyr::reframe(CLoffWeight = round(x = sum(CLoffWeight),
+                                       digits = digit_accuracy))
   balbaya_cl_data_final <- balbaya_cl_data_final %>%
     dplyr::left_join(referential_iso_3166[, c("alpha_3_code",
                                               "alpha_2_code")],
@@ -391,29 +442,127 @@ rdbes_cl <- function(observe_con,
                                               "alpha_2_code")],
                      by = c("eez_country" = "alpha_3_code")) %>%
     dplyr::rename(CLeconZone = alpha_2_code) %>%
-    dplyr::mutate(CLrecType = "CL",
-                  CLsampScheme = NA,
-                  CLdSouLanVal = "Other",
-                  CLyear = lubridate::year(x = landing_date),
+    dplyr::mutate(CLyear = lubridate::year(x = landing_date),
                   CLquar = lubridate::quarter(x = landing_date),
-                  CLmonth = lubridate::month(x = landing_date),
+                  CLmonth = lubridate::month(x = landing_date)) %>%
+    dplyr::group_by(CLyear,
+                    CLquar,
+                    CLmonth,
+                    CLlanCou,
+                    CLvesFlagCou,
+                    CLeconZone,
+                    CLspecCode,
+                    CLspecFAO,
+                    CLloc,
+                    CLarea,
+                    CLeconZoneIndi,
+                    CLencrypVesIds,
+                    vessel_type_code,
+                    vessel_length) %>%
+    dplyr::reframe(CLsciWeight = round(x = sum(CLsciWeight),
+                                       digits = digit_accuracy)) %>%
+    dplyr::mutate(CLrecType = "CL",
+                  CLlandCat = "Ind",
+                  CLcatchCat = "Lan",
+                  CLregDisCat = "NotApplicable",
+                  CLsciWeightErrMeaValTyp = NA,
+                  CLsciWeightErrMeaValFirst = NA,
+                  CLsciWeightErrMeaValSecond = NA,
+                  CLvalErrMeaValTyp = NA,
+                  CLvalErrMeaValFirst = NA,
+                  CLvalErrMeaValSecond = NA,
+                  CLnumFishInCatchErrMeaValTyp = NA,
+                  CLnumFishInCatchErrMeaValFirst = NA,
+                  CLnumFishInCatchErrMeaValSecond = NA,
+                  CLsciWeightQualBias = NA)
+  # data merge
+  cl_data <- dplyr::full_join(x = observe_ps_bb_cl_data_final,
+                              y = balbaya_cl_data_final,
+                              by = c("CLspecFAO",
+                                     "CLencrypVesIds",
+                                     "CLloc",
+                                     "CLarea",
+                                     "CLeconZoneIndi",
+                                     "CLspecCode",
+                                     "CLlanCou",
+                                     "CLvesFlagCou",
+                                     "CLeconZone",
+                                     "CLrecType",
+                                     "CLyear",
+                                     "CLquar",
+                                     "CLmonth",
+                                     "CLlandCat",
+                                     "CLcatchCat",
+                                     "CLregDisCat",
+                                     "vessel_type_code",
+                                     "vessel_length")) %>%
+    dplyr::mutate(CLdTypSciWeig = dplyr::case_when(
+      is.na(CLsciWeight) ~ "Official",
+      is.na(CLoffWeight) ~ "Estimate",
+      TRUE ~ "Estimate"
+    ),
+    CLdSouSciWeig = dplyr::case_when(
+      is.na(CLsciWeight) ~ "Logb",
+      TRUE ~ "Combination of census data"
+    ),
+    CLoffWeight = dplyr::case_when(
+      is.na(CLoffWeight) ~ 0,
+      TRUE ~ CLoffWeight),
+    CLsciWeight = dplyr::case_when(
+      is.na(CLsciWeight) ~ CLoffWeight,
+      TRUE ~ CLsciWeight
+    )) %>%
+    dplyr::group_by(CLspecFAO,
+                    CLloc,
+                    CLarea,
+                    CLeconZoneIndi,
+                    CLspecCode,
+                    CLlanCou,
+                    CLvesFlagCou,
+                    CLeconZone,
+                    CLrecType,
+                    CLyear,
+                    CLquar,
+                    CLmonth,
+                    CLlandCat,
+                    CLcatchCat,
+                    CLregDisCat,
+                    vessel_type_code,
+                    vessel_length,
+                    CLsciWeightErrMeaValTyp,
+                    CLsciWeightErrMeaValFirst,
+                    CLsciWeightErrMeaValSecond,
+                    CLvalErrMeaValTyp,
+                    CLvalErrMeaValFirst,
+                    CLvalErrMeaValSecond,
+                    CLnumFishInCatchErrMeaValTyp,
+                    CLnumFishInCatchErrMeaValFirst,
+                    CLnumFishInCatchErrMeaValSecond,
+                    CLsciWeightQualBias,
+                    CLdTypSciWeig,
+                    CLdSouSciWeig) %>%
+    dplyr::reframe(CLoffWeight = sum(CLoffWeight),
+                   CLsciWeight = sum(CLsciWeight),
+                   CLnumUniqVes = dplyr::n_distinct(CLencrypVesIds),
+                   CLencrypVesIds = stringr::str_flatten(unique(CLencrypVesIds),
+                                                         collapse = ", ")) %>%
+    dplyr::mutate(CLsampScheme = NA,
+                  CLdSouLanVal = NA,
                   CLstatRect = dplyr::case_when(
-                    major_fao == "27" ~ "ices_statistical_area_missing",
+                    stringr::str_extract(string = CLarea,
+                                         pattern = "^[:digit:].") == "27" ~ "ices_statistical_area_missing",
                     TRUE ~ "-9"
                   ),
-                  CLdSoucstatRect = "EstPosData",
                   CLfishManUnit = NA,
+                  CLdSoucstatRect = "EstPosData",
                   CLgsaSubarea = dplyr::case_when(
-                    major_fao == "37" ~ "gsa_sub_area_missing",
+                    stringr::str_extract(string = CLarea,
+                                         pattern = "^[:digit:].") == "37" ~ "gsa_sub_area_missing",
                     TRUE ~ "NotApplicable"
                   ),
                   CLjurisdArea = NA,
                   CLfishAreaCat = "NA",
                   CLfreshWatNam = "NA",
-                  CLeconZoneIndi = NA,
-                  CLlandCat = "Ind",
-                  CLcatchCat = "Lan",
-                  CLregDisCat = "NotApplicable",
                   CLsizeCatScale = NA,
                   CLsizeCat = NA,
                   CLnatFishAct = dplyr::case_when(
@@ -449,265 +598,22 @@ rdbes_cl <- function(observe_con,
                   CLgeoInd = "IWE",
                   CLspeConTech = "NA",
                   CLdeepSeaReg = "N",
-                  CLsciWeight = round(x = CLsciWeight,
-                                      digits = 1),
                   CLtotOffLanVal = "Unknown",
                   CLtotNumFish = NA,
-                  CLsciWeightErrMeaValTyp = NA,
-                  CLsciWeightErrMeaValFirst = NA,
-                  CLsciWeightErrMeaValSecond = NA,
-                  CLvalErrMeaValTyp = NA,
-                  CLvalErrMeaValFirst = NA,
-                  CLvalErrMeaValSecond = NA,
-                  CLnumFishInCatchErrMeaValTyp = NA,
-                  CLnumFishInCatchErrMeaValFirst = NA,
-                  CLnumFishInCatchErrMeaValSecond = NA,
                   CLcom = NA,
-                  CLsciWeightQualBias = NA,
-                  CLconfiFlag = "N")
-  # confidentiality variable
-  observe_ps_bb_cl_data_vessel <- observe_ps_bb_cl_data_final %>%
-    dplyr::group_by(CLyear,
-                    CLquar,
-                    CLmonth,
-                    CLarea) %>%
-    dplyr::summarise(vessel_count = dplyr::n_distinct(vessel_code),
-                     .groups = "drop")
-  if (dim(x = dplyr::filter(.data = observe_ps_bb_cl_data_vessel,
-                            vessel_count < 3))[1] != 0) {
-    observe_ps_bb_cl_data_vessel_confidential <- dplyr::filter(.data = observe_ps_bb_cl_data_vessel,
-                                                               vessel_count < 3) %>%
-      dplyr::mutate(CLFDIconCod_observe = "A")
-    observe_ps_bb_cl_data_final <- dplyr::left_join(x = observe_ps_bb_cl_data_final,
-                                                    y = dplyr::select(.data = observe_ps_bb_cl_data_vessel_confidential,
-                                                                      -vessel_count),
-                                                    by = c("CLyear",
-                                                           "CLquar",
-                                                           "CLmonth",
-                                                           "CLarea")) %>%
-      dplyr::mutate(CLFDIconCod_observe = dplyr::case_when(
-        is.na(x = CLFDIconCod_observe) ~ "N",
-        TRUE ~ CLFDIconCod_observe
-      ))
-  } else {
-    observe_ps_bb_cl_data_final <- dplyr::mutate(CLFDIconCod_observe == "N")
-  }
-  observe_ps_bb_cl_data_final <- dplyr::inner_join(x = observe_ps_bb_cl_data_final,
-                                                   y = dplyr::rename(.data = observe_ps_bb_cl_data_vessel,
-                                                                     "CLnumUniqVes_observe" = "vessel_count"),
-                                                   by = c("CLyear",
-                                                          "CLquar",
-                                                          "CLmonth",
-                                                          "CLarea"))
-  balbaya_cl_data_vessel <- balbaya_cl_data_final %>%
-    dplyr::group_by(CLyear,
-                    CLquar,
-                    CLmonth,
-                    CLarea) %>%
-    dplyr::summarise(vessel_count = dplyr::n_distinct(vessel_code),
-                     .groups = "drop")
-  if (dim(x = dplyr::filter(.data = balbaya_cl_data_vessel,
-                            vessel_count < 3))[1] != 0) {
-    balbaya_cl_data_vessel_confidential <- dplyr::filter(.data = balbaya_cl_data_vessel,
-                                                         vessel_count < 3) %>%
-      dplyr::mutate(CLFDIconCod_balbaya = "A")
-    balbaya_cl_data_final <- dplyr::left_join(x = balbaya_cl_data_final,
-                                              y = dplyr::select(.data = balbaya_cl_data_vessel_confidential,
-                                                                -vessel_count),
-                                              by = c("CLyear",
-                                                     "CLquar",
-                                                     "CLmonth",
-                                                     "CLarea")) %>%
-      dplyr::mutate(CLFDIconCod_balbaya = dplyr::case_when(
-        is.na(x = CLFDIconCod_balbaya) ~ "N",
-        TRUE ~ CLFDIconCod_balbaya
-      ))
-  } else {
-    balbaya_cl_data_final <- dplyr::mutate(CLFDIconCod_balbaya == "N")
-  }
-  balbaya_cl_data_final <- dplyr::inner_join(x = balbaya_cl_data_final,
-                                             y = dplyr::rename(.data = balbaya_cl_data_vessel,
-                                                               "CLnumUniqVes_balbaya" = "vessel_count"),
-                                             by = c("CLyear",
-                                                    "CLquar",
-                                                    "CLmonth",
-                                                    "CLarea"))
-  balbaya_cl_data_final <- dplyr::inner_join(x = balbaya_cl_data_final,
-                                             y = dplyr::select(.data = referential_vessel,
-                                                               -vessel_name),
-                                             by = "vessel_code")
-  # final design and selection
-  observe_ps_bb_cl_data_supreme <- observe_ps_bb_cl_data_final %>%
-    dplyr::group_by(CLrecType,
-                    CLdSouLanVal,
-                    CLlanCou,
-                    CLvesFlagCou,
-                    CLyear,
-                    CLquar,
-                    CLmonth,
-                    CLarea,
-                    CLstatRect,
-                    CLdSoucstatRect,
-                    CLfishManUnit,
-                    CLgsaSubarea,
-                    CLjurisdArea,
-                    CLfishAreaCat,
-                    CLfreshWatNam,
-                    CLeconZone,
-                    CLeconZoneIndi,
-                    CLspecCode,
-                    CLspecFAO,
-                    CLlandCat,
-                    CLcatchCat,
-                    CLregDisCat,
-                    CLsizeCatScale,
-                    CLsizeCat,
-                    CLnatFishAct,
-                    CLmetier6,
-                    CLIBmitiDev,
-                    CLloc,
-                    CLvesLenCat,
-                    CLfishTech,
-                    CLmesSizRan,
-                    CLsupReg,
-                    CLgeoInd,
-                    CLspeConTech,
-                    CLdeepSeaReg,
-                    CLFDIconCod_observe,
-                    CLtotOffLanVal,
-                    CLtotNumFish,
-                    CLnumUniqVes_observe,
-                    CLconfiFlag,
-                    CLencrypVesIds) %>%
-    dplyr::summarise(CLoffWeight = sum(CLoffWeight),
-                     .groups = "drop")
-  balbaya_cl_data_supreme <- balbaya_cl_data_final %>%
-    dplyr::group_by(CLrecType,
-                    CLsampScheme,
-                    CLdSouLanVal,
-                    CLlanCou,
-                    CLvesFlagCou,
-                    CLyear,
-                    CLquar,
-                    CLmonth,
-                    CLarea,
-                    CLstatRect,
-                    CLdSoucstatRect,
-                    CLfishManUnit,
-                    CLgsaSubarea,
-                    CLjurisdArea,
-                    CLfishAreaCat,
-                    CLfreshWatNam,
-                    CLeconZone,
-                    CLeconZoneIndi,
-                    CLspecCode,
-                    CLspecFAO,
-                    CLlandCat,
-                    CLcatchCat,
-                    CLregDisCat,
-                    CLsizeCatScale,
-                    CLsizeCat,
-                    CLnatFishAct,
-                    CLmetier6,
-                    CLIBmitiDev,
-                    CLloc,
-                    CLvesLenCat,
-                    CLfishTech,
-                    CLmesSizRan,
-                    CLsupReg,
-                    CLgeoInd,
-                    CLspeConTech,
-                    CLdeepSeaReg,
-                    CLFDIconCod_balbaya,
-                    CLtotOffLanVal,
-                    CLtotNumFish,
-                    CLnumUniqVes_balbaya,
-                    CLsciWeightErrMeaValTyp,
-                    CLsciWeightErrMeaValFirst,
-                    CLsciWeightErrMeaValSecond,
-                    CLvalErrMeaValTyp,
-                    CLvalErrMeaValFirst,
-                    CLvalErrMeaValSecond,
-                    CLnumFishInCatchErrMeaValTyp,
-                    CLnumFishInCatchErrMeaValFirst,
-                    CLnumFishInCatchErrMeaValSecond,
-                    CLcom,
-                    CLsciWeightQualBias,
-                    CLconfiFlag,
-                    CLencrypVesIds) %>%
-    dplyr::summarise(CLsciWeight = sum(CLsciWeight),
-                     .groups = "drop")
-  cl_data <- dplyr::full_join(x = balbaya_cl_data_supreme,
-                              y = observe_ps_bb_cl_data_supreme,
-                              by = c("CLrecType",
-                                     "CLdSouLanVal",
-                                     "CLlanCou",
-                                     "CLvesFlagCou",
-                                     "CLyear",
-                                     "CLquar",
-                                     "CLmonth",
-                                     "CLarea",
-                                     "CLstatRect",
-                                     "CLdSoucstatRect",
-                                     "CLfishManUnit",
-                                     "CLgsaSubarea",
-                                     "CLjurisdArea",
-                                     "CLfishAreaCat",
-                                     "CLfreshWatNam",
-                                     "CLeconZone",
-                                     "CLeconZoneIndi",
-                                     "CLspecCode",
-                                     "CLspecFAO",
-                                     "CLlandCat",
-                                     "CLcatchCat",
-                                     "CLregDisCat",
-                                     "CLsizeCatScale",
-                                     "CLsizeCat",
-                                     "CLnatFishAct",
-                                     "CLmetier6",
-                                     "CLIBmitiDev",
-                                     "CLloc",
-                                     "CLvesLenCat",
-                                     "CLfishTech",
-                                     "CLmesSizRan",
-                                     "CLsupReg",
-                                     "CLgeoInd",
-                                     "CLspeConTech",
-                                     "CLdeepSeaReg",
-                                     "CLtotOffLanVal",
-                                     "CLtotNumFish",
-                                     "CLconfiFlag",
-                                     "CLencrypVesIds")) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(CLdTypSciWeig = dplyr::case_when(
-      is.na(CLsciWeight) ~ "Official",
-      is.na(CLoffWeight) ~ "Estimate",
-      TRUE ~ "Estimate"
-    ),
-    CLdSouSciWeig = dplyr::case_when(
-      is.na(CLsciWeight) ~ "Logb",
-      is.na(CLoffWeight) ~ "Combination of census data",
-      TRUE ~ "Combination of census data"
-    ),
-    CLFDIconCod = dplyr::case_when(
-      is.na(CLFDIconCod_balbaya) ~ CLFDIconCod_observe,
-      is.na(CLFDIconCod_observe) ~ CLFDIconCod_balbaya,
-      CLFDIconCod_balbaya != CLFDIconCod_observe ~ "N",
-      TRUE ~ CLFDIconCod_observe
-    ),
-    CLnumUniqVes = max(CLnumUniqVes_balbaya,
-                       CLnumUniqVes_observe,
-                       na.rm = TRUE),
-    CLsciWeight = dplyr::case_when(
-      is.na(CLsciWeight) ~ CLoffWeight,
-      TRUE ~ CLsciWeight
-    ),
-    CLoffWeight = dplyr::case_when(
-      is.na(CLoffWeight) ~ 0,
-      TRUE ~ CLoffWeight),
-    CLexpDiff = dplyr::case_when(
-      CLoffWeight != CLsciWeight ~ "Sampld",
-      TRUE ~ "NoDiff")) %>%
+                  CLconfiFlag = dplyr::case_when(
+                    CLnumUniqVes <= 3 ~ "Y",
+                    TRUE ~ "N"
+                  ),
+                  CLFDIconCod = dplyr::case_when(
+                    CLnumUniqVes <= 3 ~ "A",
+                    TRUE ~ "N"
+                  ),
+                  CLexpDiff = dplyr::case_when(
+                    CLoffWeight != CLsciWeight ~ "Sampld",
+                    TRUE ~ "NoDiff")) %>%
+    dplyr::select(-vessel_type_code,
+                  -vessel_length) %>%
     dplyr::select(CLrecType,
                   CLdTypSciWeig,
                   CLdSouSciWeig,
@@ -775,19 +681,19 @@ rdbes_cl <- function(observe_con,
   if (! is.null(x = export_path)) {
     message(format(x = Sys.time(),
                    format = "%Y-%m-%d %H:%M:%S"),
-            " - Start cl data extractions.",
+            " - Start CL data extractions.",
             sep = "")
-    utils::write.csv2(x = cl_data,
-                      file = file.path(export_path,
-                                       paste(format(as.POSIXct(Sys.time()),
-                                                    "%Y%m%d_%H%M%S"),
-                                             "rdbes_cl.csv",
-                                             sep = "_")),
-                      row.names = FALSE,
-                      na = "")
+    utils::write.csv(x = cl_data,
+                     file = file.path(export_path,
+                                      paste(format(as.POSIXct(Sys.time()),
+                                                   "%Y%m%d_%H%M%S"),
+                                            "rdbes_cl.csv",
+                                            sep = "_")),
+                     row.names = FALSE,
+                     na = "")
     message(format(x = Sys.time(),
                    format = "%Y-%m-%d %H:%M:%S"),
-            " - Successful cl data extractions.\n",
+            " - Successful CL data extractions.\n",
             "File available in the directory ",
             export_path,
             sep = "")

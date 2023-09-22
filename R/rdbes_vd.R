@@ -8,7 +8,8 @@
 #' @return A R object with the RDBES table VD with potentially a csv extraction associated.
 #' @export
 rdbes_vd <- function(observe_con,
-                     rdbes_cl,
+                     rdbes_table_cl = NULL,
+                     rdbes_table_ce = NULL,
                      flag,
                      export_path = NULL) {
   message(format(x = Sys.time(),
@@ -29,6 +30,22 @@ rdbes_vd <- function(observe_con,
     return(codama::r_type_checking(r_object = observe_con,
                                    type = "list",
                                    length = 2L,
+                                   output = "message"))
+  }
+  if ((! is.null(x = rdbes_table_cl))
+      && codama::r_type_checking(r_object = rdbes_table_cl,
+                                 type = "list",
+                                 output = "data.frame") != TRUE) {
+    return(codama::r_type_checking(r_object = rdbes_table_cl,
+                                   type = "list",
+                                   output = "message"))
+  }
+  if ((! is.null(x = rdbes_table_ce))
+      && codama::r_type_checking(r_object = rdbes_table_ce,
+                                 type = "list",
+                                 output = "data.frame") != TRUE) {
+    return(codama::r_type_checking(r_object = rdbes_table_ce,
+                                   type = "list",
                                    output = "message"))
   }
   if (codama::r_type_checking(r_object = flag,
@@ -90,8 +107,23 @@ rdbes_vd <- function(observe_con,
           " - Start data design.",
           sep = "")
 
-
-
+  if (! is.null(x = rdbes_table_cl)) {
+    table_cl_vessel <- dplyr::select(.data = rdbes_table_cl,
+                                     CLencrypVesIds,
+                                     CLyear)
+    table_cl_vessel_final <- dplyr::tibble()
+    for (year in unique(table_cl_vessel$CLyear)) {
+      table_cl_vessel_subset <- dplyr::filter(.data = table_cl_vessel,
+                                              CLyear == year)
+      table_cl_vessel_final <- rbind(table_cl_vessel_final,
+                                     dplyr::tibble("CLencrypVesIds" = unique(x = unlist(x = stringr::str_split(string = table_cl_vessel_subset$CLencrypVesIds,
+                                                                                                               pattern = ", "))),
+                                                   "CLyear" = year))
+    }
+    table_cl_vessel_final <- dplyr::rename(.data = table_cl_vessel_final,
+                                           VDencrVessCode = CLencrypVesIds,
+                                           VDyear = CLyear)
+  }
 
 
   message(format(x = Sys.time(),

@@ -11,6 +11,8 @@ rdbes_cl(
   eez_area_file_path,
   year_time_period,
   flag,
+  major_fao_area_filter = NULL,
+  digit_accuracy = 1L,
   export_path = NULL
 )
 }
@@ -26,6 +28,10 @@ rdbes_cl(
 \item{year_time_period}{{\link[base]{integer}} expected. Year(s) selected associated to the databases queries extractions.}
 
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.}
+
+\item{major_fao_area_filter}{{\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.}
+
+\item{digit_accuracy}{{\link[base]{integer}} expected. By default 1. Indicating the number of decimal places to be used.}
 
 \item{export_path}{{\link[base]{character}} expected. By default NULL. Directory path associated for the export.}
 }
