@@ -24,7 +24,93 @@ rdbes_ce <- function(observe_con,
           " - Start process on RDBES table CE generation.",
           sep = "")
   # 1 - Global variables assignement ----
-
+  vessel_type_code <- NULL
+  best_fao_area <- NULL
+  eez_indicator <- NULL
+  major_fao <- NULL
+  vessel_name <- NULL
+  vessel_id <- NULL
+  alpha_2_code <- NULL
+  landing_date <- NULL
+  hours_at_sea <- NULL
+  CEoffDaySea <- NULL
+  CEoffFishDay <- NULL
+  fishing_time_hours <- NULL
+  CEoffVesFishHour <- NULL
+  CEoffSoakMeterHour <- NULL
+  vessel_engine_power_cv <- NULL
+  CEoffkWDaySea <- NULL
+  CEoffkWFishDay <- NULL
+  CEoffkWFishHour <- NULL
+  vessel_volume <- NULL
+  vessel_flag_country_fao <- NULL
+  latitude_decimal <- NULL
+  longitude_decimal <- NULL
+  vessel_code <- NULL
+  vessel_type_label <- NULL
+  vessel_length <- NULL
+  operation_type_code <- NULL
+  operation_type_label <- NULL
+  ocean <- NULL
+  subarea_fao <- NULL
+  division_fao <- NULL
+  eez <- NULL
+  eez_country <- NULL
+  CEloc <- NULL
+  CEarea <- NULL
+  CEeconZoneIndi <- NULL
+  CEencrypVesIds <- NULL
+  CEvesFlagCou <- NULL
+  CEeconZone <- NULL
+  CEyear <- NULL
+  CEquar <- NULL
+  CEmonth <- NULL
+  CEvesLenCat <- NULL
+  number_set <- NULL
+  CEoffVesHoursAtSea <- NULL
+  CESciDaySea <- NULL
+  CEsciFishDay <- NULL
+  CEsciVesFishHour <- NULL
+  CEsciSoakMeterHour <- NULL
+  CEscikWDaySea <- NULL
+  CEscikWFishDay <- NULL
+  CEscikWFishHour <- NULL
+  CEgTDaySea <- NULL
+  CEgTFishDay <- NULL
+  CEgTFishHour <- NULL
+  CEnumFracTrips <- NULL
+  CEnumDomTrip <- NULL
+  CEoffNumHaulSet <- NULL
+  CErecType <- NULL
+  CEdTypSciEff <- NULL
+  CEdSouSciEff <- NULL
+  CEsampScheme <- NULL
+  CEstatRect <- NULL
+  CEsoucStatRect <- NULL
+  CEfishManUnit <- NULL
+  CEgsaSubarea <- NULL
+  CEjurisdArea <- NULL
+  CEfishAreaCat <- NULL
+  CEfreshWatNam <- NULL
+  CEnatFishAct <- NULL
+  CEmetier6 <- NULL
+  CEIBmitiDev <- NULL
+  CEfishTech <- NULL
+  CEmesSizRan <- NULL
+  CEsupReg <- NULL
+  CEgeoInd <- NULL
+  CEspeConTech <- NULL
+  CEdeepSeaReg <- NULL
+  CEsciNumHaulSet <- NULL
+  CEnumUniqVes <- NULL
+  CEgearDim <- NULL
+  CEnumFAD <- NULL
+  CEnumSupVes <- NULL
+  CEfishDaysErrMeaValTyp <- NULL
+  CEfishDaysErrMeaValFirst <- NULL
+  CEfishDaysErrMeaValSecond <- NULL
+  CEscientificFishingDaysQualBias <- NULL
+  CEconfiFlag <- NULL
   # 2 - Arguments verifications ----
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -446,7 +532,7 @@ rdbes_ce <- function(observe_con,
                  format = "%Y-%m-%d %H:%M:%S"),
           " - Successful data design.",
           sep = "")
-  #remove strange effort equal to 0, check with Laurent
+  #remove strange effort equal to 0, check with Laurent ticket #288
   balbaya_ce_data_suprem <- dplyr::filter(.data = balbaya_ce_data_suprem,
                                           CEoffVesHoursAtSea != 0)
   # 6 - Extraction ----
