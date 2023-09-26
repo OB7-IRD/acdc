@@ -8,9 +8,18 @@
 #' @param year_time_period {\link[base]{integer}} expected. Year(s) selected associated to the databases queries extractions.
 #' @param flag {\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.
 #' @param major_fao_area_filter {\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.
+#' @param hash_algorithms {\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CEencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.
 #' @param export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return A R object with the RDBES table CE with potentially a csv extraction associated.
 #' @export
+#' @importFrom codama r_type_checking file_path_checking
+#' @importFrom DBI sqlInterpolate SQL dbGetQuery
+#' @importFrom dplyr filter rename setdiff inner_join select left_join mutate case_when group_by reframe n n_distinct
+#' @importFrom furdeb marine_area_overlay
+#' @importFrom lubridate year quarter month
+#' @importFrom stringr str_flatten str_extract
+#' @importFrom utils write.csv
+#' @importFrom digest digest
 rdbes_ce <- function(observe_con,
                      balbaya_con,
                      fao_area_file_path,
@@ -18,6 +27,7 @@ rdbes_ce <- function(observe_con,
                      year_time_period,
                      flag,
                      major_fao_area_filter = NULL,
+                     hash_algorithms = NULL,
                      export_path = NULL) {
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -111,6 +121,7 @@ rdbes_ce <- function(observe_con,
   CEfishDaysErrMeaValSecond <- NULL
   CEscientificFishingDaysQualBias <- NULL
   CEconfiFlag <- NULL
+  CEencrypVesIds_hash <- NULL
   # 2 - Arguments verifications ----
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -171,6 +182,14 @@ rdbes_ce <- function(observe_con,
                               output = "logical") != TRUE) {
     return(codama::r_type_checking(r_object = major_fao_area_filter,
                                    type = "integer",
+                                   output = "message"))
+  }
+  if ((! is.null(x = hash_algorithms))
+      && codama::r_type_checking(r_object = hash_algorithms,
+                              type = "character",
+                              output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = hash_algorithms,
+                                   type = "character",
                                    output = "message"))
   }
   if ((! is.null(x = export_path))
@@ -269,6 +288,15 @@ rdbes_ce <- function(observe_con,
                                                by = "vessel_code") %>%
       dplyr::rename(CEencrypVesIds = vessel_id)
   }
+  if (! is.null(x = hash_algorithms)) {
+    balbaya_ce_data_final <- dplyr::inner_join(x = balbaya_ce_data_final,
+                             y = dplyr::tibble("CEencrypVesIds" = unique(x = balbaya_ce_data_final$CEencrypVesIds)) %>%
+                               dplyr::rowwise() %>%
+                               dplyr::mutate(CEencrypVesIds_hash = digest::digest(CEencrypVesIds, algo = !!hash_algorithms)),
+                             by = "CEencrypVesIds") %>%
+      dplyr::select(-CEencrypVesIds) %>%
+      dplyr::rename(CEencrypVesIds = CEencrypVesIds_hash)
+  }
   # others
   balbaya_ce_data_suprem <- balbaya_ce_data_final %>%
     dplyr::left_join(referential_iso_3166[, c("alpha_3_code",
@@ -293,6 +321,10 @@ rdbes_ce <- function(observe_con,
                     vessel_length >= 24 & vessel_length < 40 ~ "VL2440",
                     vessel_length >= 40 ~ "VL40XX",
                     TRUE ~ "NK"
+                  ),
+                  CEeconZone = dplyr::case_when(
+                    is.na(x = CEeconZone) ~ "NTHH",
+                    TRUE ~ CEeconZone
                   ),
                   CEoffVesHoursAtSea = round(x = hours_at_sea,
                                              digits = 2),
@@ -532,9 +564,15 @@ rdbes_ce <- function(observe_con,
                  format = "%Y-%m-%d %H:%M:%S"),
           " - Successful data design.",
           sep = "")
-  #remove strange effort equal to 0, check with Laurent ticket #288
+  # remove strange effort equal to 0, check with Laurent ticket #288
   balbaya_ce_data_suprem <- dplyr::filter(.data = balbaya_ce_data_suprem,
                                           CEoffVesHoursAtSea != 0)
+  # remove CEofficialFishingDays equal to 0 due to check in data model. Work on that later
+  balbaya_ce_data_suprem <- dplyr::filter(.data = balbaya_ce_data_suprem,
+                                          CEoffFishDay != 0)
+  # remove CEofficialNumberOfHaulsOrSets equal to 0 due to check in data model. Work on that later
+  balbaya_ce_data_suprem <- dplyr::filter(.data = balbaya_ce_data_suprem,
+                                          CEoffNumHaulSet != 0)
   # 6 - Extraction ----
   if (! is.null(x = export_path)) {
     message(format(x = Sys.time(),

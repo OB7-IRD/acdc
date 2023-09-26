@@ -7,6 +7,9 @@
 #' If the argument "rdbes_table_cl" is provided, the process generates a table SL according to input data of the data.frame/tibble associated (not from a database SQL extraction).
 #' @return A R object with the RDBES table SL with potentially a csv extraction associated.
 #' @export
+#' @importFrom codama r_type_checking
+#' @importFrom dplyr select distinct rename mutate case_when
+#' @importFrom utils write.csv
 rdbes_sl <- function(rdbes_table_cl = NULL,
                      export_path = NULL) {
   message(format(x = Sys.time(),
@@ -125,7 +128,8 @@ rdbes_sl <- function(rdbes_table_cl = NULL,
                                                    "%Y%m%d_%H%M%S"),
                                             "rdbes_sl.csv",
                                             sep = "_")),
-                     row.names = FALSE)
+                     row.names = FALSE,
+                     na = "")
     message(format(x = Sys.time(),
                    format = "%Y-%m-%d %H:%M:%S"),
             " - Successful SL data extractions.\n",

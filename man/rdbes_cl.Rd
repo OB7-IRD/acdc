@@ -12,6 +12,7 @@ rdbes_cl(
   year_time_period,
   flag,
   major_fao_area_filter = NULL,
+  hash_algorithms = NULL,
   digit_accuracy = 1L,
   export_path = NULL
 )
@@ -30,6 +31,8 @@ rdbes_cl(
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.}
 
 \item{major_fao_area_filter}{{\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.}
+
+\item{hash_algorithms}{{\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CLencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.}
 
 \item{digit_accuracy}{{\link[base]{integer}} expected. By default 1. Indicating the number of decimal places to be used.}
 

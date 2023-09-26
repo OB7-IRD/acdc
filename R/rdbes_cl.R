@@ -9,18 +9,19 @@
 #' @param flag {\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.
 #' @param major_fao_area_filter {\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.
 #' @param digit_accuracy {\link[base]{integer}} expected. By default 1. Indicating the number of decimal places to be used.
+#' @param hash_algorithms {\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CLencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.
 #' @param export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return A R object with the RDBES table CL with potentially a csv extraction associated.
 #' @export
 #' @importFrom codama r_type_checking file_path_checking
 #' @importFrom DBI sqlInterpolate SQL dbGetQuery
 #' @importFrom furdeb marine_area_overlay
-#' @importFrom dplyr rename filter select setdiff inner_join rowwise mutate case_when left_join group_by reframe full_join n_distinct
-#' @importFrom tidyr tibble
+#' @importFrom dplyr rename filter select setdiff inner_join rowwise mutate case_when left_join group_by reframe full_join n_distinct tibble
 #' @importFrom worrms wm_name2id
 #' @importFrom lubridate year quarter month
 #' @importFrom stringr str_flatten
 #' @importFrom utils write.csv
+#' @importFrom digest digest
 rdbes_cl <- function(observe_con,
                      balbaya_con,
                      fao_area_file_path,
@@ -28,6 +29,7 @@ rdbes_cl <- function(observe_con,
                      year_time_period,
                      flag,
                      major_fao_area_filter = NULL,
+                     hash_algorithms = NULL,
                      digit_accuracy = 1L,
                      export_path = NULL) {
   message(format(x = Sys.time(),
@@ -109,6 +111,7 @@ rdbes_cl <- function(observe_con,
   CLnumUniqVes <- NULL
   CLcom <- NULL
   CLconfiFlag <- NULL
+  CLencrypVesIds_hash <- NULL
   # 2 - Arguments verifications ----
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -178,6 +181,14 @@ rdbes_cl <- function(observe_con,
     return(codama::r_type_checking(r_object = digit_accuracy,
                                    type = "integer",
                                    length = 1L,
+                                   output = "message"))
+  }
+  if ((! is.null(x = hash_algorithms))
+      && codama::r_type_checking(r_object = hash_algorithms,
+                                 type = "character",
+                                 output = "logical") != TRUE) {
+    return(codama::r_type_checking(r_object = hash_algorithms,
+                                   type = "character",
                                    output = "message"))
   }
   if ((! is.null(x = export_path))
@@ -316,12 +327,30 @@ rdbes_cl <- function(observe_con,
                                                by = "vessel_code") %>%
       dplyr::rename(CLencrypVesIds = vessel_id)
   }
+  if (! is.null(x = hash_algorithms)) {
+    balbaya_cl_data_final <- dplyr::inner_join(x = balbaya_cl_data_final,
+                                               y = dplyr::tibble("CLencrypVesIds" = unique(x = balbaya_cl_data_final$CLencrypVesIds)) %>%
+                                                 dplyr::rowwise() %>%
+                                                 dplyr::mutate(CLencrypVesIds_hash = digest::digest(CLencrypVesIds,
+                                                                                                    algo = !!hash_algorithms)),
+                                               by = "CLencrypVesIds") %>%
+      dplyr::select(-CLencrypVesIds) %>%
+      dplyr::rename(CLencrypVesIds = CLencrypVesIds_hash)
+    observe_ps_bb_cl_data_final <- dplyr::inner_join(x = observe_ps_bb_cl_data_final,
+                                                     y = dplyr::tibble("CLencrypVesIds" = unique(x = observe_ps_bb_cl_data_final$CLencrypVesIds)) %>%
+                                                       dplyr::rowwise() %>%
+                                                       dplyr::mutate(CLencrypVesIds_hash = digest::digest(CLencrypVesIds,
+                                                                                                          algo = !!hash_algorithms)),
+                                                     by = "CLencrypVesIds") %>%
+      dplyr::select(-CLencrypVesIds) %>%
+      dplyr::rename(CLencrypVesIds = CLencrypVesIds_hash)
+  }
   # specie code and name
   warning(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
           " - Check the code regarding non dynamic worms aphia id definition.",
           sep = "")
-  observe_ps_bb_cl_data_specie <- tidyr::tibble("specie_scientific_name" = unique(observe_ps_bb_cl_data_final$specie_scientific_name)) %>%
+  observe_ps_bb_cl_data_specie <- dplyr::tibble("specie_scientific_name" = unique(observe_ps_bb_cl_data_final$specie_scientific_name)) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(worms_aphia_id = as.character(x = tryCatch(worrms::wm_name2id(name = specie_scientific_name),
                                                              error = function(a) {NA_character_})),
@@ -349,7 +378,7 @@ rdbes_cl <- function(observe_con,
                                                                      ! is.na(x = worms_aphia_id)),
                                                    by = "specie_scientific_name") %>%
     dplyr::rename(CLspecCode = worms_aphia_id)
-  balbaya_cl_data_specie <- tidyr::tibble("specie_scientific_name" = unique(balbaya_cl_data_final$specie_scientific_name)) %>%
+  balbaya_cl_data_specie <- dplyr::tibble("specie_scientific_name" = unique(balbaya_cl_data_final$specie_scientific_name)) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(worms_aphia_id = as.character(x = tryCatch(worrms::wm_name2id(name = specie_scientific_name),
                                                              error = function(a) {NA_character_})),
@@ -358,6 +387,8 @@ rdbes_cl <- function(observe_con,
                     specie_scientific_name == "Caranx spp" ~ "125936",
                     specie_scientific_name == "Thunnus alalunga" ~ "127026",
                     specie_scientific_name == "Sphyraena barracuda" ~ "345843",
+                    # modification of specie name
+                    specie_scientific_name == "Euthynnus alleteratus" ~ "127017",
                     TRUE ~ worms_aphia_id
                   ))
   if (any(is.na(x = balbaya_cl_data_specie$worms_aphia_id))) {
@@ -395,6 +426,10 @@ rdbes_cl <- function(observe_con,
                   CLyear = lubridate::year(x = landing_date),
                   CLquar = lubridate::quarter(x = landing_date),
                   CLmonth = lubridate::month(x = landing_date),
+                  CLeconZone = dplyr::case_when(
+                    is.na(x = CLeconZone) ~ "NTHH",
+                    TRUE ~ CLeconZone
+                  ),
                   CLlandCat = dplyr::case_when(
                     specie_fate_code == 6 ~ "Ind",
                     specie_fate_code == 11 ~ "None",
@@ -444,7 +479,11 @@ rdbes_cl <- function(observe_con,
     dplyr::rename(CLeconZone = alpha_2_code) %>%
     dplyr::mutate(CLyear = lubridate::year(x = landing_date),
                   CLquar = lubridate::quarter(x = landing_date),
-                  CLmonth = lubridate::month(x = landing_date)) %>%
+                  CLmonth = lubridate::month(x = landing_date),
+                  CLeconZone = dplyr::case_when(
+                    is.na(x = CLeconZone) ~ "NTHH",
+                    TRUE ~ CLeconZone
+                  )) %>%
     dplyr::group_by(CLyear,
                     CLquar,
                     CLmonth,
@@ -503,7 +542,7 @@ rdbes_cl <- function(observe_con,
     ),
     CLdSouSciWeig = dplyr::case_when(
       is.na(CLsciWeight) ~ "Logb",
-      TRUE ~ "Combination of census data"
+      TRUE ~ "Combcd"
     ),
     CLoffWeight = dplyr::case_when(
       is.na(CLoffWeight) ~ 0,
@@ -547,7 +586,7 @@ rdbes_cl <- function(observe_con,
                    CLencrypVesIds = stringr::str_flatten(unique(CLencrypVesIds),
                                                          collapse = ", ")) %>%
     dplyr::mutate(CLsampScheme = NA,
-                  CLdSouLanVal = NA,
+                  CLdSouLanVal = "Other",
                   CLstatRect = dplyr::case_when(
                     stringr::str_extract(string = CLarea,
                                          pattern = "^[:digit:].") == "27" ~ "ices_statistical_area_missing",
@@ -611,7 +650,13 @@ rdbes_cl <- function(observe_con,
                   ),
                   CLexpDiff = dplyr::case_when(
                     CLoffWeight != CLsciWeight ~ "Sampld",
-                    TRUE ~ "NoDiff")) %>%
+                    TRUE ~ "NoDiff"),
+                  # manual modification regarding the RDBES referential, remove in the future
+                  CLspecFAO = dplyr::case_when(
+                    CLspecFAO %in% c("DOX", "RMM", "RRU", "SAI") ~ NA_character_,
+                    TRUE ~ CLspecFAO
+                  ),
+                  ) %>%
     dplyr::select(-vessel_type_code,
                   -vessel_length) %>%
     dplyr::select(CLrecType,
