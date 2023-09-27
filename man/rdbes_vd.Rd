@@ -10,6 +10,7 @@ rdbes_vd(
   rdbes_table_ce = NULL,
   flag,
   hash_algorithms = NULL,
+  encrypted_vessel_code_separator = ", ",
   export_path = NULL
 )
 }
@@ -23,6 +24,8 @@ rdbes_vd(
 \item{flag}{{\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.}
 
 \item{hash_algorithms}{{\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the VDencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.}
+
+\item{encrypted_vessel_code_separator}{{\link[base]{character}} expected. By default ", ". Which separator you want to use for the VDencrypVesIds variable.}
 
 \item{export_path}{{\link[base]{character}} expected. By default NULL. Directory path associated for the export.}
 }

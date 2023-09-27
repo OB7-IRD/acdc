@@ -14,6 +14,7 @@ rdbes_cl(
   major_fao_area_filter = NULL,
   hash_algorithms = NULL,
   digit_accuracy = 1L,
+  encrypted_vessel_code_separator = ", ",
   export_path = NULL
 )
 }
@@ -35,6 +36,8 @@ rdbes_cl(
 \item{hash_algorithms}{{\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CLencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.}
 
 \item{digit_accuracy}{{\link[base]{integer}} expected. By default 1. Indicating the number of decimal places to be used.}
+
+\item{encrypted_vessel_code_separator}{{\link[base]{character}} expected. By default ", ". Which separator you want to use for the CLencrypVesIds variable.}
 
 \item{export_path}{{\link[base]{character}} expected. By default NULL. Directory path associated for the export.}
 }

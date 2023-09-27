@@ -10,6 +10,7 @@
 #' @param major_fao_area_filter {\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.
 #' @param digit_accuracy {\link[base]{integer}} expected. By default 1. Indicating the number of decimal places to be used.
 #' @param hash_algorithms {\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CLencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.
+#' @param encrypted_vessel_code_separator {\link[base]{character}} expected. By default ", ". Which separator you want to use for the CLencrypVesIds variable.
 #' @param export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return A R object with the RDBES table CL with potentially a csv extraction associated.
 #' @export
@@ -31,6 +32,7 @@ rdbes_cl <- function(observe_con,
                      major_fao_area_filter = NULL,
                      hash_algorithms = NULL,
                      digit_accuracy = 1L,
+                     encrypted_vessel_code_separator = ", ",
                      export_path = NULL) {
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -387,10 +389,13 @@ rdbes_cl <- function(observe_con,
                     specie_scientific_name == "Caranx spp" ~ "125936",
                     specie_scientific_name == "Thunnus alalunga" ~ "127026",
                     specie_scientific_name == "Sphyraena barracuda" ~ "345843",
-                    # modification of specie name
-                    specie_scientific_name == "Euthynnus alleteratus" ~ "127017",
                     TRUE ~ worms_aphia_id
-                  ))
+                  )) %>%
+    # modification of specie name Euthynnus alletteratus to Euthynnus alleteratus, ticket github #289
+    dplyr::mutate(worms_aphia_id = dplyr::case_when(
+      specie_scientific_name == "Euthynnus alleteratus" ~ "127017",
+      TRUE ~ worms_aphia_id
+    ))
   if (any(is.na(x = balbaya_cl_data_specie$worms_aphia_id))) {
     warning(format(x = Sys.time(),
                    format = "%Y-%m-%d %H:%M:%S"),
@@ -584,7 +589,7 @@ rdbes_cl <- function(observe_con,
                    CLsciWeight = sum(CLsciWeight),
                    CLnumUniqVes = dplyr::n_distinct(CLencrypVesIds),
                    CLencrypVesIds = stringr::str_flatten(unique(CLencrypVesIds),
-                                                         collapse = ", ")) %>%
+                                                         collapse = !!encrypted_vessel_code_separator)) %>%
     dplyr::mutate(CLsampScheme = NA,
                   CLdSouLanVal = "Other",
                   CLstatRect = dplyr::case_when(
@@ -656,7 +661,7 @@ rdbes_cl <- function(observe_con,
                     CLspecFAO %in% c("DOX", "RMM", "RRU", "SAI") ~ NA_character_,
                     TRUE ~ CLspecFAO
                   ),
-                  ) %>%
+    ) %>%
     dplyr::select(-vessel_type_code,
                   -vessel_length) %>%
     dplyr::select(CLrecType,

@@ -9,6 +9,7 @@
 #' @param flag {\link[base]{integer}} expected. Flag(s) selected associated to the databases queries extractions.
 #' @param major_fao_area_filter {\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.
 #' @param hash_algorithms {\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CEencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.
+#' @param encrypted_vessel_code_separator {\link[base]{character}} expected. By default ", ". Which separator you want to use for the CEencrypVesIds variable.
 #' @param export_path {\link[base]{character}} expected. By default NULL. Directory path associated for the export.
 #' @return A R object with the RDBES table CE with potentially a csv extraction associated.
 #' @export
@@ -28,6 +29,7 @@ rdbes_ce <- function(observe_con,
                      flag,
                      major_fao_area_filter = NULL,
                      hash_algorithms = NULL,
+                     encrypted_vessel_code_separator = ", ",
                      export_path = NULL) {
   message(format(x = Sys.time(),
                  format = "%Y-%m-%d %H:%M:%S"),
@@ -279,7 +281,7 @@ rdbes_ce <- function(observe_con,
          "Check the following vessel id(s):\n",
          paste(dplyr::setdiff(x = unique(x = balbaya_ce_data_final$vessel_code),
                               y = referential_vessel$vessel_code),
-               collapse = ", "),
+               collapse = ";"),
          sep = "")
   } else {
     balbaya_ce_data_final <- dplyr::inner_join(x = balbaya_ce_data_final,
@@ -441,7 +443,7 @@ rdbes_ce <- function(observe_con,
                    CEnumDomTrip = sum(CEnumDomTrip),
                    CEnumUniqVes = dplyr::n_distinct(CEencrypVesIds),
                    CEencrypVesIds = stringr::str_flatten(unique(CEencrypVesIds),
-                                                         collapse = ", ")) %>%
+                                                         collapse = !!encrypted_vessel_code_separator)) %>%
     dplyr::mutate(CErecType = "CL",
                   CEdTypSciEff = "Estimate",
                   CEdSouSciEff = "Combcd",

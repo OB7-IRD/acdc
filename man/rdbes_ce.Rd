@@ -13,6 +13,7 @@ rdbes_ce(
   flag,
   major_fao_area_filter = NULL,
   hash_algorithms = NULL,
+  encrypted_vessel_code_separator = ", ",
   export_path = NULL
 )
 }
@@ -32,6 +33,8 @@ rdbes_ce(
 \item{major_fao_area_filter}{{\link[base]{integer}} expected. By default NULL. Sub selection of major fao area.}
 
 \item{hash_algorithms}{{\link[base]{integer}} expected. By default NULL. The hashing algorithms to be used for the CEencrypVesIds variable. You can choose any modality of the argument "algo" or the function {\link[digest]{digest}}.}
+
+\item{encrypted_vessel_code_separator}{{\link[base]{character}} expected. By default ", ". Which separator you want to use for the CEencrypVesIds variable.}
 
 \item{export_path}{{\link[base]{character}} expected. By default NULL. Directory path associated for the export.}
 }
