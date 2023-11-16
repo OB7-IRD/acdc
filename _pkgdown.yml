@@ -41,6 +41,7 @@ articles:
   navbar: ~
   contents:
   - fisheries_dependent_information_data_call
+  - regional_database_estimation_system_data_call
 
 url: https://ob7-ird.github.io/acdc/
 
