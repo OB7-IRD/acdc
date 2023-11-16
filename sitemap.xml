@@ -13,6 +13,9 @@
     <loc>https://ob7-ird.github.io/acdc/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://ob7-ird.github.io/acdc/articles/regional_database_estimation_system_data_call.html</loc>
+  </url>
+  <url>
     <loc>https://ob7-ird.github.io/acdc/authors.html</loc>
   </url>
   <url>
@@ -68,5 +71,17 @@
   </url>
   <url>
     <loc>https://ob7-ird.github.io/acdc/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/rdbes_ce.html</loc>
+  </url>
+  <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/rdbes_cl.html</loc>
+  </url>
+  <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/rdbes_sl.html</loc>
+  </url>
+  <url>
+    <loc>https://ob7-ird.github.io/acdc/reference/rdbes_vd.html</loc>
   </url>
 </urlset>
