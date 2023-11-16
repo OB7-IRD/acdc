@@ -1,0 +1,137 @@
+---
+title: "Regional DataBase Estimation System data call"
+author:
+  - Mathieu Depetris^[IRD, mathieu.depetris@ird.fr]
+date: "28/09/2023"
+output: rmarkdown::html_vignette
+description: |
+  Description of Regional DataBase Estimation System data call.
+vignette: |
+  %\VignetteIndexEntry{Regional DataBase Estimation System data call}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<div style="text-align: justify">
+
+## Regional DataBase Estimation System data call
+
+The Regional DataBase and Estimation System, RDBES, is the new regional database currently being developed by ICES. This system is a structure hosting a database but also processes and treatments, for example with an aim of data validation and quality. The aims of the RDBES are:
+
+* To ensure that data can be made available for the coordination of regional fisheries data sampling plans, in particular for the EU DC-MAP Regional Coordination Groups (RCGs),
+* To provide a regional estimation system such that statistical estimates of quantities of interest can be produced from sample data,
+* To increase the data quality, documentation of data and ensuring of approved estimation methods are used,
+* To serve and facilitate the production of fisheries management advice and status reports,
+* To increase the awareness of fisheries data collected by the users of the RDBES and the overall usage of these data.
+
+More information is available on the [GitHub](https://github.com/ices-tools-dev/RDBES/tree/master) or on the [offical webpage](https://rdbes.ices.dk/#/home).
+
+## 2023 version
+
+Github tag for scripts apply in 2023: 
+
+Github 2023 documentation associated:
+
+To compile it on your computer use the following code:
+
+```{r, eval = FALSE, echo = TRUE}
+devtools::install_github("OB7-IRD/acdc@vx.x.x",
+                         INSTALL_opts=c("--no-multiarch"))
+```
+
+Specific configuration and parameters is available below:
+
+```{r, eval = FALSE, echo = TRUE}
+# setup ----
+library(furdeb)
+library(acdc)
+config <- configuration_file(path_file = "D:/bdd/rdbes/data_call/2023/rdbes_datacall_2023_configuration_file.yml",
+                             silent = TRUE)
+# parameters definition ----
+year_time_period <- 2022L
+# for the French fleet, 1 = France
+flag <- 1L
+major_fao_area_filter <- as.integer(x = c(21, 27, 34, 41, 47, 87))
+digit_accuracy <- 1L
+hash_algorithms <- "crc32"
+encrypted_vessel_code_separator <- ";"
+fao_area_file_path <- "D:/developpement/shapes/FAO_AREAS_CWP_NOCOASTLINE/FAO_AREAS_CWP_NOCOASTLINE.Rdata"
+eez_area_file_path <- "D:/developpement/shapes/Intersect_EEZ_IHO_v4_2020/Intersect_EEZ_IHO_v4_2020.Rdata"
+export_path <- config$output_path
+# databases connections ----
+balbaya_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["balbaya_vmot5"]]$login,
+                                       db_password = config[["databases_configuration"]][["balbaya_vmot5"]]$password,
+                                       db_dbname = config[["databases_configuration"]][["balbaya_vmot5"]]$dbname,
+                                       db_host = config[["databases_configuration"]][["balbaya_vmot5"]]$host,
+                                       db_port = config[["databases_configuration"]][["balbaya_vmot5"]]$port)
+observe_con <- postgresql_dbconnection(db_user = config[["databases_configuration"]][["observe_vmot6_test"]]$login,
+                                       db_password = config[["databases_configuration"]][["observe_vmot6_test"]]$password,
+                                       db_dbname = config[["databases_configuration"]][["observe_vmot6_test"]]$dbname,
+                                       db_host = config[["databases_configuration"]][["observe_vmot6_test"]]$host,
+                                       db_port = config[["databases_configuration"]][["observe_vmot6_test"]]$port)
+# data call tables generation ----
+table_cl <- rdbes_cl(observe_con = observe_con,
+                     balbaya_con = balbaya_con,
+                     fao_area_file_path = fao_area_file_path,
+                     eez_area_file_path = eez_area_file_path,
+                     year_time_period = year_time_period,
+                     flag = flag,
+                     major_fao_area_filter = major_fao_area_filter,
+                     digit_accuracy = digit_accuracy,
+                     hash_algorithms = hash_algorithms,
+                     encrypted_vessel_code_separator = encrypted_vessel_code_separator,
+                     export_path = export_path)
+
+table_ce <- rdbes_ce(observe_con = observe_con,
+                     balbaya_con = balbaya_con,
+                     fao_area_file_path = fao_area_file_path,
+                     eez_area_file_path = eez_area_file_path,
+                     year_time_period = year_time_period,
+                     flag = flag,
+                     major_fao_area_filter = major_fao_area_filter,
+                     hash_algorithms = hash_algorithms,
+                     encrypted_vessel_code_separator = encrypted_vessel_code_separator,
+                     export_path = export_path)
+
+table_vd <- rdbes_vd(observe_con,
+                     rdbes_table_cl = table_cl,
+                     rdbes_table_ce = table_ce,
+                     flag = flag,
+                     hash_algorithms = hash_algorithms,
+                     encrypted_vessel_code_separator = encrypted_vessel_code_separator,
+                     export_path = export_path)
+
+table_sl <- rdbes_sl(rdbes_table_cl = table_cl,
+                     export_path = export_path)
+```
+
+## Global comments for further development and improvement
+
+Theses comments aims to highlight every subjects or topics related to the future improvement of the large pelagics data integration in the RDBES. For more information and detail please contact [Mathieu Depetris](mathieu.depetris@ird.fr).
+
+### Table CL: Commercial Landing
+
+To do
+
+### Table CE: Commercial Effort
+
+To do
+
+### Table VD: Vessel Details
+
+To do
+
+### Table SL: Species List
+
+To do
+
+
+
+

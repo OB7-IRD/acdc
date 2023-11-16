@@ -45,7 +45,7 @@ Imports:
     openxlsx (>= 4.2.5),
     readxl (>= 1.4.0),
     stringr (>= 1.4.0),
-    furdeb (>= 0.9.0),
+    furdeb (>= 0.0.0.9000),
     utils,
     lubridate (>= 1.9.2),
     tidyr (>= 1.3.0),

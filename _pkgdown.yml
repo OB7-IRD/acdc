@@ -22,6 +22,14 @@ reference:
   - fdi_tables_consistency
   - fdi_table_export
   - fdi_template_identification
+- title: "RDBES processes and functions"
+  desc: >
+    Processes and functions related to the Regional Database & Estimation System (RDBES).
+- contents:
+  - rdbes_ce
+  - rdbes_cl
+  - rdbes_sl
+  - rdbes_vd
 - title: "ICCAT processes and functions"
   desc: >
     Processes and functions related to the International Commission for the Conservation of Atlantic Tunas annual data call.

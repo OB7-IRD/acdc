@@ -444,7 +444,7 @@ rdbes_ce <- function(observe_con,
                    CEnumUniqVes = dplyr::n_distinct(CEencrypVesIds),
                    CEencrypVesIds = stringr::str_flatten(unique(CEencrypVesIds),
                                                          collapse = !!encrypted_vessel_code_separator)) %>%
-    dplyr::mutate(CErecType = "CL",
+    dplyr::mutate(CErecType = "CE",
                   CEdTypSciEff = "Estimate",
                   CEdSouSciEff = "Combcd",
                   CEsampScheme = NA,

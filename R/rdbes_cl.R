@@ -508,17 +508,7 @@ rdbes_cl <- function(observe_con,
     dplyr::mutate(CLrecType = "CL",
                   CLlandCat = "Ind",
                   CLcatchCat = "Lan",
-                  CLregDisCat = "NotApplicable",
-                  CLsciWeightErrMeaValTyp = NA,
-                  CLsciWeightErrMeaValFirst = NA,
-                  CLsciWeightErrMeaValSecond = NA,
-                  CLvalErrMeaValTyp = NA,
-                  CLvalErrMeaValFirst = NA,
-                  CLvalErrMeaValSecond = NA,
-                  CLnumFishInCatchErrMeaValTyp = NA,
-                  CLnumFishInCatchErrMeaValFirst = NA,
-                  CLnumFishInCatchErrMeaValSecond = NA,
-                  CLsciWeightQualBias = NA)
+                  CLregDisCat = "NotApplicable")
   # data merge
   cl_data <- dplyr::full_join(x = observe_ps_bb_cl_data_final,
                               y = balbaya_cl_data_final,
@@ -555,115 +545,131 @@ rdbes_cl <- function(observe_con,
     CLsciWeight = dplyr::case_when(
       is.na(CLsciWeight) ~ CLoffWeight,
       TRUE ~ CLsciWeight
-    )) %>%
-    dplyr::group_by(CLspecFAO,
-                    CLloc,
-                    CLarea,
-                    CLeconZoneIndi,
-                    CLspecCode,
+    ),
+    CLstatRect = dplyr::case_when(
+      stringr::str_extract(string = CLarea,
+                           pattern = "^[:digit:].") == "27" ~ "ices_statistical_area_missing",
+      TRUE ~ "-9"
+    ),
+    CLgsaSubarea = dplyr::case_when(
+      stringr::str_extract(string = CLarea,
+                           pattern = "^[:digit:].") == "37" ~ "gsa_sub_area_missing",
+      TRUE ~ "NotApplicable"
+    ),
+    CLnatFishAct = dplyr::case_when(
+      vessel_type_code == 6 ~ "PS_LPF_>0_0_0_TRO",
+      vessel_type_code == 2 ~ "LHP_LPF_0_0_0_MSP",
+      TRUE ~ "national_fishing_activity_missing"
+    ),
+    CLmetier6 = dplyr::case_when(
+      vessel_type_code == 6 ~ "PS_LPF_>0_0_0",
+      vessel_type_code == 2 ~ "LHP_LPF_0_0_0",
+      TRUE ~ "metier6_missing"
+    ),
+    CLvesLenCat = dplyr::case_when(
+      vessel_length < 6 ~ "VL0006",
+      vessel_length >= 6 & vessel_length < 8 ~ "VL0608",
+      vessel_length >= 8 & vessel_length < 10 ~ "VL0810",
+      vessel_length >= 10 & vessel_length < 12 ~ "VL1012",
+      vessel_length >= 12 & vessel_length < 15 ~ "VL0608",
+      vessel_length >= 15 & vessel_length < 18 ~ "VL1518",
+      vessel_length >= 18 & vessel_length < 24 ~ "VL0608",
+      vessel_length >= 24 & vessel_length < 40 ~ "VL2440",
+      vessel_length >= 40 ~ "VL40XX",
+      TRUE ~ "NK"
+    ),
+    CLfishTech = dplyr::case_when(
+      vessel_type_code == 6 ~ "PS",
+      vessel_type_code == 2 ~ "HOK",
+      TRUE ~ "fishing_technique_missing"
+    ),
+    CLsampScheme = NA,
+    CLdSouLanVal = "Other",
+    CLfishManUnit = NA,
+    CLdSoucstatRect = "EstPosData",
+    CLjurisdArea = NA,
+    CLfishAreaCat = "NA",
+    CLfreshWatNam = "NA",
+    CLsizeCatScale = NA,
+    CLsizeCat = NA,
+    CLIBmitiDev = "None",
+    CLmesSizRan = NA,
+    CLsupReg = "OFR",
+    CLgeoInd = "IWE",
+    CLspeConTech = "NA",
+    CLdeepSeaReg = "N") %>%
+    dplyr::group_by(CLrecType,
+                    CLdTypSciWeig,
+                    CLdSouSciWeig,
+                    CLsampScheme,
+                    CLdSouLanVal,
                     CLlanCou,
                     CLvesFlagCou,
-                    CLeconZone,
-                    CLrecType,
                     CLyear,
                     CLquar,
                     CLmonth,
+                    CLarea,
+                    CLstatRect,
+                    CLdSoucstatRect,
+                    CLfishManUnit,
+                    CLgsaSubarea,
+                    CLjurisdArea,
+                    CLfishAreaCat,
+                    CLfreshWatNam,
+                    CLeconZone,
+                    CLeconZoneIndi,
+                    CLspecCode,
+                    CLspecFAO,
                     CLlandCat,
                     CLcatchCat,
                     CLregDisCat,
-                    vessel_type_code,
-                    vessel_length,
-                    CLsciWeightErrMeaValTyp,
-                    CLsciWeightErrMeaValFirst,
-                    CLsciWeightErrMeaValSecond,
-                    CLvalErrMeaValTyp,
-                    CLvalErrMeaValFirst,
-                    CLvalErrMeaValSecond,
-                    CLnumFishInCatchErrMeaValTyp,
-                    CLnumFishInCatchErrMeaValFirst,
-                    CLnumFishInCatchErrMeaValSecond,
-                    CLsciWeightQualBias,
-                    CLdTypSciWeig,
-                    CLdSouSciWeig) %>%
+                    CLsizeCatScale,
+                    CLsizeCat,
+                    CLnatFishAct,
+                    CLmetier6,
+                    CLIBmitiDev,
+                    CLloc,
+                    CLvesLenCat,
+                    CLfishTech,
+                    CLmesSizRan,
+                    CLsupReg,
+                    CLgeoInd,
+                    CLspeConTech,
+                    CLdeepSeaReg) %>%
     dplyr::reframe(CLoffWeight = sum(CLoffWeight),
                    CLsciWeight = sum(CLsciWeight),
                    CLnumUniqVes = dplyr::n_distinct(CLencrypVesIds),
                    CLencrypVesIds = stringr::str_flatten(unique(CLencrypVesIds),
                                                          collapse = !!encrypted_vessel_code_separator)) %>%
-    dplyr::mutate(CLsampScheme = NA,
-                  CLdSouLanVal = "Other",
-                  CLstatRect = dplyr::case_when(
-                    stringr::str_extract(string = CLarea,
-                                         pattern = "^[:digit:].") == "27" ~ "ices_statistical_area_missing",
-                    TRUE ~ "-9"
-                  ),
-                  CLfishManUnit = NA,
-                  CLdSoucstatRect = "EstPosData",
-                  CLgsaSubarea = dplyr::case_when(
-                    stringr::str_extract(string = CLarea,
-                                         pattern = "^[:digit:].") == "37" ~ "gsa_sub_area_missing",
-                    TRUE ~ "NotApplicable"
-                  ),
-                  CLjurisdArea = NA,
-                  CLfishAreaCat = "NA",
-                  CLfreshWatNam = "NA",
-                  CLsizeCatScale = NA,
-                  CLsizeCat = NA,
-                  CLnatFishAct = dplyr::case_when(
-                    vessel_type_code == 6 ~ "PS_LPF_>0_0_0_TRO",
-                    vessel_type_code == 2 ~ "LHP_LPF_0_0_0_MSP",
-                    TRUE ~ "national_fishing_activity_missing"
-                  ),
-                  CLmetier6 = dplyr::case_when(
-                    vessel_type_code == 6 ~ "PS_LPF_>0_0_0",
-                    vessel_type_code == 2 ~ "LHP_LPF_0_0_0",
-                    TRUE ~ "metier6_missing"
-                  ),
-                  CLIBmitiDev = "None",
-                  CLvesLenCat = dplyr::case_when(
-                    vessel_length < 6 ~ "VL0006",
-                    vessel_length >= 6 & vessel_length < 8 ~ "VL0608",
-                    vessel_length >= 8 & vessel_length < 10 ~ "VL0810",
-                    vessel_length >= 10 & vessel_length < 12 ~ "VL1012",
-                    vessel_length >= 12 & vessel_length < 15 ~ "VL0608",
-                    vessel_length >= 15 & vessel_length < 18 ~ "VL1518",
-                    vessel_length >= 18 & vessel_length < 24 ~ "VL0608",
-                    vessel_length >= 24 & vessel_length < 40 ~ "VL2440",
-                    vessel_length >= 40 ~ "VL40XX",
-                    TRUE ~ "NK"
-                  ),
-                  CLfishTech = dplyr::case_when(
-                    vessel_type_code == 6 ~ "PS",
-                    vessel_type_code == 2 ~ "HOK",
-                    TRUE ~ "fishing_technique_missing"
-                  ),
-                  CLmesSizRan = NA,
-                  CLsupReg = "OFR",
-                  CLgeoInd = "IWE",
-                  CLspeConTech = "NA",
-                  CLdeepSeaReg = "N",
-                  CLtotOffLanVal = "Unknown",
-                  CLtotNumFish = NA,
-                  CLcom = NA,
-                  CLconfiFlag = dplyr::case_when(
-                    CLnumUniqVes <= 3 ~ "Y",
-                    TRUE ~ "N"
-                  ),
-                  CLFDIconCod = dplyr::case_when(
-                    CLnumUniqVes <= 3 ~ "A",
-                    TRUE ~ "N"
-                  ),
-                  CLexpDiff = dplyr::case_when(
-                    CLoffWeight != CLsciWeight ~ "Sampld",
-                    TRUE ~ "NoDiff"),
-                  # manual modification regarding the RDBES referential, remove in the future
-                  CLspecFAO = dplyr::case_when(
-                    CLspecFAO %in% c("DOX", "RMM", "RRU", "SAI") ~ NA_character_,
-                    TRUE ~ CLspecFAO
-                  ),
-    ) %>%
-    dplyr::select(-vessel_type_code,
-                  -vessel_length) %>%
+    dplyr::mutate(CLconfiFlag = dplyr::case_when(
+      CLnumUniqVes <= 3 ~ "Y",
+      TRUE ~ "N"
+    ),
+    CLFDIconCod = dplyr::case_when(
+      CLnumUniqVes <= 3 ~ "A",
+      TRUE ~ "N"
+    ),
+    CLexpDiff = dplyr::case_when(
+      CLoffWeight != CLsciWeight ~ "Sampld",
+      TRUE ~ "NoDiff"),
+    # manual modification regarding the RDBES referential, remove in the future
+    CLspecFAO = dplyr::case_when(
+      CLspecFAO %in% c("DOX", "RMM", "RRU", "SAI") ~ NA_character_,
+      TRUE ~ CLspecFAO
+    ),
+    CLcom = NA,
+    CLtotOffLanVal = "Unknown",
+    CLsciWeightErrMeaValTyp = NA,
+    CLsciWeightErrMeaValFirst = NA,
+    CLsciWeightErrMeaValSecond = NA,
+    CLvalErrMeaValTyp = NA,
+    CLvalErrMeaValFirst = NA,
+    CLvalErrMeaValSecond = NA,
+    CLnumFishInCatchErrMeaValTyp = NA,
+    CLnumFishInCatchErrMeaValFirst = NA,
+    CLnumFishInCatchErrMeaValSecond = NA,
+    CLsciWeightQualBias = NA,
+    CLtotNumFish = NA) %>%
     dplyr::select(CLrecType,
                   CLdTypSciWeig,
                   CLdSouSciWeig,
